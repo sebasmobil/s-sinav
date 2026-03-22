@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S-Sınav</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}:root{--bg:#f5f5f5;--surface:#ffffff;--surface2:#f0f0f0;--border:#e0e0e0;--accent:#2563eb;--accent2:#3b82f6;--text:#1a1a1a;--muted:#888;--radius:12px;}body.theme-dark{--bg:#0f0f0f;--surface:#1a1a1a;--surface2:#242424;--border:#2e2e2e;--accent:#d4a853;--accent2:#e8c87a;--text:#f0ece4;--muted:#888;}body.theme-green{--bg:#f0fdf4;--surface:#ffffff;--surface2:#dcfce7;--border:#bbf7d0;--accent:#16a34a;--accent2:#22c55e;--text:#14532d;--muted:#6b7280;}body.theme-purple{--bg:#faf5ff;--surface:#ffffff;--surface2:#f3e8ff;--border:#e9d5ff;--accent:#7c3aed;--accent2:#8b5cf6;--text:#3b0764;--muted:#6b7280;}body.theme-dark-blue{--bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#475569;--accent:#38bdf8;--accent2:#7dd3fc;--text:#f1f5f9;--muted:#94a3b8;}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:40px 20px;}.container{max-width:780px;margin:0 auto;}.top-bar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;gap:12px;}header{text-align:center;flex:1;padding-top:0;padding-bottom:0;}header h1{font-family:'Nunito',sans-serif;font-size:2.6rem;color:var(--accent);letter-spacing:-0.5px;margin-bottom:2px;line-height:1.1;}header p{color:var(--muted);font-size:0.88rem;font-weight:300;margin:0 0 18px 0;line-height:1;letter-spacing:0.2px;}.theme-bar{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}.theme-chip{display:flex;align-items:center;justify-content:center;padding:6px;border-radius:50%;border:2px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.15s;user-select:none;}.theme-chip:hover{border-color:var(--accent);}.theme-chip.active{border-color:var(--accent);background:var(--accent);}.theme-chip .dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,0.12);flex-shrink:0;}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 32px;margin-bottom:20px;}.card-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--accent);margin-bottom:18px;display:flex;align-items:center;gap:10px;}.card-title::before{content:'';width:3px;height:18px;background:var(--accent);border-radius:2px;}label{display:block;font-size:0.82rem;color:var(--muted);margin-bottom:7px;letter-spacing:0.5px;text-transform:uppercase;}input[type="text"],textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.95rem;padding:12px 16px;outline:none;transition:border-color 0.2s;resize:vertical;}input[type="text"]:focus,textarea:focus{border-color:var(--accent);}select{appearance:none;-webkit-appearance:none;width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;padding:8px 36px 8px 14px;outline:none;cursor:pointer;transition:border-color 0.2s,box-shadow 0.2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}select:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(56,189,248,0.1);}select option{background:var(--surface);color:var(--text);}.form-row{margin-bottom:18px;}.form-row:last-child{margin-bottom:0;}.inline-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}input[type="range"]{width:100%;accent-color:var(--accent);margin-top:6px;}.range-display{font-size:0.85rem;color:var(--accent2);text-align:right;margin-top:4px;}.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:40px 20px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;}.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:rgba(212,168,83,0.04);}.upload-zone input{position:absolute;top:0;right:0;bottom:0;left:0;opacity:0;cursor:pointer;}.upload-icon{font-size:2.5rem;margin-bottom:12px;opacity:0.6;}.upload-zone p{color:var(--muted);font-size:0.9rem;}.upload-zone strong{color:var(--accent);}.photo-list{margin-top:20px;display:flex;flex-direction:column;gap:10px;}.photo-item{display:flex;align-items:center;gap:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:grab;transition:box-shadow 0.15s,border-color 0.15s;user-select:none;}.photo-item:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(0,0,0,0.4);}.photo-item.dragging{opacity:0.35;cursor:grabbing;}.photo-item.drag-target{border-color:var(--accent);background:rgba(212,168,83,0.07);}.photo-item .thumb{width:56px;height:56px;min-width:56px;border-radius:7px;overflow:hidden;border:1px solid var(--border);}.photo-item .thumb img{width:100%;height:100%;object-fit:cover;pointer-events:none;}.photo-item .item-num{font-family:'Playfair Display',serif;font-size:1rem;color:var(--accent);min-width:24px;text-align:center;}.photo-item .item-name{flex:1;font-size:0.82rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.photo-item .point-wrap{display:flex;align-items:center;gap:6px;}.photo-item .point-wrap label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;margin:0;}.photo-item .point-input{width:70px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.9rem;padding:6px 10px;outline:none;text-align:center;transition:border-color 0.2s;}.photo-item .point-input:focus{border-color:var(--accent);}.photo-item .remove-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:4px;border-radius:6px;transition:color 0.15s,background 0.15s;line-height:1;}.photo-item .remove-btn:hover{color:#e05555;background:rgba(224,85,85,0.1);}.drag-handle{color:var(--muted);font-size:1rem;cursor:grab;padding:0 2px;opacity:0.5;}.move-btns{display:flex;flex-direction:column;gap:2px;}.move-btn{background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;width:26px;height:22px;border-radius:5px;font-size:0.7rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:color 0.15s,background 0.15s,border-color 0.15s;}.move-btn:hover{color:var(--accent);border-color:var(--accent);background:rgba(212,168,83,0.08);}.move-btn:disabled{opacity:0.2;cursor:default;}.archive-row{display:flex;align-items:center;gap:12px;margin:8px 0 10px;}.archive-save-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.82rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:600;white-space:nowrap;transition:opacity 0.15s;}.archive-save-btn:hover{opacity:0.85;}.title-archive{display:flex;flex-direction:column;gap:6px;margin-bottom:4px;}.archive-item{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}.archive-item-text{flex:1;font-size:0.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}.archive-item-text:hover{color:var(--accent);}.archive-use-btn{background:none;border:1px solid var(--border);color:var(--accent);border-radius:6px;padding:4px 10px;font-size:0.75rem;cursor:pointer;white-space:nowrap;transition:all 0.15s;font-family:'DM Sans',sans-serif;}.archive-use-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}.archive-del-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:2px 4px;border-radius:6px;transition:color 0.15s;}.archive-del-btn:hover{color:#e05555;}.stats-bar{display:flex;gap:20px;align-items:center;padding:14px 18px;background:var(--surface2);border-radius:8px;margin-top:18px;font-size:0.82rem;color:var(--muted);}.stats-bar span strong{color:var(--accent2);}.btn-generate{width:100%;padding:16px;background:var(--accent);color:#0f0f0f;border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:0.3px;transition:background 0.2s,transform 0.1s;margin-top:8px;}.btn-generate:hover{background:var(--accent2);}.btn-generate:active{transform:scale(0.99);}.btn-generate:disabled{background:#444;color:#777;cursor:not-allowed;}.progress-wrap{margin-top:20px;display:none;}.progress-label{font-size:0.85rem;color:var(--muted);margin-bottom:8px;}.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}.progress-fill{height:100%;background:var(--accent);width:0%;transition:width 0.3s;}.empty-hint{text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;}.color-row{display:flex;align-items:center;gap:12px;}.color-row input[type="color"]{width:38px;height:38px;padding:2px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);cursor:pointer;}.color-row span{font-size:0.82rem;color:var(--muted);}.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;}.toggle-row span{font-size:0.9rem;color:var(--text);}.toggle{position:relative;width:44px;height:24px;}.toggle input{opacity:0;width:0;height:0;}.toggle-slider{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--border);border-radius:24px;cursor:pointer;transition:background 0.2s;}.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform 0.2s;}.toggle input:checked+.toggle-slider{background:var(--accent);}.toggle input:checked+.toggle-slider::before{transform:translateX(20px);}input[type="number"]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.95rem;padding:12px 16px;outline:none;transition:border-color 0.2s;}input[type="number"]:focus{border-color:var(--accent);}.label-preview{background:var(--surface2);border-radius:8px;padding:12px 16px;font-size:0.85rem;color:var(--accent2);margin-top:14px;text-align:center;border:1px dashed var(--border);letter-spacing:0.5px;}.style-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}.style-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;transition:all 0.15s;user-select:none;}.style-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}.style-btn.bold-btn{font-weight:700;}.style-btn.italic-btn{font-style:italic;}.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}.section-divider{border:none;border-top:1px solid var(--border);margin:18px 0;}.theme-menu-item{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border:none;background:none;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.82rem;border-radius:7px;transition:background 0.15s;text-align:left;}.theme-menu-item:hover{background:var(--surface2);}.theme-menu-item.active{background:var(--surface2);font-weight:600;color:var(--accent);}.theme-menu-item .dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);flex-shrink:0;}</style>
+</head>
+<body class="theme-dark-blue">
+<div style="position:fixed; top:12px; left:12px; z-index:1000; line-height:1.6;">
+  <div style="font-size:0.72rem; color:var(--muted); opacity:0.7;">© sebasmobil</div>
+  <div style="font-size:0.72rem; color:var(--muted); opacity:0.5;" id="freeTextLabel">ücretsiz, reklamsız ve süresiz</div>
+</div>
+
+<div style="position:absolute; top:12px; right:12px; z-index:1000;">
+  <div style="position:relative;">
+    <button id="themeToggleBtn" onclick="toggleThemeMenu()" style="background:none; border:1px solid var(--border); border-radius:8px; padding:5px 12px; font-size:0.75rem; color:var(--muted); cursor:pointer; font-family:'DM Sans',sans-serif; display:flex; align-items:center; gap:6px;">
+      <span id="themeActiveDot" style="background:#0f172a; width:10px; height:10px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); display:inline-block; flex-shrink:0;"></span>
+      <span id="themeActiveName">Gece Mavisi</span>
+      <span style="font-size:0.6rem; opacity:0.6;">▼</span>
+    </button>
+    <div id="themeMenu" style="display:none; position:absolute; top:110%; right:0; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:6px; z-index:100; min-width:140px; box-shadow:0 8px 24px rgba(0,0,0,0.3);">
+      <button class="theme-menu-item active" onclick="setTheme('theme-dark-blue', this, 'Gece Mavisi', '#0f172a')">
+        <span class="dot" style="background:#0f172a;"></span> Gece Mavisi
+      </button>
+      <button class="theme-menu-item" onclick="setTheme('', this, 'Beyaz', '#f5f5f5')">
+        <span class="dot" style="background:#f5f5f5; border-color:#ccc;"></span> Beyaz
+      </button>
+      <button class="theme-menu-item" onclick="setTheme('theme-dark', this, 'Koyu', '#1a1a1a')">
+        <span class="dot" style="background:#1a1a1a;"></span> Koyu
+      </button>
+      <button class="theme-menu-item" onclick="setTheme('theme-green', this, 'Yeşil', '#16a34a')">
+        <span class="dot" style="background:#16a34a;"></span> Yeşil
+      </button>
+      <button class="theme-menu-item" onclick="setTheme('theme-purple', this, 'Mor', '#7c3aed')">
+        <span class="dot" style="background:#7c3aed;"></span> Mor
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <header>
+      <h1 style="position:relative; display:inline-block;">S-Sınav<span style="display:inline-block; vertical-align:top; margin-left:0.1em; margin-top:1.55em; font-family:'DM Sans',sans-serif; font-size:0.22em; font-weight:700; letter-spacing:0.02em; background:var(--accent); color:#fff; border-radius:4px; padding:2px 5px; line-height:1.4; white-space:nowrap;">pro <span style="color:#fff; font-weight:700; opacity:0.7;">v5.0</span></span></h1>
+      <p>Fotoğrafları seç ve sınavını hazırla</p>
+    </header>
+
+  
+  <div class="card">
+    <div class="card-title">Sorular</div>
+    <div class="form-row">
+      <label>Yükleme kalitesi</label>
+      <select id="uploadQuality">
+        <option value="low">Düşük — hızlı, az yer (mobil önerilir)</option>
+        <option value="medium" selected>Orta — dengeli</option>
+        <option value="high">Yüksek — net, büyük dosya</option>
+        <option value="original">Orijinal — sıkıştırma yok</option>
+      </select>
+    </div>
+    <div class="upload-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="image/*" multiple>
+      <div class="upload-icon">📷</div>
+      <p><strong>Tıklayın veya soruları buraya sürükleyin</strong></p>
+      <p style="margin-top:6px; font-size:0.8rem;">JPG, PNG, WEBP — Birden fazla seçebilirsiniz</p>
+    </div>
+
+    <div id="totalPointsBanner" style="display:none; margin-bottom:8px; padding:8px 14px; border-radius:8px; font-size:0.85rem; font-weight:600; background:var(--surface2); transition:all 0.2s;">
+      <span id="totalPointsSpan">🎯 Toplam puan: <strong id="totalPoints">0</strong></span>
+    </div>
+    <div id="photoList" class="photo-list"></div>
+
+    <div id="statsBar" class="stats-bar" style="display:none; flex-direction:column; gap:10px;">
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+        <span>📋 <strong id="photoCount">0</strong> soru</span>
+        <span>📄 Tahminen <strong id="pageCount">~</strong> sayfa</span>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button onclick="shufflePhotos()" style="flex:1; background:none; border:1px solid var(--border); color:var(--text); border-radius:6px; padding:5px 10px; font-size:0.75rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">🔀 Karıştır</button>
+        <button onclick="clearAllPhotos()" style="flex:1; background:none; border:1px solid var(--border); color:var(--text); border-radius:6px; padding:5px 10px; font-size:0.75rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='#e05555';this.style.color='#e05555'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">🗑 Tümünü Sil</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-title">Belge Bilgileri</div>
+
+    
+    <div class="form-row">
+      <label>Başlık metni</label>
+      <textarea id="docTitle" rows="2" placeholder="Belgenin başlığını girin..."></textarea>
+    </div>
+    <div class="archive-row">
+      <button class="archive-save-btn" onclick="archiveSaveTitle()">＋ Arşive Kaydet</button>
+      <span style="font-size:0.78rem; color:var(--muted);">Kaydettikleriniz aşağıda listelenir</span>
+    </div>
+    <div id="titleArchive" class="title-archive"></div>
+    <div class="three-col">
+      <div class="form-row">
+        <label>Yazı boyutu (pt)</label>
+        <input type="number" id="titleSize" value="12" min="6" max="72">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="titleColor" value="#1a1a1a"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn active" id="titleBold" onclick="toggleStyle('titleBold')">K</button>
+          <button class="style-btn italic-btn" id="titleItalic" onclick="toggleStyle('titleItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Hizalama</label>
+      <div class="style-btns">
+        <button class="style-btn" id="titleAlignLeft" onclick="setTitleAlign('left')">← Sol</button>
+        <button class="style-btn active" id="titleAlignCenter" onclick="setTitleAlign('center')">←→ Orta</button>
+        <button class="style-btn" id="titleAlignRight" onclick="setTitleAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    
+    <div class="three-col">
+      <div class="form-row">
+        <label>AD SOYAD / NO yazı boyutu (pt)</label>
+        <input type="number" id="studentSize" value="12" min="6" max="20">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="studentColor" value="#1a1a1a"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn active" id="studentBold" onclick="toggleStyle('studentBold')">K</button>
+          <button class="style-btn italic-btn" id="studentItalic" onclick="toggleStyle('studentItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    
+    <div class="form-row">
+      <label>İlk Sayfa Açıklama Metni</label>
+      <textarea id="docDesc" rows="3" placeholder="Kısa bir açıklama yazın..."></textarea>
+    </div>
+    <div class="archive-row">
+      <button class="archive-save-btn" onclick="archiveSaveDesc()">＋ Arşive Kaydet</button>
+      <span style="font-size:0.78rem; color:var(--muted);">Kaydettikleriniz aşağıda listelenir</span>
+    </div>
+    <div id="descArchive" class="title-archive"></div>
+    <div class="three-col">
+      <div class="form-row">
+        <label>Yazı boyutu (pt)</label>
+        <input type="number" id="descSize" value="12" min="6" max="48">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="descColor" value="#444444"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn" id="descBold" onclick="toggleStyle('descBold')">K</button>
+          <button class="style-btn italic-btn" id="descItalic" onclick="toggleStyle('descItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Hizalama</label>
+      <div class="style-btns">
+        <button class="style-btn active" id="descAlignLeft" onclick="setDescAlign('left')">← Sol</button>
+        <button class="style-btn" id="descAlignCenter" onclick="setDescAlign('center')">←→ Orta</button>
+        <button class="style-btn" id="descAlignRight" onclick="setDescAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    
+    <div class="form-row">
+      <label>Son Sayfa Açıklama Metni</label>
+      <textarea id="footerText" rows="2" placeholder="Örn: Başarılar dileriz. — Fen Bilimleri Zümresi"></textarea>
+    </div>
+    <div class="archive-row">
+      <button class="archive-save-btn" onclick="archiveSaveFooter()">＋ Arşive Kaydet</button>
+      <span style="font-size:0.78rem; color:var(--muted);">Kaydettikleriniz aşağıda listelenir</span>
+    </div>
+    <div id="footerArchive" class="title-archive"></div>
+    <div class="three-col">
+      <div class="form-row">
+        <label>Yazı boyutu (pt)</label>
+        <input type="number" id="footerSize" value="12" min="6" max="36">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="footerColor" value="#444444"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn" id="footerBold" onclick="toggleStyle('footerBold')">K</button>
+          <button class="style-btn italic-btn" id="footerItalic" onclick="toggleStyle('footerItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Hizalama</label>
+      <div class="style-btns">
+        <button class="style-btn active" id="footerAlignLeft" onclick="setFooterAlign('left')">← Sol</button>
+        <button class="style-btn" id="footerAlignCenter" onclick="setFooterAlign('center')">←→ Orta</button>
+        <button class="style-btn" id="footerAlignRight" onclick="setFooterAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Alt boşluktan mesafe (mm)</label>
+      <input type="range" id="footerOffsetSlider" min="2" max="30" value="8" oninput="document.getElementById('footerOffsetVal').textContent=this.value+' mm'">
+      <div class="range-display" id="footerOffsetVal">8 mm</div>
+    </div>
+    <hr class="section-divider">
+
+    
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>"Diğer sayfaya geçiniz…" ekle</span>
+        <label class="toggle">
+          <input type="checkbox" id="nextPageEnabled" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="nextPageOptions" style="margin-top:14px;">
+      <div class="inline-row">
+        <div class="form-row">
+          <label>Alt boşluktan mesafe (mm)</label>
+          <input type="range" id="nextPageOffsetSlider" min="2" max="30" value="8" oninput="document.getElementById('nextPageOffsetVal').textContent=this.value+' mm'">
+          <div class="range-display" id="nextPageOffsetVal">8 mm</div>
+        </div>
+        <div class="form-row">
+          <label>Yazı boyutu (pt)</label>
+          <input type="number" id="nextPageSize" value="9" min="6" max="20">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Hizalama</label>
+        <div class="style-btns">
+          <button class="style-btn" id="nextPageAlignLeft" onclick="selectNextPageAlign('left')">← Sol</button>
+          <button class="style-btn" id="nextPageAlignCenter" onclick="selectNextPageAlign('center')">←→ Orta</button>
+          <button class="style-btn active" id="nextPageAlignRight" onclick="selectNextPageAlign('right')">→ Sağ</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    
+    <div class="form-row">
+      <label>Arka plan rengi</label>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#ffffff">
+        <span>Sayfa arka planı</span>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-title">Düzen Ayarları</div>
+    <div class="inline-row">
+      <div class="form-row">
+        <label>Sayfa yönü</label>
+        <div class="style-btns">
+          <button class="style-btn active" id="orientPortrait" onclick="selectOrientation('portrait')">↕ Dikey (A4)</button>
+          <button class="style-btn" id="orientLandscape" onclick="selectOrientation('landscape')">↔ Yatay (A4)</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Sütun sayısı</label>
+        <div class="style-btns">
+          <button class="style-btn" id="col1" onclick="selectCols(1)">1 Sütun</button>
+          <button class="style-btn active" id="col2" onclick="selectCols(2)">2 Sütun</button>
+          <button class="style-btn" id="col3" onclick="selectCols(3)">3 Sütun</button>
+          <button class="style-btn" id="col4" onclick="selectCols(4)">4 Sütun</button>
+        </div>
+      </div>
+    </div>
+    <div class="inline-row">
+      <div class="form-row">
+        <label>Soru arası boşluk (mm)</label>
+        <input type="range" id="gapSlider" min="1" max="15" value="4">
+        <div class="range-display" id="gapVal">4 mm</div>
+      </div>
+      <div class="form-row">
+        <label>Sayfa kenar boşluğu (mm)</label>
+        <input type="range" id="marginSlider" min="5" max="30" value="8">
+        <div class="range-display" id="marginVal">8 mm</div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-title">Soru Düzeni</div>
+
+    
+    <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:10px;">Soru Etiketi</div>
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Her soruya "SORU X (Y Puan)" etiketi ekle</span>
+        <label class="toggle">
+          <input type="checkbox" id="labelEnabled" checked onchange="updatePreview()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="labelOptions">
+      <div class="three-col" style="margin-top:16px;">
+        <div class="form-row">
+          <label>Başlangıç soru no</label>
+          <input type="number" id="startQuestion" value="1" min="1" oninput="updatePreview()">
+        </div>
+        <div class="form-row">
+          <label>Yazı boyutu (pt)</label>
+          <input type="number" id="labelSize" value="12" min="6" max="36" oninput="updatePreview()">
+        </div>
+        <div class="form-row">
+          <label>Renk</label>
+          <div class="color-row"><input type="color" id="labelColor" value="#003580" oninput="updatePreview()"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn active" id="labelBold" onclick="toggleStyle('labelBold'); updatePreview()">K</button>
+          <button class="style-btn italic-btn" id="labelItalic" onclick="toggleStyle('labelItalic'); updatePreview()">İ</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Hizalama</label>
+        <div class="style-btns">
+          <button class="style-btn active" id="labelAlignLeft" onclick="setLabelAlign('left')">← Sol</button>
+          <button class="style-btn" id="labelAlignCenter" onclick="setLabelAlign('center')">←→ Orta</button>
+          <button class="style-btn" id="labelAlignRight" onclick="setLabelAlign('right')">→ Sağ</button>
+        </div>
+      </div>
+      <div class="label-preview" id="labelPreview" style="margin-top:12px;">SORU 1 &nbsp;&nbsp;(10 Puan)</div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-top:8px;">Her soru için puan, soru listesinde ayrı ayrı girilecek.</div>
+    </div>
+
+    <hr class="section-divider">
+
+    
+    <div class="form-row">
+      <label>Soru hizalama (sütun içinde)</label>
+      <div class="style-btns">
+        <button class="style-btn active" id="alignLeft" onclick="selectAlign('left')">← Sol</button>
+        <button class="style-btn" id="alignCenter" onclick="selectAlign('center')">←→ Ortala</button>
+        <button class="style-btn" id="alignRight" onclick="selectAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Soruları belirli sayıda sayfaya sığdır</span>
+        <label class="toggle">
+          <input type="checkbox" id="fitPagesEnabled" onchange="toggleFitPages()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="fitPagesOptions" style="opacity:0.4; pointer-events:none; margin-top:12px;">
+      <div class="form-row">
+        <label>Hedef sayfa sayısı</label>
+        <div class="style-btns">
+          <button class="style-btn" id="fitPage1" onclick="selectFitPages(1)">1</button>
+          <button class="style-btn active" id="fitPage2" onclick="selectFitPages(2)">2</button>
+          <button class="style-btn" id="fitPage3" onclick="selectFitPages(3)">3</button>
+          <button class="style-btn" id="fitPage4" onclick="selectFitPages(4)">4</button>
+          <button class="style-btn" id="fitPage5" onclick="selectFitPages(5)">5</button>
+          <button class="style-btn" id="fitPage6" onclick="selectFitPages(6)">6</button>
+          <button class="style-btn" id="fitPage7" onclick="selectFitPages(7)">7</button>
+          <button class="style-btn" id="fitPage8" onclick="selectFitPages(8)">8</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Her soruyu yuvarlatılmış çerçeve içine al</span>
+        <label class="toggle">
+          <input type="checkbox" id="borderEnabled" checked onchange="toggleBorderOptions()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="borderOptions">
+      <div class="three-col" style="margin-top:14px;">
+        <div class="form-row">
+          <label>Çizgi kalınlığı (pt)</label>
+          <input type="number" id="borderWidth" value="2" min="0.5" max="5" step="0.5">
+        </div>
+        <div class="form-row">
+          <label>Çerçeve rengi</label>
+          <div class="color-row"><input type="color" id="borderColor" value="#000000"></div>
+        </div>
+        <div class="form-row">
+          <label>Köşe yuvarlaklığı (mm)</label>
+          <input type="number" id="borderRadius" value="3" min="0" max="10">
+        </div>
+      </div>
+      <div class="inline-row">
+        <div class="form-row">
+          <label>İç dolgu — yatay (mm)</label>
+          <input type="range" id="borderPadH" min="0" max="8" value="2" oninput="document.getElementById('borderPadHVal').textContent=this.value+' mm'">
+          <div class="range-display" id="borderPadHVal">2 mm</div>
+        </div>
+        <div class="form-row">
+          <label>İç dolgu — dikey (mm)</label>
+          <input type="range" id="borderPadV" min="0" max="8" value="2" oninput="document.getElementById('borderPadVVal').textContent=this.value+' mm'">
+          <div class="range-display" id="borderPadVVal">2 mm</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <button class="btn-generate" id="generateBtn" disabled>
+      PDF Oluştur ve İndir
+    </button>
+    <div class="progress-wrap" id="progressWrap">
+      <div class="progress-label" id="progressLabel">Hazırlanıyor...</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var _0x001=['\x74\x68\x65\x6d\x65\x4d\x65\x6e\x75','\x6e\x6f\x6e\x65','\x62\x6c\x6f\x63\x6b','\x63\x6c\x69\x63\x6b','\x23\x74\x68\x65\x6d\x65\x54\x6f\x67\x67\x6c\x65\x42\x74\x6e','\x23\x74\x68\x65\x6d\x65\x4d\x65\x6e\x75','\x2e\x74\x68\x65\x6d\x65\x2d\x6d\x65\x6e\x75\x2d\x69\x74\x65\x6d','\x61\x63\x74\x69\x76\x65','\x74\x68\x65\x6d\x65\x41\x63\x74\x69\x76\x65\x4e\x61\x6d\x65','\x74\x68\x65\x6d\x65\x41\x63\x74\x69\x76\x65\x44\x6f\x74','\x73\x65\x6c\x65\x63\x74\x65\x64\x54\x68\x65\x6d\x65','\x70\x6f\x72\x74\x72\x61\x69\x74','\x6f\x72\x69\x65\x6e\x74\x50\x6f\x72\x74\x72\x61\x69\x74','\x6f\x72\x69\x65\x6e\x74\x4c\x61\x6e\x64\x73\x63\x61\x70\x65','\x6c\x61\x6e\x64\x73\x63\x61\x70\x65','\x63\x6f\x6c','\x67\x61\x70\x53\x6c\x69\x64\x65\x72','\x69\x6e\x70\x75\x74','\x67\x61\x70\x56\x61\x6c','\x20\x6d\x6d','\x6d\x61\x72\x67\x69\x6e\x53\x6c\x69\x64\x65\x72','\x6d\x61\x72\x67\x69\x6e\x56\x61\x6c','\x66\x69\x74\x50\x61\x67\x65\x73\x45\x6e\x61\x62\x6c\x65\x64','\x66\x69\x74\x50\x61\x67\x65\x73\x4f\x70\x74\x69\x6f\x6e\x73','\x30\x2e\x34','\x66\x69\x74\x50\x61\x67\x65','\x6c\x65\x66\x74','\x63\x65\x6e\x74\x65\x72','\x72\x69\x67\x68\x74','\x61\x6c\x69\x67\x6e','\x62\x6f\x72\x64\x65\x72\x45\x6e\x61\x62\x6c\x65\x64','\x62\x6f\x72\x64\x65\x72\x4f\x70\x74\x69\x6f\x6e\x73','\x64\x65\x73\x63\x41\x72\x63\x68\x69\x76\x65','\x5b\x5d','\x64\x6f\x63\x44\x65\x73\x63','\x64\x69\x76','\x61\x72\x63\x68\x69\x76\x65\x2d\x69\x74\x65\x6d','\x74\x69\x74\x6c\x65\x41\x72\x63\x68\x69\x76\x65','\x64\x6f\x63\x54\x69\x74\x6c\x65','\x4c\x65\x66\x74','\x43\x65\x6e\x74\x65\x72','\x52\x69\x67\x68\x74','\x6c\x61\x62\x65\x6c\x41\x6c\x69\x67\x6e','\x6c\x61\x62\x65\x6c\x45\x6e\x61\x62\x6c\x65\x64','\x6c\x61\x62\x65\x6c\x4f\x70\x74\x69\x6f\x6e\x73','\x73\x74\x61\x72\x74\x51\x75\x65\x73\x74\x69\x6f\x6e','\x6c\x61\x62\x65\x6c\x43\x6f\x6c\x6f\x72','\x6c\x61\x62\x65\x6c\x53\x69\x7a\x65','\x6c\x61\x62\x65\x6c\x42\x6f\x6c\x64','\x6c\x61\x62\x65\x6c\x49\x74\x61\x6c\x69\x63','\x6c\x61\x62\x65\x6c\x50\x72\x65\x76\x69\x65\x77','\x70\x78','\x37\x30\x30','\x34\x30\x30','\x69\x74\x61\x6c\x69\x63','\x6e\x6f\x72\x6d\x61\x6c','\x6e\x65\x78\x74\x50\x61\x67\x65\x41\x6c\x69\x67\x6e','\x74\x69\x74\x6c\x65\x41\x6c\x69\x67\x6e','\x64\x65\x73\x63\x41\x6c\x69\x67\x6e','\x66\x6f\x6f\x74\x65\x72\x41\x72\x63\x68\x69\x76\x65','\x66\x6f\x6f\x74\x65\x72\x54\x65\x78\x74','\x66\x6f\x6f\x74\x65\x72\x41\x6c\x69\x67\x6e','\x66\x6f\x6f\x74\x65\x72\x50\x72\x65\x76\x69\x65\x77','\x53\x6f\x6e\x20\x73\x61\x79\x66\x61\x20\x61çı\x6b\x6c\x61\x6d\x61\x20\x6d\x65\x74\x6e\x69','\x66\x6f\x6f\x74\x65\x72\x43\x6f\x6c\x6f\x72','\x66\x6f\x6f\x74\x65\x72\x53\x69\x7a\x65','\x66\x6f\x6f\x74\x65\x72\x42\x6f\x6c\x64','\x66\x6f\x6f\x74\x65\x72\x49\x74\x61\x6c\x69\x63','\x73\x63\x72\x6f\x6c\x6c','\x66\x72\x65\x65\x54\x65\x78\x74\x4c\x61\x62\x65\x6c','\x30\x2e\x35','\x66\x69\x6c\x65\x49\x6e\x70\x75\x74','\x63\x68\x61\x6e\x67\x65','\x64\x72\x6f\x70\x5a\x6f\x6e\x65','\x64\x72\x61\x67\x6f\x76\x65\x72','\x64\x72\x61\x67\x2d\x6f\x76\x65\x72','\x64\x72\x61\x67\x6c\x65\x61\x76\x65','\x64\x72\x6f\x70','\x75\x70\x6c\x6f\x61\x64\x51\x75\x61\x6c\x69\x74\x79','\x6d\x65\x64\x69\x75\x6d','\x6f\x72\x69\x67\x69\x6e\x61\x6c','\x63\x61\x6e\x76\x61\x73','\x32\x64','\x69\x6d\x61\x67\x65\x2f\x6a\x70\x65\x67','\x69\x6d\x61\x67\x65\x2f','\x70\x68\x6f\x74\x6f\x4c\x69\x73\x74','\x70\x68\x6f\x74\x6f\x2d\x69\x74\x65\x6d','\x64\x72\x61\x67\x73\x74\x61\x72\x74','\x64\x72\x61\x67\x67\x69\x6e\x67','\x64\x72\x61\x67\x65\x6e\x64','\x2e\x70\x68\x6f\x74\x6f\x2d\x69\x74\x65\x6d','\x64\x72\x61\x67\x2d\x74\x61\x72\x67\x65\x74','\x73\x74\x61\x74\x73\x42\x61\x72','\x67\x65\x6e\x65\x72\x61\x74\x65\x42\x74\x6e','\x66\x6c\x65\x78','\x70\x68\x6f\x74\x6f\x43\x6f\x75\x6e\x74','\x70\x61\x67\x65\x43\x6f\x75\x6e\x74','\x74\x6f\x74\x61\x6c\x50\x6f\x69\x6e\x74\x73','\x74\x6f\x74\x61\x6c\x50\x6f\x69\x6e\x74\x73\x53\x70\x61\x6e','\x74\x6f\x74\x61\x6c\x50\x6f\x69\x6e\x74\x73\x42\x61\x6e\x6e\x65\x72','\x72\x67\x62\x61\x28\x33\x34\x2c\x31\x36\x37\x2c\x38\x32\x2c\x30\x2e\x31\x32\x29','\x23\x32\x32\x61\x37\x35\x32','✅\x20\x54\x6f\x70\x6c\x61\x6d\x20\x70\x75\x61\x6e\x3a\x20\x3c\x73\x74\x72\x6f\x6e\x67\x20\x69\x64\x3d\x22\x74\x6f\x74\x61\x6c\x50\x6f\x69\x6e\x74\x73\x22\x3e','\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20—\x20\x54\x61\x6d\x20\x31\x30\x30\x21','\x72\x67\x62\x61\x28\x32\x32\x34\x2c\x38\x35\x2c\x38\x35\x2c\x30\x2e\x31\x32\x29','\x23\x65\x30\x35\x35\x35\x35','⚠️\x20\x54\x6f\x70\x6c\x61\x6d\x20\x70\x75\x61\x6e\x3a\x20\x3c\x73\x74\x72\x6f\x6e\x67\x20\x69\x64\x3d\x22\x74\x6f\x74\x61\x6c\x50\x6f\x69\x6e\x74\x73\x22\x3e','\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20—\x20\x31\x30\x30\x5c\x27\x64\x65\x6e\x20\x66\x61\x7a\x6c\x61\x21','\x76\x61\x72\x28\x2d\x2d\x73\x75\x72\x66\x61\x63\x65\x32\x29','\x76\x61\x72\x28\x2d\x2d\x6d\x75\x74\x65\x64\x29','🎯\x20\x54\x6f\x70\x6c\x61\x6d\x20\x70\x75\x61\x6e\x3a\x20\x3c\x73\x74\x72\x6f\x6e\x67\x20\x69\x64\x3d\x22\x74\x6f\x74\x61\x6c\x50\x6f\x69\x6e\x74\x73\x22\x3e\x30\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e','\x72\x67\x62\x61\x28\x32\x32\x34\x2c\x31\x34\x30\x2c\x30\x2c\x30\x2e\x31\x30\x29','\x23\x65\x30\x38\x63\x30\x30','🎯\x20\x54\x6f\x70\x6c\x61\x6d\x20\x70\x75\x61\x6e\x3a\x20\x3c\x73\x74\x72\x6f\x6e\x67\x20\x69\x64\x3d\x22\x74\x6f\x74\x61\x6c\x50\x6f\x69\x6e\x74\x73\x22\x3e','\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20—\x20\x31\x30\x30\x5c\x27\x65\x20\x75\x6c\x61şı\x6c\x6d\x61\x64ı','\x62\x67\x43\x6f\x6c\x6f\x72','\x74\x69\x74\x6c\x65\x43\x6f\x6c\x6f\x72','\x74\x69\x74\x6c\x65\x53\x69\x7a\x65','\x74\x69\x74\x6c\x65\x42\x6f\x6c\x64','\x74\x69\x74\x6c\x65\x49\x74\x61\x6c\x69\x63','\x64\x65\x73\x63\x43\x6f\x6c\x6f\x72','\x64\x65\x73\x63\x53\x69\x7a\x65','\x64\x65\x73\x63\x42\x6f\x6c\x64','\x64\x65\x73\x63\x49\x74\x61\x6c\x69\x63','\x70\x72\x6f\x67\x72\x65\x73\x73\x57\x72\x61\x70','\x70\x72\x6f\x67\x72\x65\x73\x73\x46\x69\x6c\x6c','\x70\x72\x6f\x67\x72\x65\x73\x73\x4c\x61\x62\x65\x6c','\x6d\x6d','\x61\x34','\x62\x6f\x72\x64\x65\x72\x57\x69\x64\x74\x68','\x62\x6f\x72\x64\x65\x72\x43\x6f\x6c\x6f\x72','\x62\x6f\x72\x64\x65\x72\x52\x61\x64\x69\x75\x73','\x62\x6f\x72\x64\x65\x72\x50\x61\x64\x48','\x62\x6f\x72\x64\x65\x72\x50\x61\x64\x56','\x5c\x6e','\x74\x6f\x70','\x69\x6d\x61\x67\x65\x2f\x70\x6e\x67','\x50\x4e\x47','\x46\x41\x53\x54','\x73\x74\x75\x64\x65\x6e\x74\x53\x69\x7a\x65','\x73\x74\x75\x64\x65\x6e\x74\x43\x6f\x6c\x6f\x72','\x73\x74\x75\x64\x65\x6e\x74\x42\x6f\x6c\x64','\x73\x74\x75\x64\x65\x6e\x74\x49\x74\x61\x6c\x69\x63','\x41\x44\x20\x53\x4f\x59\x41\x44\x3a','\x53\x49\x4e\x49\x46\x3a','\x4e\x4f\x3a','\x6e\x65\x78\x74\x50\x61\x67\x65\x45\x6e\x61\x62\x6c\x65\x64','\x6e\x65\x78\x74\x50\x61\x67\x65\x53\x69\x7a\x65','\x6e\x65\x78\x74\x50\x61\x67\x65\x4f\x66\x66\x73\x65\x74\x53\x6c\x69\x64\x65\x72','\x44\x69ğ\x65\x72\x20\x73\x61\x79\x66\x61\x79\x61\x20\x67\x65ç\x69\x6e\x69\x7a…','\x72\x67\x62\x28\x38\x30\x2c\x38\x30\x2c\x38\x30\x29','\x4a\x50\x45\x47','\x66\x6f\x6f\x74\x65\x72\x4f\x66\x66\x73\x65\x74\x53\x6c\x69\x64\x65\x72','\x31\x30\x30\x25','✅\x20\x50\x44\x46\x20\x68\x61\x7aı\x72\x21','\x73\x65\x62\x61\x73\x6d\x6f\x62\x69\x6c\x2d\x73\x69\x6e\x61\x76','\x75\x6e\x64\x65\x66\x69\x6e\x65\x64','\x66\x75\x6e\x63\x74\x69\x6f\x6e','\x62\x6c\x6f\x62','\x70\x64\x66\x4f\x76\x65\x72\x6c\x61\x79','\x64\x61\x74\x61\x75\x72\x69\x73\x74\x72\x69\x6e\x67','\x3c\x69\x66\x72\x61\x6d\x65\x20\x73\x72\x63\x3d\x22','\x22\x20\x73\x74\x79\x6c\x65\x3d\x22\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x3a\x31\x3b\x66\x6c\x65\x78\x3a\x31\x3b\x62\x6f\x72\x64\x65\x72\x3a\x6e\x6f\x6e\x65\x3b\x77\x69\x64\x74\x68\x3a\x31\x30\x30\x25\x3b\x6d\x69\x6e\x2d\x68\x65\x69\x67\x68\x74\x3a\x30\x3b\x22\x20\x61\x6c\x6c\x6f\x77\x66\x75\x6c\x6c\x73\x63\x72\x65\x65\x6e\x3e\x3c\x2f\x69\x66\x72\x61\x6d\x65\x3e','\x3c\x64\x69\x76\x20\x73\x74\x79\x6c\x65\x3d\x22\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x3a\x31\x3b\x66\x6c\x65\x78\x3a\x31\x3b\x64\x69\x73\x70\x6c\x61\x79\x3a\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x3b\x64\x69\x73\x70\x6c\x61\x79\x3a\x66\x6c\x65\x78\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x61\x6c\x69\x67\x6e\x2d\x69\x74\x65\x6d\x73\x3a\x63\x65\x6e\x74\x65\x72\x3b\x61\x6c\x69\x67\x6e\x2d\x69\x74\x65\x6d\x73\x3a\x63\x65\x6e\x74\x65\x72\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x6a\x75\x73\x74\x69\x66\x79\x2d\x63\x6f\x6e\x74\x65\x6e\x74\x3a\x63\x65\x6e\x74\x65\x72\x3b\x6a\x75\x73\x74\x69\x66\x79\x2d\x63\x6f\x6e\x74\x65\x6e\x74\x3a\x63\x65\x6e\x74\x65\x72\x3b\x63\x6f\x6c\x6f\x72\x3a\x23\x61\x61\x61\x3b\x66\x6f\x6e\x74\x2d\x73\x69\x7a\x65\x3a\x30\x2e\x39\x72\x65\x6d\x3b\x74\x65\x78\x74\x2d\x61\x6c\x69\x67\x6e\x3a\x63\x65\x6e\x74\x65\x72\x3b\x70\x61\x64\x64\x69\x6e\x67\x3a\x32\x30\x70\x78\x3b\x22\x3e\x50\x44\x46\x20\x5c\x75\x30\x30\x66\x36\x6e\x69\x7a\x6c\x65\x6d\x65\x20\x62\x75\x20\x74\x61\x72\x61\x79\x5c\x75\x30\x31\x33\x31\x63\x5c\x75\x30\x31\x33\x31\x64\x61\x20\x64\x65\x73\x74\x65\x6b\x6c\x65\x6e\x6d\x69\x79\x6f\x72\x2e\x3c\x62\x72\x3e\x5c\x75\x32\x42\x30\x37\x20\x5c\x75\x30\x31\x33\x30\x6e\x64\x69\x72\x20\x62\x75\x74\x6f\x6e\x75\x6e\x75\x20\x6b\x75\x6c\x6c\x61\x6e\x5c\x75\x30\x31\x33\x31\x6e\x2e\x3c\x2f\x64\x69\x76\x3e','\x66\x69\x78\x65\x64','\x23\x31\x31\x31','\x39\x39\x39\x39','\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78','\x63\x6f\x6c\x75\x6d\x6e','\x73\x61\x6e\x73\x2d\x73\x65\x72\x69\x66','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x23\x32\x32\x32\x3b\x70\x61\x64\x64\x69\x6e\x67\x3a\x31\x34\x70\x78\x20\x31\x38\x70\x78\x3b\x64\x69\x73\x70\x6c\x61\x79\x3a\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x3b\x64\x69\x73\x70\x6c\x61\x79\x3a\x66\x6c\x65\x78\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x61\x6c\x69\x67\x6e\x2d\x69\x74\x65\x6d\x73\x3a\x63\x65\x6e\x74\x65\x72\x3b\x61\x6c\x69\x67\x6e\x2d\x69\x74\x65\x6d\x73\x3a\x63\x65\x6e\x74\x65\x72\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x6a\x75\x73\x74\x69\x66\x79\x2d\x63\x6f\x6e\x74\x65\x6e\x74\x3a\x73\x70\x61\x63\x65\x2d\x62\x65\x74\x77\x65\x65\x6e\x3b\x6a\x75\x73\x74\x69\x66\x79\x2d\x63\x6f\x6e\x74\x65\x6e\x74\x3a\x73\x70\x61\x63\x65\x2d\x62\x65\x74\x77\x65\x65\x6e\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x2d\x73\x68\x72\x69\x6e\x6b\x3a\x30\x3b\x66\x6c\x65\x78\x2d\x73\x68\x72\x69\x6e\x6b\x3a\x30\x3b','\x62\x75\x74\x74\x6f\x6e','\x26\x23\x78\x32\x37\x31\x35\x3b','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x6e\x6f\x6e\x65\x3b\x62\x6f\x72\x64\x65\x72\x3a\x6e\x6f\x6e\x65\x3b\x63\x6f\x6c\x6f\x72\x3a\x23\x61\x61\x61\x3b\x66\x6f\x6e\x74\x2d\x73\x69\x7a\x65\x3a\x31\x2e\x34\x72\x65\x6d\x3b\x63\x75\x72\x73\x6f\x72\x3a\x70\x6f\x69\x6e\x74\x65\x72\x3b\x70\x61\x64\x64\x69\x6e\x67\x3a\x34\x70\x78\x3b','\x73\x70\x61\x6e','\x63\x6f\x6c\x6f\x72\x3a\x23\x66\x66\x66\x3b\x66\x6f\x6e\x74\x2d\x73\x69\x7a\x65\x3a\x30\x2e\x39\x72\x65\x6d\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x3a\x31\x3b\x66\x6c\x65\x78\x3a\x31\x3b\x70\x61\x64\x64\x69\x6e\x67\x3a\x30\x20\x31\x30\x70\x78\x3b','\x5c\x75\x44\x38\x33\x44\x5c\x75\x44\x43\x43\x34\x20','\x2e\x70\x64\x66','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x23\x66\x35\x39\x65\x30\x62\x3b\x63\x6f\x6c\x6f\x72\x3a\x23\x30\x30\x30\x3b\x70\x61\x64\x64\x69\x6e\x67\x3a\x31\x30\x70\x78\x20\x31\x38\x70\x78\x3b\x62\x6f\x72\x64\x65\x72\x2d\x72\x61\x64\x69\x75\x73\x3a\x38\x70\x78\x3b\x66\x6f\x6e\x74\x2d\x77\x65\x69\x67\x68\x74\x3a\x37\x30\x30\x3b\x66\x6f\x6e\x74\x2d\x73\x69\x7a\x65\x3a\x30\x2e\x39\x72\x65\x6d\x3b\x74\x65\x78\x74\x2d\x64\x65\x63\x6f\x72\x61\x74\x69\x6f\x6e\x3a\x6e\x6f\x6e\x65\x3b\x77\x68\x69\x74\x65\x2d\x73\x70\x61\x63\x65\x3a\x6e\x6f\x77\x72\x61\x70\x3b','\x5c\x75\x32\x42\x30\x37\x20\x5c\x75\x30\x31\x33\x30\x6e\x64\x69\x72','\x62\x61\x63\x6b\x67\x72\x6f\x75\x6e\x64\x3a\x23\x33\x33\x33\x3b\x63\x6f\x6c\x6f\x72\x3a\x23\x63\x63\x63\x3b\x66\x6f\x6e\x74\x2d\x73\x69\x7a\x65\x3a\x30\x2e\x37\x38\x72\x65\x6d\x3b\x70\x61\x64\x64\x69\x6e\x67\x3a\x31\x30\x70\x78\x20\x31\x38\x70\x78\x3b\x74\x65\x78\x74\x2d\x61\x6c\x69\x67\x6e\x3a\x63\x65\x6e\x74\x65\x72\x3b\x6c\x69\x6e\x65\x2d\x68\x65\x69\x67\x68\x74\x3a\x31\x2e\x36\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x2d\x73\x68\x72\x69\x6e\x6b\x3a\x30\x3b\x66\x6c\x65\x78\x2d\x73\x68\x72\x69\x6e\x6b\x3a\x30\x3b','\x3c\x62\x3e\x69\x50\x68\x6f\x6e\x65\x3a\x3c\x2f\x62\x3e\x20\x5c\x75\x32\x42\x30\x37\x20\x5c\x75\x30\x31\x33\x30\x6e\x64\x69\x72\x20\x5c\x75\x32\x31\x39\x32\x20\x50\x61\x79\x6c\x61\x5c\x75\x30\x31\x35\x66\x20\x28\x5c\x75\x32\x35\x41\x31\x5c\x75\x32\x31\x39\x31\x29\x20\x5c\x75\x32\x31\x39\x32\x20\x3c\x62\x3e\x44\x6f\x73\x79\x61\x6c\x61\x72\x61\x20\x4b\x61\x79\x64\x65\x74\x3c\x2f\x62\x3e','\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x3a\x31\x3b\x66\x6c\x65\x78\x3a\x31\x3b\x64\x69\x73\x70\x6c\x61\x79\x3a\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x3b\x64\x69\x73\x70\x6c\x61\x79\x3a\x66\x6c\x65\x78\x3b\x2d\x77\x65\x62\x6b\x69\x74\x2d\x66\x6c\x65\x78\x2d\x64\x69\x72\x65\x63\x74\x69\x6f\x6e\x3a\x63\x6f\x6c\x75\x6d\x6e\x3b\x66\x6c\x65\x78\x2d\x64\x69\x72\x65\x63\x74\x69\x6f\x6e\x3a\x63\x6f\x6c\x75\x6d\x6e\x3b\x6d\x69\x6e\x2d\x68\x65\x69\x67\x68\x74\x3a\x30\x3b','\x30\x25','\x64\x61\x74\x61\x3a\x69\x6d\x61\x67\x65\x2f\x70\x6e\x67','\x64\x61\x74\x61\x3a\x69\x6d\x61\x67\x65\x2f\x77\x65\x62\x70','\x57\x45\x42\x50'];function _0x002(i){return _0x001[i];}
+const { jsPDF } = window.jspdf;
+
+let _0x003 = [];
+let _0x004 = null;
+
+function _0x09f() {
+ const _0x005 = document.getElementById(_0x002(0));
+ _0x005.style.display = _0x005.style.display === _0x002(1) ? _0x002(2) : _0x002(1);
+}
+
+document.addEventListener(_0x002(3), function(e) {
+ if (!e.target.closest(_0x002(4)) && !e.target.closest(_0x002(5))) {
+ const _0x005 = document.getElementById(_0x002(0));
+ if (_0x005) _0x005.style.display = _0x002(1);
+ }
+});
+
+function _0x0a0(cls, btn, name, _0x012) {
+ document.body.className = cls;
+ document.querySelectorAll(_0x002(6)).forEach(c => c.classList.remove(_0x002(7)));
+ if (btn) btn.classList.add(_0x002(7));
+ if (name) document.getElementById(_0x002(8)).textContent = name;
+ if (_0x012) document.getElementById(_0x002(9)).style.background = _0x012;
+ document.getElementById(_0x002(0)).style.display = _0x002(1);
+ localStorage.setItem(_0x002(10), JSON.stringify({ cls, name, _0x012 }));
+}
+
+(function() {
+ try {
+ const _0x006 = JSON.parse(localStorage.getItem(_0x002(10)));
+ if (!_0x006) return;
+ document.body.className = _0x006.cls;
+ if (_0x006.name) document.getElementById(_0x002(8)).textContent = _0x006.name;
+ if (_0x006._0x012) document.getElementById(_0x002(9)).style.background = _0x006._0x012;
+ document.querySelectorAll(_0x002(6)).forEach(btn => {
+ if (btn.textContent.trim().includes(_0x006.name)) btn.classList.add(_0x002(7));
+ else btn.classList.remove(_0x002(7));
+ });
+ } catch(e) {}
+})();
+
+let _0x007 = _0x002(11);
+let _0x008 = 2;
+
+function _0x0a1(val) {
+ _0x007 = val;
+ document.getElementById(_0x002(12)).classList.toggle(_0x002(7), val === _0x002(11));
+ document.getElementById(_0x002(13)).classList.toggle(_0x002(7), val === _0x002(14));
+ _0x0c5();
+}
+
+function _0x0a2(n) {
+ _0x008 = n;
+ [1,2,3,4].forEach(i => document.getElementById(_0x002(15)+i).classList.toggle(_0x002(7), i === n));
+ _0x0c5();
+}
+
+document.getElementById(_0x002(16)).addEventListener(_0x002(17), function() {
+ document.getElementById(_0x002(18)).textContent = this.value + _0x002(19);
+ _0x0c5();
+});
+document.getElementById(_0x002(20)).addEventListener(_0x002(17), function() {
+ document.getElementById(_0x002(21)).textContent = this.value + _0x002(19);
+ _0x0c5();
+});
+
+let _0x009 = 2;
+
+function _0x0a3() {
+ const _0x00a = document.getElementById(_0x002(22)).checked;
+ document.getElementById(_0x002(23)).style.opacity = _0x00a ? '1' : _0x002(24);
+ document.getElementById(_0x002(23)).style.pointerEvents = _0x00a ? '' : _0x002(1);
+}
+
+function _0x0a4(n) {
+ _0x009 = n;
+ [1,2,3,4,5,6,7,8].forEach(i => document.getElementById(_0x002(25)+i).classList.toggle(_0x002(7), i === n));
+}
+
+let _0x00b = _0x002(26);
+let _0x00c = _0x002(26);
+
+function _0x0a5(val) {
+ _0x00b = val;
+ [_0x002(26),_0x002(27),_0x002(28)].forEach(a => document.getElementById(_0x002(29)+a.charAt(0).toUpperCase()+a.slice(1)).classList.toggle(_0x002(7), a === val));
+}
+
+function _0x0a6() {
+ const _0x00a = document.getElementById(_0x002(30)).checked;
+ document.getElementById(_0x002(31)).style.opacity = _0x00a ? '1' : _0x002(24);
+ document.getElementById(_0x002(31)).style.pointerEvents = _0x00a ? '' : _0x002(1);
+}
+
+let _0x00d = JSON.parse(localStorage.getItem(_0x002(32)) || _0x002(33));
+
+function _0x0a7() {
+ const val = document.getElementById(_0x002(34)).value.trim();
+ if (!val) return;
+ if (_0x00d.includes(val)) return;
+ _0x00d.unshift(val);
+ if (_0x00d.length > 10) _0x00d = _0x00d.slice(0, 10);
+ localStorage.setItem(_0x002(32), JSON.stringify(_0x00d));
+ _0x0aa();
+}
+
+function _0x0a8(idx) {
+ document.getElementById(_0x002(34)).value = _0x00d[idx];
+}
+
+function _0x0a9(idx) {
+ _0x00d.splice(idx, 1);
+ localStorage.setItem(_0x002(32), JSON.stringify(_0x00d));
+ _0x0aa();
+}
+
+function _0x0aa() {
+ const _0x00e = document.getElementById(_0x002(32));
+ _0x00e.innerHTML = '';
+ if (_0x00d.length === 0) return;
+ _0x00d.forEach((t, idx) => {
+ const _0x00f = document.createElement(_0x002(35));
+ _0x00f.className = _0x002(36);
+ _0x00f.innerHTML = `
+ <span class="archive-_0x00f-text" onclick="_0x0a8(${idx})" _0x034="${t}">${t}</span>
+ <button class="archive-use-btn" onclick="_0x0a8(${idx})">Kullan</button>
+ <button class="archive-del-btn" onclick="_0x0a9(${idx})" _0x034="Sil">✕</button>
+ `;
+ _0x00e.appendChild(_0x00f);
+ });
+}
+_0x0aa();
+
+let _0x010 = JSON.parse(localStorage.getItem(_0x002(37)) || _0x002(33));
+
+function _0x0ab() {
+ const val = document.getElementById(_0x002(38)).value.trim();
+ if (!val) return;
+ if (_0x010.includes(val)) return;
+ _0x010.unshift(val);
+ if (_0x010.length > 10) _0x010 = _0x010.slice(0, 10);
+ localStorage.setItem(_0x002(37), JSON.stringify(_0x010));
+ _0x0ae();
+}
+
+function _0x0ac(idx) {
+ document.getElementById(_0x002(38)).value = _0x010[idx];
+}
+
+function _0x0ad(idx) {
+ _0x010.splice(idx, 1);
+ localStorage.setItem(_0x002(37), JSON.stringify(_0x010));
+ _0x0ae();
+}
+
+function _0x0ae() {
+ const _0x00e = document.getElementById(_0x002(37));
+ _0x00e.innerHTML = '';
+ if (_0x010.length === 0) return;
+ _0x010.forEach((t, idx) => {
+ const _0x00f = document.createElement(_0x002(35));
+ _0x00f.className = _0x002(36);
+ _0x00f.innerHTML = `
+ <span class="archive-_0x00f-text" onclick="_0x0ac(${idx})" _0x034="${t}">${t}</span>
+ <button class="archive-use-btn" onclick="_0x0ac(${idx})">Kullan</button>
+ <button class="archive-del-btn" onclick="_0x0ad(${idx})" _0x034="Sil">✕</button>
+ `;
+ _0x00e.appendChild(_0x00f);
+ });
+}
+_0x0ae();
+
+function _0x0af(id) {
+ const btn = document.getElementById(id);
+ btn.classList.toggle(_0x002(7));
+}
+
+function _0x0b0(id) {
+ return document.getElementById(id).classList.contains(_0x002(7));
+}
+
+function _0x0b1(align) {
+ _0x00c = align;
+ [_0x002(39),_0x002(40),_0x002(41)].forEach(a => {
+ const btn = document.getElementById(_0x002(42) + a);
+ if (btn) btn.classList.toggle(_0x002(7), a.toLowerCase() === align);
+ });
+}
+
+function _0x0b2() {
+ const _0x00a = document.getElementById(_0x002(43)).checked;
+ document.getElementById(_0x002(44)).style.opacity = _0x00a ? '1' : _0x002(24);
+ document.getElementById(_0x002(44)).style.pointerEvents = _0x00a ? '' : _0x002(1);
+ const _0x011 = parseInt(document.getElementById(_0x002(45)).value) || 1;
+ const _0x012 = document.getElementById(_0x002(46)).value;
+ const size = parseInt(document.getElementById(_0x002(47)).value) || 9;
+ const _0x013 = _0x0b0(_0x002(48));
+ const _0x014 = _0x0b0(_0x002(49));
+ const _0x015 = document.getElementById(_0x002(50));
+ _0x015.textContent = `SORU ${_0x011} (10 Puan)`;
+ _0x015.style._0x012 = _0x012;
+ _0x015.style.fontSize = Math.min(size * 1.2, 18) + _0x002(51);
+ _0x015.style.fontWeight = _0x013 ? _0x002(52) : _0x002(53);
+ _0x015.style.fontStyle = _0x014 ? _0x002(54) : _0x002(55);
+}
+_0x0b2();
+
+let _0x016 = _0x002(28);
+
+function _0x0b3(val) {
+ _0x016 = val;
+ [_0x002(39),_0x002(40),_0x002(41)].forEach(a => {
+ const btn = document.getElementById(_0x002(56) + a);
+ if (btn) btn.classList.toggle(_0x002(7), a.toLowerCase() === val);
+ });
+}
+
+let _0x017 = _0x002(27);
+
+function _0x0b4(align) {
+ _0x017 = align;
+ [_0x002(39),_0x002(40),_0x002(41)].forEach(a => {
+ const btn = document.getElementById(_0x002(57) + a);
+ if (btn) btn.classList.toggle(_0x002(7), a.toLowerCase() === align);
+ });
+}
+
+let _0x018 = _0x002(26);
+
+function _0x0b5(align) {
+ _0x018 = align;
+ [_0x002(39),_0x002(40),_0x002(41)].forEach(a => {
+ const btn = document.getElementById(_0x002(58) + a);
+ if (btn) btn.classList.toggle(_0x002(7), a.toLowerCase() === align);
+ });
+}
+
+ 
+let _0x019 = JSON.parse(localStorage.getItem(_0x002(59)) || _0x002(33));
+
+function _0x0b6() {
+ const val = document.getElementById(_0x002(60)).value.trim();
+ if (!val) return;
+ if (_0x019.includes(val)) return;
+ _0x019.unshift(val);
+ if (_0x019.length > 10) _0x019 = _0x019.slice(0, 10);
+ localStorage.setItem(_0x002(59), JSON.stringify(_0x019));
+ _0x0b9();
+}
+
+function _0x0b7(idx) {
+ document.getElementById(_0x002(60)).value = _0x019[idx];
+ _0x0bb();
+}
+
+function _0x0b8(idx) {
+ _0x019.splice(idx, 1);
+ localStorage.setItem(_0x002(59), JSON.stringify(_0x019));
+ _0x0b9();
+}
+
+function _0x0b9() {
+ const _0x00e = document.getElementById(_0x002(59));
+ _0x00e.innerHTML = '';
+ if (_0x019.length === 0) return;
+ _0x019.forEach((t, idx) => {
+ const _0x00f = document.createElement(_0x002(35));
+ _0x00f.className = _0x002(36);
+ _0x00f.innerHTML = `
+ <span class="archive-_0x00f-text" onclick="_0x0b7(${idx})" _0x034="${t}">${t}</span>
+ <button class="archive-use-btn" onclick="_0x0b7(${idx})">Kullan</button>
+ <button class="archive-del-btn" onclick="_0x0b8(${idx})" _0x034="Sil">✕</button>
+ `;
+ _0x00e.appendChild(_0x00f);
+ });
+}
+_0x0b9();
+
+ 
+let _0x01a = _0x002(26);
+
+function _0x0ba(align) {
+ _0x01a = align;
+ [_0x002(39),_0x002(40),_0x002(41)].forEach(a => {
+ const btn = document.getElementById(_0x002(61) + a);
+ if (btn) btn.classList.toggle(_0x002(7), a.toLowerCase() === align);
+ });
+ _0x0bb();
+}
+
+function _0x0bb() {
+ const _0x015 = document.getElementById(_0x002(62));
+ if (!_0x015) return;
+ const text = document.getElementById(_0x002(60)).value || _0x002(63);
+ const _0x012 = document.getElementById(_0x002(64)).value;
+ const size = parseInt(document.getElementById(_0x002(65)).value) || 12;
+ const _0x013 = _0x0b0(_0x002(66));
+ const _0x014 = _0x0b0(_0x002(67));
+ _0x015.textContent = text;
+ _0x015.style._0x012 = _0x012;
+ _0x015.style.fontSize = Math.min(size * 1.2, 18) + _0x002(51);
+ _0x015.style.fontWeight = _0x013 ? _0x002(52) : _0x002(53);
+ _0x015.style.fontStyle = _0x014 ? _0x002(54) : _0x002(55);
+ _0x015.style.textAlign = _0x01a;
+}
+
+document.getElementById(_0x002(60)).addEventListener(_0x002(17), _0x0bb);
+document.getElementById(_0x002(65)).addEventListener(_0x002(17), _0x0bb);
+document.getElementById(_0x002(64)).addEventListener(_0x002(17), _0x0bb);
+
+window.addEventListener(_0x002(68), () => {
+ const el = document.getElementById(_0x002(69));
+ if (el) el.style.opacity = window.scrollY > 30 ? '0' : _0x002(70);
+});
+
+document.getElementById(_0x002(71)).addEventListener(_0x002(72), e => _0x0bd(e.target.files));
+
+const _0x01b = document.getElementById(_0x002(73));
+_0x01b.addEventListener(_0x002(74), e => { e.preventDefault(); _0x01b.classList.add(_0x002(75)); });
+_0x01b.addEventListener(_0x002(76), () => _0x01b.classList.remove(_0x002(75)));
+_0x01b.addEventListener(_0x002(77), e => {
+ e.preventDefault();
+ _0x01b.classList.remove(_0x002(75));
+ _0x0bd(e.dataTransfer.files);
+});
+
+function _0x0bc(dataUrl) {
+ return new Promise(resolve => {
+ const _0x01c = document.getElementById(_0x002(78));
+ const _0x01d = (_0x01c && _0x01c.value) ? _0x01c.value : _0x002(79);
+ if (_0x01d === _0x002(80)) { resolve(dataUrl); return; }
+
+ const _0x01e = {
+ low: { max: 900, q: 0.65 },
+ medium: { max: 1200, q: 0.82 },
+ high: { max: 1800, q: 0.93 },
+ };
+ const { max: MAX, q } = _0x01e[_0x01d];
+
+ const img = new Image();
+ img.onload = () => {
+ let w = img.width, h = img.height;
+ if (w > MAX || h > MAX) {
+ if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+ else { w = Math.round(w * MAX / h); h = MAX; }
+ }
+ const _0x01f = document.createElement(_0x002(81));
+ _0x01f.width = w; _0x01f.height = h;
+ _0x01f.getContext(_0x002(82)).drawImage(img, 0, 0, w, h);
+ resolve(_0x01f.toDataURL(_0x002(83), q));
+ };
+ img.src = dataUrl;
+ });
+}
+
+function _0x0bd(fileList) {
+ const files = Array.from(fileList).filter(f => f.type.startsWith(_0x002(84)));
+ if (files.length === 0) return;
+
+ async function _0x0be() {
+ for (const _0x020 of files) {
+ await new Promise(resolve => {
+ const _0x021 = new FileReader();
+ _0x021.onload = async e => {
+ const _0x022 = await _0x0bc(e.target.result);
+ _0x003.push({ id: Date.now() + Math.random(), _0x020, dataUrl: _0x022, name: _0x020.name, points: 10 });
+ _0x0c2();
+ resolve();
+ };
+ _0x021.readAsDataURL(_0x020);
+ });
+ await new Promise(r => setTimeout(r, 10));
+ }
+ }
+
+ _0x0be();
+}
+
+function _0x0bf() {
+ if (_0x003.length === 0) return;
+ _0x003 = [];
+ _0x0c2();
+}
+
+function _0x0c0() {
+ for (let i = _0x003.length - 1; i > 0; i--) {
+ const j = Math.floor(Math.random() * (i + 1));
+ [_0x003[i], _0x003[j]] = [_0x003[j], _0x003[i]];
+ }
+ _0x0c2();
+}
+
+function _0x0c1(idx, dir) {
+ const _0x023 = idx + dir;
+ if (_0x023 < 0 || _0x023 >= _0x003.length) return;
+ const _0x024 = _0x003.splice(idx, 1)[0];
+ _0x003.splice(_0x023, 0, _0x024);
+ _0x0c2();
+}
+
+function _0x0c2() {
+ const _0x025 = document.getElementById(_0x002(85));
+ _0x025.innerHTML = '';
+ const _0x026 = parseInt(document.getElementById(_0x002(45)).value) || 1;
+
+ _0x003.forEach((p, idx) => {
+ const _0x00f = document.createElement(_0x002(35));
+ _0x00f.className = _0x002(86);
+ _0x00f.draggable = true;
+ _0x00f.dataset.idx = idx;
+ const _0x011 = _0x026 + idx;
+ _0x00f.innerHTML = `
+ <div class="move-btns">
+ <button class="move-btn" onclick="_0x0c1(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} _0x034="Yukarı">▲</button>
+ <button class="move-btn" onclick="_0x0c1(${idx}, 1)" ${idx === _0x003.length-1 ? 'disabled' : ''} _0x034="Aşağı">▼</button>
+ </div>
+ <div class="thumb"><img src="${p.dataUrl}" alt="${p.name}"></div>
+ <span class="_0x00f-num">${_0x011}</span>
+ <span class="_0x00f-name" _0x034="${p.name}">${p.name}</span>
+ <div class="point-wrap">
+ <label>Puan</label>
+ <input class="point-input" type="text" inputmode="numeric" value="${p.points}" data-idx="${idx}" oninput="_0x0c3(${idx}, this.value)" onfocus="this.select()">
+ </div>
+ <button class="remove-btn" onclick="_0x0c4(${idx})" _0x034="Sil">✕</button>
+ `;
+ _0x00f.addEventListener(_0x002(87), e => { _0x004 = idx; _0x00f.classList.add(_0x002(88)); });
+ _0x00f.addEventListener(_0x002(89), () => { _0x00f.classList.remove(_0x002(88)); document.querySelectorAll(_0x002(90)).forEach(t => t.classList.remove(_0x002(91))); });
+ _0x00f.addEventListener(_0x002(74), e => { e.preventDefault(); _0x00f.classList.add(_0x002(91)); });
+ _0x00f.addEventListener(_0x002(76), () => _0x00f.classList.remove(_0x002(91)));
+ _0x00f.addEventListener(_0x002(77), e => {
+ e.preventDefault();
+ if (_0x004 !== null && _0x004 !== idx) {
+ const _0x024 = _0x003.splice(_0x004, 1)[0];
+ _0x003.splice(idx, 0, _0x024);
+ _0x0c2();
+ }
+ });
+ _0x025.appendChild(_0x00f);
+ });
+
+ const _0x027 = document.getElementById(_0x002(92));
+ const _0x028 = document.getElementById(_0x002(93));
+ if (_0x003.length > 0) {
+ _0x027.style.display = _0x002(94);
+ _0x028.disabled = false;
+ _0x0c5();
+ } else {
+ _0x027.style.display = _0x002(1);
+ _0x028.disabled = true;
+ }
+}
+
+function _0x0c3(idx, val) {
+ _0x003[idx].points = parseInt(val) || 0;
+ _0x0c5();
+}
+
+function _0x0c4(idx) {
+ _0x003.splice(idx, 1);
+ _0x0c2();
+}
+
+document.getElementById(_0x002(45)).addEventListener(_0x002(17), () => { if(_0x003.length) _0x0c2(); });
+
+function _0x0c5() {
+ document.getElementById(_0x002(95)).textContent = _0x003.length;
+ const gap = parseFloat(document.getElementById(_0x002(16)).value);
+ const _0x029 = parseFloat(document.getElementById(_0x002(20)).value);
+ const _0x02a = _0x007 === _0x002(14);
+ const pgW = _0x02a ? 297 : 210;
+ const pgH = _0x02a ? 210 : 297;
+ const _0x02b = (pgW - _0x029 * 2 - gap * (_0x008 - 1)) / _0x008;
+ const _0x02c = _0x02b / 1.33;
+ const _0x02d = pgH - _0x029 * 2 - 30;
+ const _0x02e = Math.floor(_0x02d / (_0x02c + gap)) * _0x008;
+ const _0x02f = Math.max(1, Math.ceil(_0x003.length / Math.max(1, _0x02e)));
+ document.getElementById(_0x002(96)).textContent = '~' + _0x02f;
+
+ const _0x030 = _0x003.reduce((sum, p) => sum + (parseFloat(p.points) || 0), 0);
+ const _0x031 = document.getElementById(_0x002(97));
+ const _0x032 = document.getElementById(_0x002(98));
+ const _0x033 = document.getElementById(_0x002(99));
+ _0x031.textContent = _0x030;
+
+ if (_0x003.length === 0) {
+ _0x033.style.display = _0x002(1);
+ } else {
+ _0x033.style.display = _0x002(2);
+ if (_0x030 === 100) {
+ _0x033.style.background = _0x002(100);
+ _0x033.style._0x012 = _0x002(101);
+ _0x032.innerHTML = _0x002(102) + _0x030 + _0x002(103);
+ } else if (_0x030 > 100) {
+ _0x033.style.background = _0x002(104);
+ _0x033.style._0x012 = _0x002(105);
+ _0x032.innerHTML = _0x002(106) + _0x030 + _0x002(107);
+ } else if (_0x030 === 0) {
+ _0x033.style.background = _0x002(108);
+ _0x033.style._0x012 = _0x002(109);
+ _0x032.innerHTML = _0x002(110);
+ } else {
+ _0x033.style.background = _0x002(111);
+ _0x033.style._0x012 = _0x002(112);
+ _0x032.innerHTML = _0x002(113) + _0x030 + _0x002(114);
+ }
+ }
+}
+
+document.getElementById(_0x002(93)).addEventListener(_0x002(3), _0x0c6);
+
+async function _0x0c6() {
+ const _0x034 = document.getElementById(_0x002(38)).value.trim();
+ const _0x035 = document.getElementById(_0x002(34)).value.trim();
+ const gap = parseFloat(document.getElementById(_0x002(16)).value);
+ const _0x029 = parseFloat(document.getElementById(_0x002(20)).value);
+ const _0x036 = document.getElementById(_0x002(115)).value;
+
+ const _0x037 = document.getElementById(_0x002(116)).value;
+ const _0x038 = parseInt(document.getElementById(_0x002(117)).value) || 22;
+ const _0x039 = _0x0b0(_0x002(118));
+ const _0x03a = _0x0b0(_0x002(119));
+
+ const _0x03b = document.getElementById(_0x002(120)).value;
+ const _0x03c = parseInt(document.getElementById(_0x002(121)).value) || 10;
+ const _0x03d = _0x0b0(_0x002(122));
+ const _0x03e = _0x0b0(_0x002(123));
+
+ const _0x03f = document.getElementById(_0x002(43)).checked;
+ const _0x040 = parseInt(document.getElementById(_0x002(45)).value) || 1;
+ const _0x041 = document.getElementById(_0x002(46)).value;
+ const _0x042 = parseInt(document.getElementById(_0x002(47)).value) || 9;
+ const _0x043 = _0x0b0(_0x002(48));
+ const _0x044 = _0x0b0(_0x002(49));
+
+ const _0x045 = _0x042 * 0.352778 + 2;
+
+ const btn = document.getElementById(_0x002(93));
+ const _0x046 = document.getElementById(_0x002(124));
+ const _0x047 = document.getElementById(_0x002(125));
+ const _0x048 = document.getElementById(_0x002(126));
+
+ btn.disabled = true;
+ _0x046.style.display = _0x002(2);
+
+ const _0x02a = _0x007 === _0x002(14);
+ const _0x049 = _0x02a ? 297 : 210;
+ const _0x04a = _0x02a ? 210 : 297;
+ const _0x04b = _0x008;
+ const _0x02b = (_0x049 - _0x029 * 2 - gap * (_0x04b - 1)) / _0x04b;
+
+ const bgR = parseInt(_0x036.slice(1,3),16);
+ const bgG = parseInt(_0x036.slice(3,5),16);
+ const bgB = parseInt(_0x036.slice(5,7),16);
+
+ const pdf = new jsPDF({ unit: _0x002(127), format: _0x002(128), orientation: _0x007 });
+
+ const _0x04c = document.getElementById(_0x002(30)).checked;
+ const _0x04d = parseFloat(document.getElementById(_0x002(129)).value) || 1;
+ const _0x04e = document.getElementById(_0x002(130)).value;
+ const _0x04f = parseFloat(document.getElementById(_0x002(131)).value) || 3;
+ const _0x050 = parseFloat(document.getElementById(_0x002(132)).value) || 2;
+ const _0x051 = parseFloat(document.getElementById(_0x002(133)).value) || 2;
+ const bR = parseInt(_0x04e.slice(1,3),16);
+ const bG = parseInt(_0x04e.slice(3,5),16);
+ const bB = parseInt(_0x04e.slice(5,7),16);
+
+ function _0x0c7(x, y, w, h, r) {
+ r = Math.min(r, w/2, h/2);
+ pdf.setDrawColor(bR, bG, bB);
+ pdf.setLineWidth(_0x04d * 0.352778);
+ pdf.roundedRect(x, y, w, h, r, r, 'S');
+ }
+
+ const DPI = 300;
+ const _0x052 = DPI / 25.4;
+
+ function _0x0c8(mm) { return Math.round(mm * _0x052); }
+
+ function _0x0c9(text, xMm, yMm, fontSizePt, _0x012, _0x013, _0x014, maxWidthMm, align) {
+ if (!text || !text.trim()) return 0;
+ const _0x01f = document.createElement(_0x002(81));
+ const ctx = _0x01f.getContext(_0x002(82));
+ const _0x053 = Math.round(fontSizePt * DPI / 72);
+ const _0x054 = _0x0c8(maxWidthMm);
+ const _0x055 = `${_0x014?'_0x014 ':''} ${_0x013?'_0x013 ':''} ${_0x053}px Arial, sans-serif`;
+ ctx.font = _0x055;
+
+ const _0x056 = text.split(_0x002(134));
+ const _0x057 = [];
+ for (const _0x058 of _0x056) {
+ if (_0x058.trim() === '') { _0x057.push(''); continue; }
+ const _0x059 = _0x058.split(' ');
+ let _0x05a = '';
+ for (const w of _0x059) {
+ const _0x05b = _0x05a ? _0x05a + ' ' + w : w;
+ if (ctx.measureText(_0x05b).width > _0x054 && _0x05a) {
+ _0x057.push(_0x05a);
+ _0x05a = w;
+ } else {
+ _0x05a = _0x05b;
+ }
+ }
+ if (_0x05a) _0x057.push(_0x05a);
+ }
+
+ const _0x05c = Math.round(_0x053 * 1.3);
+ const _0x05d = _0x057.length * _0x05c;
+ _0x01f.width = _0x054;
+ _0x01f.height = _0x05d + 4;
+ ctx.font = _0x055;
+ ctx.fillStyle = _0x012;
+ ctx.textBaseline = _0x002(135);
+ if (align === _0x002(27)) {
+ ctx.textAlign = _0x002(27);
+ } else if (align === _0x002(28)) {
+ ctx.textAlign = _0x002(28);
+ } else {
+ ctx.textAlign = _0x002(26);
+ }
+ const _0x05e = align === _0x002(27) ? _0x054 / 2 : align === _0x002(28) ? _0x054 : 0;
+ _0x057.forEach((line, i) => {
+ ctx.fillText(line, _0x05e, i * _0x05c + 2);
+ });
+
+ const _0x05f = _0x01f.toDataURL(_0x002(136));
+ const hMm = (_0x05d + 4) / _0x052;
+ pdf.addImage(_0x05f, _0x002(137), xMm, yMm, maxWidthMm, hMm, '', _0x002(138));
+ return hMm;
+ }
+
+ function _0x0ca(text, xMm, yMm, fontSizePt, _0x012, _0x013, _0x014) {
+ if (!text || !text.trim()) return 0;
+ const _0x01f = document.createElement(_0x002(81));
+ const ctx = _0x01f.getContext(_0x002(82));
+ const _0x053 = Math.round(fontSizePt * DPI / 72);
+ const _0x055 = `${_0x014?'_0x014 ':''} ${_0x013?'_0x013 ':''} ${_0x053}px Arial, sans-serif`;
+ ctx.font = _0x055;
+ const _0x060 = ctx.measureText(text).width;
+ const hPx = Math.round(_0x053 * 1.4);
+ _0x01f.width = Math.ceil(_0x060) + 4;
+ _0x01f.height = hPx;
+ ctx.font = _0x055;
+ ctx.fillStyle = _0x012;
+ ctx.textBaseline = _0x002(135);
+ ctx.fillText(text, 2, 2);
+ const _0x05f = _0x01f.toDataURL(_0x002(136));
+ const wMm = _0x01f.width / _0x052;
+ const hMm = hPx / _0x052;
+ pdf.addImage(_0x05f, _0x002(137), xMm, yMm, wMm, hMm, '', _0x002(138));
+ return wMm;
+ }
+
+ function _0x0cb(hex) {
+ const r = parseInt(hex.slice(1,3),16);
+ const g = parseInt(hex.slice(3,5),16);
+ const b = parseInt(hex.slice(5,7),16);
+ return `rgb(${r},${g},${b})`;
+ }
+
+ let _0x061 = true;
+ const _0x062 = 4;
+
+ function _0x0cc() {
+ const fs = parseInt(document.getElementById(_0x002(139)).value) || 10;
+ return fs * 0.352778 * 1.2;
+ }
+
+ function _0x0cd() {
+ pdf.setFillColor(bgR, bgG, bgB);
+ pdf.rect(0, 0, _0x049, _0x04a, 'F');
+ }
+
+ function _0x0ce() {
+ let y = _0x029;
+ const _0x063 = _0x049 - _0x029 * 2;
+ const _0x064 = _0x0cb(_0x037);
+ const _0x065 = _0x0cb(_0x03b);
+
+ if (_0x034) {
+ const h = _0x0c9(_0x034, _0x029, y, _0x038, _0x064, _0x039, _0x03a, _0x063, _0x017);
+ y += h + _0x062;
+ }
+
+ {
+ const fs = parseInt(document.getElementById(_0x002(139)).value) || 10;
+ const _0x066 = _0x0cb(document.getElementById(_0x002(140)).value);
+ const _0x067 = _0x0b0(_0x002(141));
+ const _0x068 = _0x0b0(_0x002(142));
+ const adW = _0x063 * 0.52;
+ const _0x069 = _0x063 * 0.26;
+ const pad = 0;
+ const _0x06a = _0x0cc();
+
+ pdf.setDrawColor(160,160,160);
+ pdf.setLineWidth(0.25);
+ pdf.line(_0x029, y, _0x029 + _0x063, y);
+
+ y += pad;
+
+ _0x0ca(_0x002(143), _0x029, y, fs, _0x066, _0x067, _0x068);
+ _0x0ca(_0x002(144), _0x029 + adW, y, fs, _0x066, _0x067, _0x068);
+ _0x0ca(_0x002(145), _0x029 + adW + _0x069, y, fs, _0x066, _0x067, _0x068);
+
+ y += _0x06a;
+
+ pdf.setDrawColor(160,160,160);
+ pdf.setLineWidth(0.25);
+ pdf.line(_0x029, y, _0x029 + _0x063, y);
+
+ y += pad + 0.5;
+ }
+
+ if (_0x035) {
+ const _0x06b = _0x0cb(_0x03b);
+ const h = _0x0c9(_0x035, _0x029, y, _0x03c, _0x06b, _0x03d, _0x03e, _0x063, _0x018);
+ y += h + 1;
+ }
+
+ return y + 1;
+ }
+
+ _0x0cd();
+ let _0x06c = _0x029;
+ if (_0x061) {
+ _0x06c = _0x0ce();
+ _0x061 = false;
+ }
+
+ let _0x06d = Array(_0x04b).fill(_0x06c);
+ let col = 0;
+
+ const _0x06e = document.getElementById(_0x002(22)).checked;
+ let _0x06f = null;
+ if (_0x06e && _0x003.length > 0) {
+ const _0x070 = _0x009;
+ const _0x071 = _0x04a - _0x029;
+ const _0x072 = _0x071 - _0x06c;
+ const _0x073 = Math.ceil(_0x003.length / (_0x04b * _0x070));
+ const _0x074 = _0x03f ? _0x045 : 0;
+ const _0x075 = _0x04c ? _0x051 : 0;
+ const _0x076 = (_0x072 - gap * (_0x073 - 1)) / _0x073;
+ _0x06f = _0x076 - _0x074 - _0x075 * 2;
+ if (_0x06f < 5) _0x06f = 5;
+ }
+
+ for (let i = 0; i < _0x003.length; i++) {
+ _0x048.textContent = `Soru ${i+1} / ${_0x003.length} işleniyor...`;
+ _0x047.style.width = ((i / _0x003.length) * 90) + '%';
+
+ const _0x077 = _0x003[i];
+
+ const _0x078 = await _0x0cf(_0x077.dataUrl);
+ const _0x079 = _0x078.height / _0x078.width;
+ const _0x07a = _0x04c ? _0x050 : 0;
+ const _0x075 = _0x04c ? _0x051 : 0;
+ const _0x07b = _0x02b - _0x07a * 2;
+
+ let _0x07c, imgH;
+ if (_0x06f !== null) {
+ imgH = _0x06f;
+ _0x07c = imgH / _0x079;
+ if (_0x07c > _0x07b) {
+ _0x07c = _0x07b;
+ imgH = _0x07c * _0x079;
+ }
+ } else {
+ _0x07c = _0x07b;
+ imgH = _0x07c * _0x079;
+ }
+
+ const _0x074 = _0x03f ? _0x045 : 0;
+ const _0x07d = imgH + _0x074 + _0x075 * 2;
+
+ const _0x02d = _0x04a - _0x029;
+
+ while (_0x06d[col] + _0x07d > _0x02d) {
+ col++;
+ if (col >= _0x04b) {
+ 
+ if (document.getElementById(_0x002(146)).checked) {
+ const _0x07e = parseInt(document.getElementById(_0x002(147)).value) || 9;
+ const _0x07f = parseFloat(document.getElementById(_0x002(148)).value) || 8;
+ const _0x080 = _0x002(149);
+ const _0x081 = _0x002(150);
+ const _0x082 = _0x07e * 0.352778 * 1.4;
+ const npY = _0x04a - _0x029 - _0x07f - _0x082;
+ _0x0c9(_0x080, _0x029, npY, _0x07e, _0x081, false, true, _0x049 - _0x029 * 2, _0x016);
+ }
+ pdf.addPage();
+ _0x0cd();
+ _0x06d = Array(_0x04b).fill(_0x029);
+ col = 0;
+ break;
+ }
+ }
+
+ const _0x083 = _0x029 + col * (_0x02b + gap);
+ let _0x084 = _0x06d[col];
+
+ let _0x085 = 0;
+ if (_0x00b === _0x002(27)) _0x085 = (_0x02b - _0x07c - _0x07a * 2) / 2;
+ else if (_0x00b === _0x002(28)) _0x085 = _0x02b - _0x07c - _0x07a * 2;
+
+ if (_0x04c) {
+ _0x0c7(_0x083, _0x084, _0x02b, _0x07d, _0x04f);
+ }
+
+ _0x084 += _0x075;
+ const _0x086 = _0x083 + _0x07a + _0x085;
+
+ if (_0x03f) {
+ const _0x011 = _0x040 + i;
+ const pts = _0x077.points ?? 0;
+ const _0x087 = `SORU ${_0x011} (${pts} Puan)`;
+ const _0x088 = _0x0cb(_0x041);
+ const _0x089 = _0x00c === _0x002(27) ? _0x002(27) : _0x00c === _0x002(28) ? _0x002(28) : _0x002(26);
+ _0x0c9(_0x087, _0x083 + _0x07a, _0x084, _0x042, _0x088, _0x043, _0x044, _0x02b - _0x07a * 2, _0x089);
+ _0x084 += _0x045;
+ }
+
+ try {
+ const fmt = _0x0d0(_0x077.dataUrl);
+ pdf.addImage(_0x077.dataUrl, fmt, _0x086, _0x084, _0x07c, imgH, '', _0x002(138));
+ } catch(e) {
+ pdf.addImage(_0x077.dataUrl, _0x002(151), _0x086, _0x084, _0x07c, imgH, '', _0x002(138));
+ }
+
+ _0x06d[col] += _0x07d + gap;
+ }
+
+ 
+ const _0x08a = document.getElementById(_0x002(60)).value.trim();
+ if (_0x08a) {
+ const _0x08b = parseInt(document.getElementById(_0x002(65)).value) || 10;
+ const _0x08c = document.getElementById(_0x002(64)).value;
+ const _0x08d = _0x0b0(_0x002(66));
+ const _0x08e = _0x0b0(_0x002(67));
+ const _0x08f = _0x0cb(_0x08c);
+ const _0x063 = _0x049 - _0x029 * 2;
+ const _0x090 = _0x08b * 0.352778 * 1.4;
+ const _0x091 = parseFloat(document.getElementById(_0x002(152)).value) || 8;
+ const _0x092 = _0x04a - _0x029 - _0x091 - _0x090;
+ _0x0c9(_0x08a, _0x029, _0x092, _0x08b, _0x08f, _0x08d, _0x08e, _0x063, _0x01a);
+ }
+
+ _0x047.style.width = _0x002(153);
+ _0x048.textContent = _0x002(154);
+
+ var _0x093 = _0x002(155);
+
+ 
+ var _0x094 = null;
+ try {
+ if (typeof URL !== _0x002(156) && typeof URL.createObjectURL === _0x002(157)) {
+ var _0x095 = pdf.output(_0x002(158));
+ _0x094 = URL.createObjectURL(_0x095);
+ }
+ } catch(e) { _0x094 = null; }
+
+ window.__pdfBlobUrl = _0x094;
+
+ 
+ window.__closePdfOverlay = function() {
+ var el = document.getElementById(_0x002(159));
+ if (el) el.remove();
+ try {
+ if (window.__pdfBlobUrl) {
+ URL.revokeObjectURL(window.__pdfBlobUrl);
+ window.__pdfBlobUrl = null;
+ }
+ } catch(e) {}
+ };
+
+ 
+ var _0x096 = _0x094;
+ if (!_0x096) {
+ try { _0x096 = pdf.output(_0x002(160)); } catch(e) { _0x096 = '#'; }
+ }
+
+ 
+ var _0x097;
+ if (_0x094) {
+ _0x097 = _0x002(161) + _0x094 + _0x002(162);
+ } else {
+ _0x097 = _0x002(163);
+ }
+
+ var _0x098 = document.createElement(_0x002(35));
+ _0x098.id = _0x002(159);
+ _0x098.style.position = _0x002(164);
+ _0x098.style.top = '0';
+ _0x098.style.right = '0';
+ _0x098.style.bottom = '0';
+ _0x098.style.left = '0';
+ _0x098.style.background = _0x002(165);
+ _0x098.style.zIndex = _0x002(166);
+ _0x098.style.display = _0x002(167);
+ _0x098.style.display = _0x002(94);
+ _0x098.style.webkitFlexDirection = _0x002(168);
+ _0x098.style.flexDirection = _0x002(168);
+ _0x098.style.fontFamily = _0x002(169);
+
+ var _0x099 = document.createElement(_0x002(35));
+ _0x099.style.cssText = _0x002(170);
+
+ var _0x09a = document.createElement(_0x002(171));
+ _0x09a.innerHTML = _0x002(172);
+ _0x09a.style.cssText = _0x002(173);
+ _0x09a.onclick = function() { window.__closePdfOverlay(); };
+
+ var _0x09b = document.createElement(_0x002(174));
+ _0x09b.style.cssText = _0x002(175);
+ _0x09b.textContent = _0x002(176) + _0x093 + _0x002(177);
+
+ var _0x09c = document.createElement('a');
+ _0x09c.href = _0x096;
+ _0x09c.download = _0x093 + _0x002(177);
+ _0x09c.style.cssText = _0x002(178);
+ _0x09c.textContent = _0x002(179);
+
+ _0x099.appendChild(_0x09a);
+ _0x099.appendChild(_0x09b);
+ _0x099.appendChild(_0x09c);
+
+ var _0x09d = document.createElement(_0x002(35));
+ _0x09d.style.cssText = _0x002(180);
+ _0x09d.innerHTML = _0x002(181);
+
+ _0x098.appendChild(_0x099);
+ _0x098.appendChild(_0x09d);
+
+ var _0x09e = document.createElement(_0x002(35));
+ _0x09e.style.cssText = _0x002(182);
+ _0x09e.innerHTML = _0x097;
+ _0x098.appendChild(_0x09e);
+
+ document.body.appendChild(_0x098);
+
+ setTimeout(function() {
+ _0x046.style.display = _0x002(1);
+ _0x047.style.width = _0x002(183);
+ btn.disabled = false;
+ }, 1500);
+}
+
+function _0x0cf(dataUrl) {
+ return new Promise(resolve => {
+ const img = new Image();
+ img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+ img.src = dataUrl;
+ });
+}
+
+function _0x0d0(dataUrl) {
+ if (dataUrl.includes(_0x002(184))) return _0x002(137);
+ if (dataUrl.includes(_0x002(185))) return _0x002(186);
+ return _0x002(151);
+}
+</script>
+
+<style>#debugOverlay{display:none;position:fixed;top:0;right:0;bottom:0;left:0;z-index:99999;background:rgba(0,0,0,0.75);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;font-family:'DM Sans',sans-serif;animation:debugFadeIn 0.2s ease;}#debugOverlay.visible{display:-webkit-flex;display:flex;}@keyframes debugFadeIn{from{opacity:0;transform:scale(0.97);}to{opacity:1;transform:scale(1);}}#debugPanel{background:#0f172a;border:1px solid #334155;border-radius:14px;width:min(680px,96vw);max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,0.6);}#debugHeader{display:flex;align-items:center;gap:10px;padding:16px 20px;background:#1e293b;border-bottom:1px solid #334155;flex-shrink:0;}#debugHeader .debug-icon{font-size:1.3rem;}#debugHeader .debug-title{font-size:0.95rem;font-weight:700;color:#f87171;flex:1;}#debugHeader .debug-close{background:none;border:none;color:#64748b;cursor:pointer;font-size:1.3rem;padding:2px 6px;border-radius:6px;line-height:1;transition:color 0.15s,background 0.15s;}#debugHeader .debug-close:hover{color:#fff;background:#334155;}#debugBody{padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;}.debug-section{display:flex;flex-direction:column;gap:6px;}.debug-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;}.debug-error-box{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.35);border-radius:10px;padding:14px 16px;}.debug-error-message{font-size:0.92rem;font-weight:600;color:#fca5a5;line-height:1.5;word-break:break-word;}.debug-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.debug-meta-item{background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;}.debug-meta-key{font-size:0.72rem;color:#64748b;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;}.debug-meta-val{font-size:0.88rem;color:#e2e8f0;font-weight:600;word-break:break-all;}.debug-source-box{background:#020617;border:1px solid #334155;border-radius:10px;overflow:hidden;}.debug-source-header{padding:8px 14px;font-size:0.72rem;color:#64748b;border-bottom:1px solid #1e293b;background:#0f172a;display:flex;align-items:center;justify-content:space-between;}.debug-source-lines{padding:8px 0;}.debug-source-line{display:flex;gap:0;align-items:stretch;font-size:0.8rem;line-height:1.7;}.debug-source-line.error-line{background:rgba(248,113,113,0.12);}.debug-line-num{min-width:48px;text-align:right;padding:0 12px 0 8px;color:#475569;user-select:none;flex-shrink:0;font-family:monospace;}.debug-source-line.error-line .debug-line-num{color:#f87171;font-weight:700;}.debug-line-code{color:#94a3b8;font-family:monospace;padding-right:12px;white-space:pre-wrap;word-break:break-all;}.debug-source-line.error-line .debug-line-code{color:#fca5a5;}.debug-explain-box{background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:14px 16px;font-size:0.88rem;color:#bae6fd;line-height:1.6;}.debug-explain-box strong{color:#38bdf8;}.debug-stack-box{background:#020617;border:1px solid #1e293b;border-radius:10px;padding:12px 16px;font-size:0.75rem;color:#475569;font-family:monospace;white-space:pre-wrap;word-break:break-all;max-height:120px;overflow-y:auto;}.debug-footer{padding:12px 20px;border-top:1px solid #1e293b;display:flex;gap:8px;flex-shrink:0;background:#0f172a;}.debug-btn{padding:8px 16px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;transition:opacity 0.15s;}.debug-btn:hover{opacity:0.85;}.debug-btn-copy{background:#334155;color:#e2e8f0;}.debug-btn-close{background:#38bdf8;color:#0f172a;}.debug-copy-ok{font-size:0.78rem;color:#4ade80;align-self:center;opacity:0;transition:opacity 0.3s;}.debug-copy-ok.show{opacity:1;}</style>
+
+<div id="debugOverlay" role="dialog" aria-modal="true" aria-label="Hata Ayıklayıcı">
+  <div id="debugPanel">
+    <div id="debugHeader">
+      <span class="debug-icon">🐛</span>
+      <span class="debug-title">Akıllı Hata Ayıklayıcı</span>
+      <button class="debug-close" onclick="closeDebugger()" title="Kapat">✕</button>
+    </div>
+    <div id="debugBody">
+      
+    </div>
+    <div class="debug-footer">
+      <button class="debug-btn debug-btn-copy" onclick="copyDebugInfo()">📋 Kopyala</button>
+      <span class="debug-copy-ok" id="debugCopyOk">✓ Kopyalandı</span>
+      <button class="debug-btn debug-btn-close" style="margin-left:auto;" onclick="closeDebugger()">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var _0x0d1=['\x63\x61\x6e\x6e\x6f\x74\x20\x72\x65\x61\x64\x20\x70\x72\x6f\x70','\x63\x61\x6e\x6e\x6f\x74\x20\x72\x65\x61\x64\x20\x70\x72\x6f\x70\x65\x72\x74\x69\x65\x73','\x6e\x75\x6c\x6c','\x75\x6e\x64\x65\x66\x69\x6e\x65\x64','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x4b\x6f\x64\x2c\x20\x68\x65\x6eü\x7a\x20\x79ü\x6b\x6c\x65\x6e\x6d\x65\x6d\x69ş\x20\x76\x65\x79\x61\x20\x76\x61\x72\x20\x6f\x6c\x6d\x61\x79\x61\x6e\x20\x62\x69\x72\x20\x65\x6c\x65\x6d\x61\x6e\x61\x2f\x64\x65ğ\x69ş\x6b\x65\x6e\x65\x20\x65\x72\x69ş\x6d\x65\x79\x65\x20ç\x61\x6cışı\x79\x6f\x72\x2e\x20\x53\x61\x79\x66\x61\x6eı\x6e\x20\x74\x61\x6d\x20\x79ü\x6b\x6c\x65\x6e\x6d\x65\x64\x65\x6e\x20ö\x6e\x63\x65\x20\x62\x69\x72\x20\x73\x63\x72\x69\x70\x74\x20ç\x61\x6cışı\x79\x6f\x72\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x20\x79\x61\x20\x64\x61\x20\x62\x65\x6b\x6c\x65\x6e\x65\x6e\x20\x62\x69\x72\x20\x48\x54\x4d\x4c\x20\x65\x6c\x65\x6d\x65\x6e\x74\x69\x20\x62\x75\x6c\x75\x6e\x61\x6dı\x79\x6f\x72\x2e','\x69\x73\x20\x6e\x6f\x74\x20\x61\x20\x66\x75\x6e\x63\x74\x69\x6f\x6e','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x42\x69\x72\x20\x66\x6f\x6e\x6b\x73\x69\x79\x6f\x6e\x20\x6f\x6c\x6d\x61\x73ı\x20\x62\x65\x6b\x6c\x65\x6e\x65\x6e\x20\x64\x65ğ\x65\x72\x2c\x20\x61\x73\x6cı\x6e\x64\x61\x20\x66\x6f\x6e\x6b\x73\x69\x79\x6f\x6e\x20\x64\x65ğ\x69\x6c\x2e\x20\x59\x61\x6e\x6cış\x20\x69\x73\x69\x6d\x2c\x20\x79\x61\x6e\x6cış\x20\x6b\x61\x70\x73\x61\x6d\x20\x76\x65\x79\x61\x20\x68\x65\x6eü\x7a\x20\x74\x61\x6eı\x6d\x6c\x61\x6e\x6d\x61\x6dış\x20\x62\x69\x72\x20\x66\x6f\x6e\x6b\x73\x69\x79\x6f\x6e\x20ç\x61ğ\x72ı\x6c\x6dış\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x2e','\x69\x73\x20\x6e\x6f\x74\x20\x64\x65\x66\x69\x6e\x65\x64','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x4b\x75\x6c\x6c\x61\x6eı\x6c\x6d\x61\x79\x61\x20ç\x61\x6cışı\x6c\x61\x6e\x20\x64\x65ğ\x69ş\x6b\x65\x6e\x20\x76\x65\x79\x61\x20\x66\x6f\x6e\x6b\x73\x69\x79\x6f\x6e\x20\x68\x69ç\x20\x74\x61\x6eı\x6d\x6c\x61\x6e\x6d\x61\x6dış\x2e\x20\x59\x61\x7aı\x6d\x20\x68\x61\x74\x61\x73ı\x20\x79\x61\x20\x64\x61\x20\x66\x61\x72\x6b\x6cı\x20\x62\x69\x72\x20\x64\x6f\x73\x79\x61\x64\x61\x2f\x6b\x61\x70\x73\x61\x6d\x64\x61\x20\x74\x61\x6eı\x6d\x6cı\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x2e','\x73\x79\x6e\x74\x61\x78\x65\x72\x72\x6f\x72','\x53\x79\x6e\x74\x61\x78\x45\x72\x72\x6f\x72','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x4b\x6f\x64\x64\x61\x20\x79\x61\x7aı\x6d\x2f\x73ö\x7a\x64\x69\x7a\x69\x6d\x69\x20\x68\x61\x74\x61\x73ı\x20\x76\x61\x72\x2e\x20\x45\x6b\x73\x69\x6b\x20\x70\x61\x72\x61\x6e\x74\x65\x7a\x2c\x20\x76\x69\x72\x67ü\x6c\x20\x76\x65\x79\x61\x20\x74ı\x72\x6e\x61\x6b\x20\x69ş\x61\x72\x65\x74\x69\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x2e','\x74\x79\x70\x65\x65\x72\x72\x6f\x72','\x54\x79\x70\x65\x45\x72\x72\x6f\x72','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x59\x61\x6e\x6cış\x20\x74ü\x72\x64\x65\x20\x62\x69\x72\x20\x64\x65ğ\x65\x72\x20\x6b\x75\x6c\x6c\x61\x6eı\x6c\x6dış\x2e\x20Ö\x72\x6e\x65ğ\x69\x6e\x20\x73\x61\x79ı\x20\x62\x65\x6b\x6c\x65\x6e\x69\x72\x6b\x65\x6e\x20\x6d\x65\x74\x69\x6e\x20\x67\x65\x6c\x6d\x69ş\x20\x79\x61\x20\x64\x61\x20\x6e\x65\x73\x6e\x65\x20\x79\x65\x72\x69\x6e\x65\x20\x6e\x75\x6c\x6c\x2f\x75\x6e\x64\x65\x66\x69\x6e\x65\x64\x20\x67\x65\x6c\x6d\x69ş\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x2e','\x72\x61\x6e\x67\x65\x65\x72\x72\x6f\x72','\x52\x61\x6e\x67\x65\x45\x72\x72\x6f\x72','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x42\x69\x72\x20\x64\x65ğ\x65\x72\x20\x67\x65ç\x65\x72\x6c\x69\x20\x61\x72\x61\x6cığı\x6e\x20\x64ışı\x6e\x61\x20çı\x6b\x74ı\x2e\x20\x53\x6f\x6e\x73\x75\x7a\x20\x64ö\x6e\x67ü\x2c\x20ç\x6f\x6b\x20\x64\x65\x72\x69\x6e\x20ö\x7a\x79\x69\x6e\x65\x6c\x65\x6d\x65\x20\x76\x65\x79\x61\x20\x67\x65ç\x65\x72\x73\x69\x7a\x20\x73\x61\x79ı\x73\x61\x6c\x20\x69ş\x6c\x65\x6d\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x2e','\x72\x65\x66\x65\x72\x65\x6e\x63\x65\x65\x72\x72\x6f\x72','\x52\x65\x66\x65\x72\x65\x6e\x63\x65\x45\x72\x72\x6f\x72','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x56\x61\x72\x20\x6f\x6c\x6d\x61\x79\x61\x6e\x20\x62\x69\x72\x20\x64\x65ğ\x69ş\x6b\x65\x6e\x65\x20\x72\x65\x66\x65\x72\x61\x6e\x73\x20\x76\x65\x72\x69\x6c\x6d\x69ş\x2e\x20\x4b\x61\x70\x73\x61\x6d\x20\x28\x73\x63\x6f\x70\x65\x29\x20\x73\x6f\x72\x75\x6e\x6c\x61\x72ı\x20\x76\x65\x79\x61\x20\x79\x61\x7aı\x6d\x20\x68\x61\x74\x61\x73ı\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x2e','\x6e\x65\x74\x77\x6f\x72\x6b','\x66\x65\x74\x63\x68','\x6c\x6f\x61\x64','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x41ğ\x20\x76\x65\x79\x61\x20\x6b\x61\x79\x6e\x61\x6b\x20\x79ü\x6b\x6c\x65\x6d\x65\x20\x68\x61\x74\x61\x73ı\x2e\x20İ\x6e\x74\x65\x72\x6e\x65\x74\x20\x62\x61ğ\x6c\x61\x6e\x74ı\x73ı\x2c\x20\x43\x4f\x52\x53\x20\x70\x6f\x6c\x69\x74\x69\x6b\x61\x73ı\x20\x76\x65\x79\x61\x20\x79\x61\x6e\x6cış\x20\x55\x52\x4c\x20\x6f\x6c\x61\x62\x69\x6c\x69\x72\x2e','\x3c\x73\x74\x72\x6f\x6e\x67\x3e\x4e\x65\x20\x61\x6e\x6c\x61\x6d\x61\x20\x67\x65\x6c\x69\x79\x6f\x72\x3f\x3c\x2f\x73\x74\x72\x6f\x6e\x67\x3e\x20\x42\x65\x6b\x6c\x65\x6e\x6d\x65\x64\x69\x6b\x20\x62\x69\x72\x20\x4a\x61\x76\x61\x53\x63\x72\x69\x70\x74\x20\x68\x61\x74\x61\x73ı\x20\x6f\x6c\x75ş\x74\x75\x2e\x20\x44\x65\x74\x61\x79\x6c\x61\x72\x20\x69ç\x69\x6e\x20\x68\x61\x74\x61\x20\x6d\x65\x73\x61\x6aı\x20\x76\x65\x20\x79ığı\x6e\x20\x69\x7a\x69\x6e\x69\x20\x69\x6e\x63\x65\x6c\x65\x79\x69\x6e\x69\x7a\x2e','\x5c\x6e','\x26\x61\x6d\x70\x3b','\x26\x6c\x74\x3b','\x26\x67\x74\x3b','\x42\x69\x6c\x69\x6e\x6d\x65\x79\x65\x6e\x20\x68\x61\x74\x61','\x45\x72\x72\x6f\x72','\x69\x6e\x6c\x69\x6e\x65','\x74\x72\x2d\x54\x52','\x75\x6e\x68\x61\x6e\x64\x6c\x65\x64\x72\x65\x6a\x65\x63\x74\x69\x6f\x6e','\x50\x72\x6f\x6d\x69\x73\x65\x20\x72\x65\x64\x64\x65\x64\x69\x6c\x64\x69','\x55\x6e\x68\x61\x6e\x64\x6c\x65\x64\x50\x72\x6f\x6d\x69\x73\x65\x52\x65\x6a\x65\x63\x74\x69\x6f\x6e','\x50\x72\x6f\x6d\x69\x73\x65','\x64\x65\x62\x75\x67\x4f\x76\x65\x72\x6c\x61\x79','\x64\x65\x62\x75\x67\x42\x6f\x64\x79','\x42\x75\x20\x64\x6f\x73\x79\x61\x20\x28\x69\x6e\x6c\x69\x6e\x65\x20\x73\x63\x72\x69\x70\x74\x29','\x62\x6c\x6f\x62\x3a','\x64\x65\x62\x75\x67\x2d\x73\x65\x63\x74\x69\x6f\x6e','\x64\x65\x62\x75\x67\x2d\x6c\x61\x62\x65\x6c','\x64\x65\x62\x75\x67\x2d\x73\x6f\x75\x72\x63\x65\x2d\x62\x6f\x78','\x64\x65\x62\x75\x67\x2d\x73\x6f\x75\x72\x63\x65\x2d\x68\x65\x61\x64\x65\x72','\x64\x65\x62\x75\x67\x2d\x73\x6f\x75\x72\x63\x65\x2d\x6c\x69\x6e\x65\x73','\x64\x65\x62\x75\x67\x2d\x73\x74\x61\x63\x6b\x2d\x62\x6f\x78','\x76\x69\x73\x69\x62\x6c\x65','\x64\x65\x62\x75\x67\x43\x6f\x70\x79\x4f\x6b','\x73\x68\x6f\x77','\x74\x65\x78\x74\x61\x72\x65\x61','\x70\x6f\x73\x69\x74\x69\x6f\x6e\x3a\x66\x69\x78\x65\x64\x3b\x74\x6f\x70\x3a\x2d\x39\x39\x39\x39\x70\x78\x3b\x6c\x65\x66\x74\x3a\x2d\x39\x39\x39\x39\x70\x78\x3b\x6f\x70\x61\x63\x69\x74\x79\x3a\x30\x3b','\x63\x6f\x70\x79','\x63\x6c\x69\x63\x6b','\x6b\x65\x79\x64\x6f\x77\x6e','\x45\x73\x63\x61\x70\x65','\x43\x61\x6e\x6e\x6f\x74\x20\x72\x65\x61\x64\x20\x70\x72\x6f\x70\x65\x72\x74\x69\x65\x73\x20\x6f\x66\x20\x6e\x75\x6c\x6c\x20\x28\x72\x65\x61\x64\x69\x6e\x67\x20\x27\x76\x61\x6c\x75\x65\x27\x29','\x54\x79\x70\x65\x45\x72\x72\x6f\x72\x3a\x20\x43\x61\x6e\x6e\x6f\x74\x20\x72\x65\x61\x64\x20\x70\x72\x6f\x70\x65\x72\x74\x69\x65\x73\x20\x6f\x66\x20\x6e\x75\x6c\x6c\x5c\x6e\x20\x20\x20\x20\x61\x74\x20\x67\x65\x6e\x65\x72\x61\x74\x65\x50\x44\x46\x20\x28\x73\x2d\x73\x69\x6e\x61\x76\x2e\x68\x74\x6d\x6c\x3a\x34\x32\x3a\x31\x38\x29\x5c\x6e\x20\x20\x20\x20\x61\x74\x20\x48\x54\x4d\x4c\x42\x75\x74\x74\x6f\x6e\x45\x6c\x65\x6d\x65\x6e\x74\x2e\x6f\x6e\x63\x6c\x69\x63\x6b\x20\x28\x73\x2d\x73\x69\x6e\x61\x76\x2e\x68\x74\x6d\x6c\x3a\x38\x39\x33\x3a\x31\x29'];function _0x0d2(i){return _0x0d1[i];}
+(function() {
+ 
+ function _0x0e0(msg, type) {
+ const m = (msg || '').toLowerCase();
+ if (m.includes(_0x0d2(0)) || m.includes(_0x0d2(1)) || m.includes(_0x0d2(2)) || m.includes(_0x0d2(3))) {
+ return _0x0d2(4);
+ }
+ if (m.includes(_0x0d2(5))) {
+ return _0x0d2(6);
+ }
+ if (m.includes(_0x0d2(7))) {
+ return _0x0d2(8);
+ }
+ if (m.includes(_0x0d2(9)) || type === _0x0d2(10)) {
+ return _0x0d2(11);
+ }
+ if (m.includes(_0x0d2(12)) || type === _0x0d2(13)) {
+ return _0x0d2(14);
+ }
+ if (m.includes(_0x0d2(15)) || type === _0x0d2(16)) {
+ return _0x0d2(17);
+ }
+ if (m.includes(_0x0d2(18)) || type === _0x0d2(19)) {
+ return _0x0d2(20);
+ }
+ if (m.includes(_0x0d2(21)) || m.includes(_0x0d2(22)) || m.includes(_0x0d2(23))) {
+ return _0x0d2(24);
+ }
+ return _0x0d2(25);
+ }
+
+ 
+ function _0x0e1(url, lineNo, colNo) {
+ 
+ const _0x0d3 = document.documentElement.outerHTML;
+ const _0x0d4 = _0x0d3.split(_0x0d2(26));
+ if (!lineNo || lineNo < 1) return null;
+
+ const ctx = 4; 
+ const _0x0d5 = Math.max(0, lineNo - ctx - 1);
+ const end = Math.min(_0x0d4.length - 1, lineNo + ctx - 1);
+
+ let out = '';
+ for (let i = _0x0d5; i <= end; i++) {
+ const _0x0d6 = (i === lineNo - 1);
+ const _0x0d7 = _0x0d4[i]
+ .replace(/&/g,_0x0d2(27)).replace(/</g,_0x0d2(28)).replace(/>/g,_0x0d2(29));
+ out += `<div class="debug-source-line${_0x0d6?' error-line':''}">
+ <span class="debug-line-num">${i+1}${_0x0d6?' ◀':''}</span>
+ <span class="debug-line-_0x0d7">${_0x0d7 || ' '}</span>
+ </div>`;
+ }
+ return out;
+ }
+
+ 
+ window.__debugErrors = [];
+
+ window.onerror = function(message, source, lineno, colno, error) {
+ const _0x0d8 = {
+ message: message || _0x0d2(30),
+ type: error ? error.name : _0x0d2(31),
+ source: source || _0x0d2(32),
+ lineno: lineno || 0,
+ colno: colno || 0,
+ stack: error ? (error.stack || '') : '',
+ time: new Date().toLocaleTimeString(_0x0d2(33))
+ };
+ window.__debugErrors.push(_0x0d8);
+ showDebugger(_0x0d8);
+ return false; 
+ };
+
+ window.addEventListener(_0x0d2(34), function(e) {
+ const err = e.reason;
+ const _0x0d8 = {
+ message: err ? (err.message || String(err)) : _0x0d2(35),
+ type: err ? (err.name || _0x0d2(36)) : _0x0d2(36),
+ source: _0x0d2(37),
+ lineno: 0, colno: 0,
+ stack: err ? (err.stack || '') : '',
+ time: new Date().toLocaleTimeString(_0x0d2(33))
+ };
+ window.__debugErrors.push(_0x0d8);
+ showDebugger(_0x0d8);
+ });
+
+ window.showDebugger = function(_0x0d8) {
+ const _0x0d9 = document.getElementById(_0x0d2(38));
+ const _0x0da = document.getElementById(_0x0d2(39));
+ if (!_0x0d9 || !_0x0da) return;
+
+ const _0x0db = _0x0e1(_0x0d8.source, _0x0d8.lineno, _0x0d8.colno);
+ const _0x0dc = _0x0e0(_0x0d8.message, _0x0d8.type);
+ const _0x0dd = _0x0d8.source === _0x0d2(32) ? _0x0d2(40) : _0x0d8.source;
+ const _0x0de = !_0x0d8.source || _0x0d8.source === _0x0d2(32) || _0x0d8.source.includes(location.hostname) || _0x0d8.source.startsWith(_0x0d2(41));
+
+ _0x0da.innerHTML = `
+ <div class="debug-section">
+ <div class="debug-label">Hata Mesajı</div>
+ <div class="debug-error-box">
+ <div class="debug-error-message">${_0x0d8.type ? '<span style="color:#fb923c;">['+_0x0d8.type+']</span> ' : ''}${(_0x0d8.message||'').replace(/</g,'&lt;')}</div>
+ </div>
+ </div>
+
+ <div class="debug-section">
+ <div class="debug-label">Konum Bilgisi</div>
+ <div class="debug-meta-grid">
+ <div class="debug-meta-item">
+ <div class="debug-meta-key">Satır</div>
+ <div class="debug-meta-val">${_0x0d8.lineno || '—'}</div>
+ </div>
+ <div class="debug-meta-item">
+ <div class="debug-meta-key">Sütun</div>
+ <div class="debug-meta-val">${_0x0d8.colno || '—'}</div>
+ </div>
+ <div class="debug-meta-item" style="grid-column:span 2;">
+ <div class="debug-meta-key">Kaynak</div>
+ <div class="debug-meta-val" style="font-size:0.78rem;">${_0x0dd}</div>
+ </div>
+ </div>
+ </div>
+
+ ${_0x0db && _0x0de ? `
+ <div class=_0x0d2(42)>
+ <div class=_0x0d2(43)>Kaynak Kod (Satır ${_0x0d8.lineno})</div>
+ <div class=_0x0d2(44)>
+ <div class=_0x0d2(45)>
+ <span>◀ hata satırı işaretli</span>
+ <span>Satır ${_0x0d8.lineno}, Sütun ${_0x0d8.colno}</span>
+ </div>
+ <div class=_0x0d2(46)>${_0x0db}</div>
+ </div>
+ </div>` : ''}
+
+ <div class="debug-section">
+ <div class="debug-label">Açıklama</div>
+ <div class="debug-_0x0dc-box">${_0x0dc}</div>
+ </div>
+
+ ${_0x0d8.stack ? `
+ <div class=_0x0d2(42)>
+ <div class=_0x0d2(43)>Yığın İzi (Stack Trace)</div>
+ <div class=_0x0d2(47)>${_0x0d8.stack.replace(/</g,_0x0d2(28))}</div>
+ </div>` : ''}
+ `;
+
+ _0x0d9.classList.add(_0x0d2(48));
+ };
+
+ window.closeDebugger = function() {
+ document.getElementById(_0x0d2(38)).classList.remove(_0x0d2(48));
+ };
+
+ window.copyDebugInfo = function() {
+ const _0x0da = document.getElementById(_0x0d2(39));
+ const text = _0x0da ? _0x0da.innerText : '';
+ const _0x0df = function() {
+ const el = document.getElementById(_0x0d2(49));
+ if (el) { el.classList.add(_0x0d2(50)); setTimeout(function() { el.classList.remove(_0x0d2(50)); }, 2000); }
+ };
+ 
+ if (navigator.clipboard && navigator.clipboard.writeText) {
+ navigator.clipboard.writeText(text).then(_0x0df).catch(function() { fallbackCopy(text, _0x0df); });
+ } else {
+ fallbackCopy(text, _0x0df);
+ }
+ };
+
+ function fallbackCopy(text, cb) {
+ try {
+ const ta = document.createElement(_0x0d2(51));
+ ta.value = text;
+ ta.style.cssText = _0x0d2(52);
+ document._0x0da.appendChild(ta);
+ ta.focus(); ta.select();
+ document.execCommand(_0x0d2(53));
+ document._0x0da.removeChild(ta);
+ if (cb) cb();
+ } catch(e) {}
+ }
+
+ 
+ document.getElementById(_0x0d2(38)).addEventListener(_0x0d2(54), function(e) {
+ if (e.target === this) closeDebugger();
+ });
+
+ 
+ document.addEventListener(_0x0d2(55), function(e) {
+ if (e.key === _0x0d2(56)) closeDebugger();
+ });
+
+ 
+ window.debugTest = function() {
+ window.showDebugger({
+ message: _0x0d2(57),
+ type: _0x0d2(13), source: _0x0d2(32),
+ lineno: 42, colno: 18,
+ stack: _0x0d2(58),
+ time: new Date().toLocaleTimeString(_0x0d2(33))
+ });
+ };
+})();
+</script>
+
+</body>
+</html>
