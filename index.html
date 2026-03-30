@@ -1,0 +1,2954 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S-Sınav Pro 8.5</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f5f5;
+    --surface: #ffffff;
+    --surface2: #f0f0f0;
+    --border: #e0e0e0;
+    --accent: #2563eb;
+    --accent2: #3b82f6;
+    --text: #1a1a1a;
+    --muted: #888;
+    --radius: 12px;
+  }
+
+  body.theme-dark {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: #2e2e2e;
+    --accent: #d4a853;
+    --accent2: #e8c87a;
+    --text: #f0ece4;
+    --muted: #888;
+  }
+
+  body.theme-green {
+    --bg: #f0fdf4;
+    --surface: #ffffff;
+    --surface2: #dcfce7;
+    --border: #bbf7d0;
+    --accent: #16a34a;
+    --accent2: #22c55e;
+    --text: #14532d;
+    --muted: #6b7280;
+  }
+
+  body.theme-purple {
+    --bg: #faf5ff;
+    --surface: #ffffff;
+    --surface2: #f3e8ff;
+    --border: #e9d5ff;
+    --accent: #7c3aed;
+    --accent2: #8b5cf6;
+    --text: #3b0764;
+    --muted: #6b7280;
+  }
+
+  body.theme-dark-blue {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --surface2: #334155;
+    --border: #475569;
+    --accent: #38bdf8;
+    --accent2: #7dd3fc;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 20px 80px 20px;
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  .top-bar {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 12px; gap: 12px;
+  }
+  header { text-align: center; flex: 1; padding-top: 0; padding-bottom: 0; }
+  header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 2.6rem;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+    margin-bottom: 2px;
+    line-height: 1.1;
+  }
+  header p { color: var(--muted); font-size: 0.88rem; font-weight: 300; margin: 0 0 18px 0; line-height: 1; letter-spacing: 0.2px; }
+
+  .theme-bar {
+    display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;
+  }
+  .theme-chip {
+    display: flex; align-items: center; justify-content: center;
+    padding: 6px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .theme-chip:hover { border-color: var(--accent); }
+  .theme-chip.active { border-color: var(--accent); background: var(--accent); }
+  .theme-chip .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.12);
+    flex-shrink: 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-title::before {
+    content: '';
+    width: 3px; height: 18px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 7px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  input[type="text"], textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  input[type="text"]:focus, textarea:focus { border-color: var(--accent); }
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 8px 36px 8px 14px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56,189,248,0.1); }
+  select option { background: var(--surface); color: var(--text); }
+
+  .form-row { margin-bottom: 18px; }
+  .form-row:last-child { margin-bottom: 0; }
+
+  .inline-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+    margin-top: 6px;
+  }
+
+  .range-display {
+    font-size: 0.85rem;
+    color: var(--accent2);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(212, 168, 83, 0.04);
+  }
+  .upload-zone input { position: absolute; top:0; right:0; bottom:0; left:0; opacity: 0; cursor: pointer; }
+  .upload-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.6; }
+  .upload-zone p { color: var(--muted); font-size: 0.9rem; }
+  .upload-zone strong { color: var(--accent); }
+
+  /* Photo list */
+  .photo-list { margin-top: 20px; display: flex; flex-direction: column; gap: 6px; }
+  .photo-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    cursor: grab;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    user-select: none;
+    overflow: visible;
+  }
+  .photo-item:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+  .photo-item.dragging { opacity: 0.35; cursor: grabbing; }
+  .photo-item.drag-target { border-color: var(--accent); background: rgba(212,168,83,0.07); }
+
+  /* Row 1: thumb + name + move btns + remove */
+  .photo-item-top {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .photo-item .thumb {
+    width: 42px; height: 42px; min-width: 42px;
+    border-radius: 6px; overflow: hidden;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .photo-item .thumb img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .photo-item .item-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem; color: var(--accent);
+    min-width: 18px; text-align: center;
+    flex-shrink: 0;
+  }
+  .photo-item .item-name {
+    flex: 1; font-size: 0.75rem; color: var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    min-width: 0;
+  }
+  .move-btns { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+  .move-btn {
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); cursor: pointer;
+    width: 22px; height: 19px; border-radius: 4px;
+    font-size: 0.62rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+  }
+  .move-btn:hover { color: var(--accent); border-color: var(--accent); background: rgba(212,168,83,0.08); }
+  .move-btn:disabled { opacity: 0.2; cursor: default; }
+  .photo-item .remove-btn {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 1rem; padding: 4px;
+    border-radius: 6px; transition: color 0.15s, background 0.15s;
+    line-height: 1; flex-shrink: 0;
+  }
+  .photo-item .remove-btn:hover { color: #e05555; background: rgba(224,85,85,0.1); }
+
+  /* Row 2: puan + span selector */
+  .photo-item-bottom {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 6px; padding-top: 6px;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .photo-item-bottom-group {
+    display: flex; flex-direction: column; gap: 4px;
+    flex-shrink: 0;
+  }
+  .photo-item-bottom-label {
+    font-size: 0.65rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.4px;
+    white-space: nowrap;
+  }
+  .photo-item .point-wrap {
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+  }
+  .photo-item .point-input {
+    width: 52px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 4px 6px;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .photo-item .point-input:focus { border-color: var(--accent); }
+
+  .span-divider { width: 1px; height: 18px; background: var(--border); flex-shrink: 0; }
+
+  .span-selector { display: flex; gap: 3px; flex-shrink: 0; align-items: center; }
+  .span-col-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    min-width: 26px; height: 26px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+    padding: 0 4px;
+  }
+  .span-col-btn:hover { color: var(--accent); border-color: var(--accent); }
+  .span-col-btn.active { color: #fff; background: var(--accent); border-color: var(--accent); }
+
+  .divider-rule {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 10px;
+  }
+  .divider-rule select, .divider-rule input[type="number"] {
+    font-size: 0.78rem; padding: 4px 6px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    outline: none; width: auto;
+  }
+  .divider-rule input[type="number"] { width: 52px; text-align: center; }
+  .divider-rule input[type="color"] {
+    width: 30px; height: 28px; padding: 2px;
+    border-radius: 6px; border: 1px solid var(--border);
+    background: var(--surface); cursor: pointer;
+  }
+  .divider-rule-label { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+  .divider-rule-del {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 1rem; padding: 2px 4px;
+    border-radius: 5px; margin-left: auto;
+    transition: color 0.15s;
+  }
+  .divider-rule-del:hover { color: #e05555; }
+  .move-btns { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+  .move-btn {
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); cursor: pointer;
+    width: 22px; height: 19px; border-radius: 4px;
+    font-size: 0.62rem; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
+  }
+  .move-btn:hover { color: var(--accent); border-color: var(--accent); background: rgba(212,168,83,0.08); }
+  .move-btn:disabled { opacity: 0.2; cursor: default; }
+
+  .archive-row {
+    display: flex; align-items: center; gap: 12px; margin: 8px 0 10px;
+  }
+  .archive-save-btn {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 8px; padding: 7px 14px; font-size: 0.82rem;
+    font-family: 'DM Sans', sans-serif; cursor: pointer;
+    font-weight: 600; white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .archive-save-btn:hover { opacity: 0.85; }
+  .title-archive {
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px;
+  }
+  .archive-item {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 12px;
+  }
+  .archive-item-text {
+    flex: 1; font-size: 0.85rem; color: var(--text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    cursor: pointer;
+  }
+  .archive-item-text:hover { color: var(--accent); }
+  .archive-use-btn {
+    background: none; border: 1px solid var(--border);
+    color: var(--accent); border-radius: 6px; padding: 4px 10px;
+    font-size: 0.75rem; cursor: pointer; white-space: nowrap;
+    transition: all 0.15s; font-family: 'DM Sans', sans-serif;
+  }
+  .archive-use-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .archive-del-btn {
+    background: none; border: none; color: var(--muted);
+    cursor: pointer; font-size: 1rem; padding: 2px 4px;
+    border-radius: 6px; transition: color 0.15s;
+  }
+  .archive-del-btn:hover { color: #e05555; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex; gap: 20px; align-items: center;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border-radius: 8px;
+    margin-top: 18px;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .stats-bar span strong { color: var(--accent2); }
+
+  /* Generate button */
+  .btn-generate {
+    padding: 10px 24px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .btn-generate:hover { background: var(--accent2); }
+  .btn-generate:active { transform: scale(0.98); }
+  .btn-generate:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+  /* Sabit alt bar */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 999;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+  }
+  .bottom-bar-info {
+    flex: 1;
+    font-size: 0.78rem;
+    color: var(--muted);
+    min-width: 0;
+  }
+  .bottom-bar-info strong { color: var(--accent2); }
+  .bottom-bar-progress {
+    flex: 1;
+    min-width: 80px;
+    max-width: 180px;
+    display: none;
+  }
+  .bottom-bar-progress-label { font-size: 0.72rem; color: var(--muted); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bottom-bar-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .bottom-bar-progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+  /* Progress (eski, artık kullanılmıyor ama JS referans ediyor) */
+  .progress-wrap { display: none; }
+  .progress-label { font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+
+  .empty-hint { text-align: center; padding: 30px; color: var(--muted); font-size: 0.85rem; }
+
+  /* Color pickers */
+  .color-row { display: flex; align-items: center; gap: 12px; }
+  .color-row input[type="color"] {
+    width: 38px; height: 38px;
+    padding: 2px; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--surface2);
+    cursor: pointer;
+  }
+  .color-row span { font-size: 0.82rem; color: var(--muted); }
+
+  /* Toggle switch */
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 4px 0; }
+  .toggle-row span { font-size: 0.9rem; color: var(--text); }
+  .toggle { position: relative; width: 44px; height: 24px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider {
+    position: absolute; top:0; right:0; bottom:0; left:0;
+    background: var(--border); border-radius: 24px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle-slider::before {
+    content: ''; position: absolute;
+    width: 18px; height: 18px; left: 3px; top: 3px;
+    background: #fff; border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle input:checked + .toggle-slider { background: var(--accent); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+  input[type="number"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="number"]:focus { border-color: var(--accent); }
+
+  .label-preview {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--accent2);
+    margin-top: 14px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    letter-spacing: 0.5px;
+  }
+
+  /* Font style buttons */
+  .style-btns { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .style-btn {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .style-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .style-btn.bold-btn { font-weight: 700; }
+  .style-btn.italic-btn { font-style: italic; }
+
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .section-divider {
+    border: none; border-top: 1px solid var(--border);
+    margin: 18px 0;
+  }
+
+  .theme-menu-item {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%; padding: 7px 10px; border: none;
+    background: none; color: var(--text); cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    border-radius: 7px; transition: background 0.15s;
+    text-align: left;
+  }
+  .theme-menu-item:hover { background: var(--surface2); }
+  .theme-menu-item.active { background: var(--surface2); font-weight: 600; color: var(--accent); }
+  .theme-menu-item .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;
+  }
+</style>
+</head>
+<body class="">
+
+
+<div style="position:fixed; top:12px; right:12px; z-index:1000;">
+  <button id="dayNightBtn" onclick="toggleDayNight()" title="Gece/Gündüz" style="background:var(--surface); border:1px solid var(--border); border-radius:50%; width:38px; height:38px; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; box-shadow:0 2px 8px rgba(0,0,0,0.2);">☀️</button>
+</div>
+
+<div class="container">
+    <header>
+      <h1 style="position:relative; display:inline-block;">S-Sınav<span style="display:inline-block; vertical-align:top; margin-left:0.1em; margin-top:1.55em; font-family:'DM Sans',sans-serif; font-size:0.22em; font-weight:700; letter-spacing:0.02em; background:var(--accent); color:#fff; border-radius:4px; padding:2px 5px; line-height:1.4; white-space:nowrap;">Pro 8.5</span></h1>
+      <p>Fotoğrafları seç ve sınavını hazırla</p>
+    </header>
+
+  <!-- Sorular -->
+  <div class="card">
+    <div class="card-title">Sorular</div>
+    <div class="form-row">
+      <label>Yükleme kalitesi</label>
+      <select id="uploadQuality">
+        <option value="low">Düşük — hızlı, az yer (mobil önerilir)</option>
+        <option value="medium" selected>Orta — dengeli</option>
+        <option value="high">Yüksek — net, büyük dosya</option>
+        <option value="original">Orijinal — sıkıştırma yok</option>
+      </select>
+    </div>
+    <div class="upload-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="image/*" multiple>
+      <div class="upload-icon">📷</div>
+      <p><strong>Tıklayın veya soruları buraya sürükleyin</strong></p>
+      <p style="margin-top:6px; font-size:0.8rem;">JPG, PNG, WEBP — Birden fazla seçebilirsiniz</p>
+    </div>
+
+    <div id="totalPointsBanner" style="display:none; margin-bottom:8px; padding:8px 14px; border-radius:8px; font-size:0.85rem; font-weight:600; background:var(--surface2); transition:all 0.2s;">
+      <span id="totalPointsSpan">🎯 Toplam puan: <strong id="totalPoints">0</strong></span>
+    </div>
+    <div id="photoList" class="photo-list"></div>
+
+    <div id="statsBar" class="stats-bar" style="display:none; flex-direction:column; gap:10px;">
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+        <span>📋 <strong id="photoCount">0</strong> soru</span>
+        <span>📄 Tahminen <strong id="pageCount">~</strong> sayfa</span>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button onclick="shufflePhotos()" style="flex:1; background:none; border:1px solid var(--border); color:var(--text); border-radius:6px; padding:5px 10px; font-size:0.75rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">🔀 Karıştır</button>
+        <button onclick="clearAllPhotos()" style="flex:1; background:none; border:1px solid var(--border); color:var(--text); border-radius:6px; padding:5px 10px; font-size:0.75rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='#e05555';this.style.color='#e05555'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">🗑 Tümünü Sil</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Belge Bilgileri -->
+  <div class="card">
+    <div class="card-title">Belge Bilgileri</div>
+
+    <!-- 1. Başlık -->
+    <div class="form-row">
+      <label>Başlık metni</label>
+      <textarea id="docTitle" rows="2" placeholder="Belgenin başlığını girin..."></textarea>
+    </div>
+    <div class="archive-row">
+      <button class="archive-save-btn" onclick="archiveSaveTitle()">＋ Arşive Kaydet</button>
+      <span style="font-size:0.78rem; color:var(--muted);">Kaydettikleriniz aşağıda listelenir</span>
+    </div>
+    <div id="titleArchive" class="title-archive"></div>
+    <div class="three-col">
+      <div class="form-row">
+        <label>Yazı boyutu (pt)</label>
+        <input type="number" id="titleSize" value="12" min="6" max="72">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="titleColor" value="#1a1a1a"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn active" id="titleBold" onclick="toggleStyle('titleBold')">K</button>
+          <button class="style-btn italic-btn" id="titleItalic" onclick="toggleStyle('titleItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Hizalama</label>
+      <div class="style-btns">
+        <button class="style-btn" id="titleAlignLeft" onclick="setTitleAlign('left')">← Sol</button>
+        <button class="style-btn active" id="titleAlignCenter" onclick="setTitleAlign('center')">←→ Orta</button>
+        <button class="style-btn" id="titleAlignRight" onclick="setTitleAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- 2. AD SOYAD / SINIF / NO -->
+    <div class="three-col">
+      <div class="form-row">
+        <label>AD SOYAD / NO yazı boyutu (pt)</label>
+        <input type="number" id="studentSize" value="12" min="6" max="20">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="studentColor" value="#1a1a1a"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn active" id="studentBold" onclick="toggleStyle('studentBold')">K</button>
+          <button class="style-btn italic-btn" id="studentItalic" onclick="toggleStyle('studentItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- 3. İlk Sayfa Açıklama Metni -->
+    <div class="form-row">
+      <label>İlk Sayfa Açıklama Metni</label>
+      <textarea id="docDesc" rows="3" placeholder="Kısa bir açıklama yazın..."></textarea>
+    </div>
+    <div class="archive-row">
+      <button class="archive-save-btn" onclick="archiveSaveDesc()">＋ Arşive Kaydet</button>
+      <span style="font-size:0.78rem; color:var(--muted);">Kaydettikleriniz aşağıda listelenir</span>
+    </div>
+    <div id="descArchive" class="title-archive"></div>
+    <div class="three-col">
+      <div class="form-row">
+        <label>Yazı boyutu (pt)</label>
+        <input type="number" id="descSize" value="12" min="6" max="48">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="descColor" value="#444444"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn" id="descBold" onclick="toggleStyle('descBold')">K</button>
+          <button class="style-btn italic-btn" id="descItalic" onclick="toggleStyle('descItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Hizalama</label>
+      <div class="style-btns">
+        <button class="style-btn active" id="descAlignLeft" onclick="setDescAlign('left')">← Sol</button>
+        <button class="style-btn" id="descAlignCenter" onclick="setDescAlign('center')">←→ Orta</button>
+        <button class="style-btn" id="descAlignRight" onclick="setDescAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- 4. Son Sayfa Açıklama Metni -->
+    <div class="form-row">
+      <label>Son Sayfa Açıklama Metni</label>
+      <textarea id="footerText" rows="2" placeholder="Örn: Başarılar dileriz. — Fen Bilimleri Zümresi"></textarea>
+    </div>
+    <div class="archive-row">
+      <button class="archive-save-btn" onclick="archiveSaveFooter()">＋ Arşive Kaydet</button>
+      <span style="font-size:0.78rem; color:var(--muted);">Kaydettikleriniz aşağıda listelenir</span>
+    </div>
+    <div id="footerArchive" class="title-archive"></div>
+    <div class="three-col">
+      <div class="form-row">
+        <label>Yazı boyutu (pt)</label>
+        <input type="number" id="footerSize" value="12" min="6" max="36">
+      </div>
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="footerColor" value="#444444"></div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn" id="footerBold" onclick="toggleStyle('footerBold')">K</button>
+          <button class="style-btn italic-btn" id="footerItalic" onclick="toggleStyle('footerItalic')">İ</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Hizalama</label>
+      <div class="style-btns">
+        <button class="style-btn" id="footerAlignLeft" onclick="setFooterAlign('left')">← Sol</button>
+        <button class="style-btn" id="footerAlignCenter" onclick="setFooterAlign('center')">←→ Orta</button>
+        <button class="style-btn active" id="footerAlignRight" onclick="setFooterAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Alt boşluktan mesafe (mm)</label>
+      <input type="range" id="footerOffsetSlider" min="2" max="30" value="8" oninput="document.getElementById('footerOffsetVal').textContent=this.value+' mm'">
+      <div class="range-display" id="footerOffsetVal">8 mm</div>
+    </div>
+    <hr class="section-divider">
+
+    <!-- 5.5 Diğer sayfaya geçiniz -->
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>"Diğer sayfaya geçiniz…" ekle</span>
+        <label class="toggle">
+          <input type="checkbox" id="nextPageEnabled" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="nextPageOptions" style="margin-top:14px;">
+      <div class="inline-row">
+        <div class="form-row">
+          <label>Alt boşluktan mesafe (mm)</label>
+          <input type="range" id="nextPageOffsetSlider" min="2" max="30" value="8" oninput="document.getElementById('nextPageOffsetVal').textContent=this.value+' mm'">
+          <div class="range-display" id="nextPageOffsetVal">8 mm</div>
+        </div>
+        <div class="form-row">
+          <label>Yazı boyutu (pt)</label>
+          <input type="number" id="nextPageSize" value="9" min="6" max="20">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Hizalama</label>
+        <div class="style-btns">
+          <button class="style-btn" id="nextPageAlignLeft" onclick="selectNextPageAlign('left')">← Sol</button>
+          <button class="style-btn" id="nextPageAlignCenter" onclick="selectNextPageAlign('center')">←→ Orta</button>
+          <button class="style-btn active" id="nextPageAlignRight" onclick="selectNextPageAlign('right')">→ Sağ</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- 6. Arka plan -->
+    <div class="form-row">
+      <label>Arka plan rengi</label>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#ffffff">
+        <span>Sayfa arka planı</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Düzen Ayarları -->
+  <div class="card">
+    <div class="card-title">Düzen Ayarları</div>
+    <div class="inline-row">
+      <div class="form-row">
+        <label>Sayfa yönü</label>
+        <div class="style-btns">
+          <button class="style-btn active" id="orientPortrait" onclick="selectOrientation('portrait')">↕ Dikey (A4)</button>
+          <button class="style-btn" id="orientLandscape" onclick="selectOrientation('landscape')">↔ Yatay (A4)</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Sütun sayısı</label>
+        <div class="style-btns">
+          <button class="style-btn" id="col1" onclick="selectCols(1)">1 Sütun</button>
+          <button class="style-btn active" id="col2" onclick="selectCols(2)">2 Sütun</button>
+          <button class="style-btn" id="col3" onclick="selectCols(3)">3 Sütun</button>
+          <button class="style-btn" id="col4" onclick="selectCols(4)">4 Sütun</button>
+        </div>
+      </div>
+    </div>
+    <div class="inline-row">
+      <div class="form-row">
+        <label>Soru arası boşluk (mm)</label>
+        <input type="range" id="gapSlider" min="1" max="15" value="4">
+        <div class="range-display" id="gapVal">4 mm</div>
+      </div>
+      <div class="form-row">
+        <label>Sayfa kenar boşluğu (mm)</label>
+        <input type="range" id="marginSlider" min="5" max="30" value="8">
+        <div class="range-display" id="marginVal">8 mm</div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Sütun Arası Çizgiler -->
+    <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:12px;">Sütun Arası Çizgiler</div>
+    <div id="dividerList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
+    <button onclick="addDividerRule()" style="width:100%; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:8px; padding:8px; font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">＋ Çizgi Ekle</button>
+  </div>
+
+  <!-- Soru Düzeni -->
+  <div class="card">
+    <div class="card-title">Soru Düzeni</div>
+
+    <!-- Soru Etiketi alt bölümü -->
+    <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:10px;">Soru Etiketi</div>
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Her soruya "SORU X (Y Puan)" etiketi ekle</span>
+        <label class="toggle">
+          <input type="checkbox" id="labelEnabled" checked onchange="updatePreview()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="labelOptions">
+      <div class="form-row" style="margin-top:14px;">
+        <div class="toggle-row">
+          <span>Soru numarasını göster (SORU X)</span>
+          <label class="toggle">
+            <input type="checkbox" id="labelShowNumber" checked onchange="updatePreview()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="three-col" style="margin-top:16px;">
+        <div class="form-row">
+          <label>Başlangıç soru no</label>
+          <input type="number" id="startQuestion" value="1" min="1" oninput="updatePreview()">
+        </div>
+        <div class="form-row">
+          <label>Yazı boyutu (pt)</label>
+          <input type="number" id="labelSize" value="12" min="6" max="36" oninput="updatePreview()">
+        </div>
+        <div class="form-row">
+          <label>Renk</label>
+          <div class="color-row"><input type="color" id="labelColor" value="#003580" oninput="updatePreview()"></div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn active" id="labelBold" onclick="toggleStyle('labelBold'); updatePreview()">K</button>
+          <button class="style-btn italic-btn" id="labelItalic" onclick="toggleStyle('labelItalic'); updatePreview()">İ</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Hizalama</label>
+        <div class="style-btns">
+          <button class="style-btn active" id="labelAlignLeft" onclick="setLabelAlign('left')">← Sol</button>
+          <button class="style-btn" id="labelAlignCenter" onclick="setLabelAlign('center')">←→ Orta</button>
+          <button class="style-btn" id="labelAlignRight" onclick="setLabelAlign('right')">→ Sağ</button>
+        </div>
+      </div>
+      <div class="label-preview" id="labelPreview" style="margin-top:12px;">SORU 1 &nbsp;&nbsp;(10 Puan)</div>
+      <div style="font-size:0.82rem; color:var(--muted); margin-top:8px;">Her soru için puan, soru listesinde ayrı ayrı girilecek.</div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Soru hizalama -->
+    <div class="form-row">
+      <label>Soru hizalama (sütun içinde)</label>
+      <div class="style-btns">
+        <button class="style-btn active" id="alignLeft" onclick="selectAlign('left')">← Sol</button>
+        <button class="style-btn" id="alignCenter" onclick="selectAlign('center')">←→ Ortala</button>
+        <button class="style-btn" id="alignRight" onclick="selectAlign('right')">→ Sağ</button>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Sayfaya sığdır -->
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Soruları belirli sayıda sayfaya sığdır</span>
+        <label class="toggle">
+          <input type="checkbox" id="fitPagesEnabled" checked onchange="toggleFitPages()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="fitPagesOptions" style="margin-top:12px;">
+      <div class="form-row">
+        <label>Hedef sayfa sayısı</label>
+        <div class="style-btns">
+          <button class="style-btn" id="fitPage1" onclick="selectFitPages(1)">1</button>
+          <button class="style-btn active" id="fitPage2" onclick="selectFitPages(2)">2</button>
+          <button class="style-btn" id="fitPage3" onclick="selectFitPages(3)">3</button>
+          <button class="style-btn" id="fitPage4" onclick="selectFitPages(4)">4</button>
+          <button class="style-btn" id="fitPage5" onclick="selectFitPages(5)">5</button>
+          <button class="style-btn" id="fitPage6" onclick="selectFitPages(6)">6</button>
+          <button class="style-btn" id="fitPage7" onclick="selectFitPages(7)">7</button>
+          <button class="style-btn" id="fitPage8" onclick="selectFitPages(8)">8</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Otomatik sıralama -->
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Soruları otomatik sırala (en verimli yerleşim)</span>
+        <label class="toggle">
+          <input type="checkbox" id="autoSortEnabled" checked onchange="applyAutoSort()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div style="font-size:0.78rem; color:var(--muted); margin-top:6px; line-height:1.5;">Çok sütunlu sorular öne alınır, her soru boşluğa en uygun şekilde yerleştirilir.</div>
+
+    <hr class="section-divider">
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Her soruyu yuvarlatılmış çerçeve içine al</span>
+        <label class="toggle">
+          <input type="checkbox" id="borderEnabled" checked onchange="toggleBorderOptions()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="borderOptions">
+      <div class="three-col" style="margin-top:14px;">
+        <div class="form-row">
+          <label>Çizgi kalınlığı (pt)</label>
+          <input type="number" id="borderWidth" value="2" min="0.5" max="5" step="0.5">
+        </div>
+        <div class="form-row">
+          <label>Çerçeve rengi</label>
+          <div class="color-row"><input type="color" id="borderColor" value="#000000"></div>
+        </div>
+        <div class="form-row">
+          <label>Köşe yuvarlaklığı (mm)</label>
+          <input type="number" id="borderRadius" value="3" min="0" max="10">
+        </div>
+      </div>
+      <div class="inline-row">
+        <div class="form-row">
+          <label>İç dolgu — yatay (mm)</label>
+          <input type="range" id="borderPadH" min="0" max="8" value="2" oninput="document.getElementById('borderPadHVal').textContent=this.value+' mm'">
+          <div class="range-display" id="borderPadHVal">2 mm</div>
+        </div>
+        <div class="form-row">
+          <label>İç dolgu — dikey (mm)</label>
+          <input type="range" id="borderPadV" min="0" max="8" value="2" oninput="document.getElementById('borderPadVVal').textContent=this.value+' mm'">
+          <div class="range-display" id="borderPadVVal">2 mm</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filigran -->
+  <div class="card">
+    <div class="card-title">Filigran</div>
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Filigran ekle</span>
+        <label class="toggle">
+          <input type="checkbox" id="watermarkEnabled" onchange="toggleWatermarkOptions()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div id="watermarkOptions" style="opacity:0.4; pointer-events:none; margin-top:16px;">
+
+      <!-- Metin -->
+      <div class="form-row">
+        <label>Filigran metni</label>
+        <input type="text" id="watermarkText" value="GİZLİ" placeholder="örn: TASLAK, GİZLİ, KOPYA...">
+      </div>
+
+      <div class="three-col" style="margin-top:4px;">
+        <div class="form-row">
+          <label>Yazı boyutu (pt)</label>
+          <input type="number" id="watermarkSize" value="60" min="10" max="200">
+        </div>
+        <div class="form-row">
+          <label>Renk</label>
+          <div class="color-row"><input type="color" id="watermarkColor" value="#000000"></div>
+        </div>
+        <div class="form-row">
+          <label>Saydamlık (%)</label>
+          <input type="number" id="watermarkOpacity" value="10" min="1" max="100">
+        </div>
+      </div>
+
+      <!-- Stil -->
+      <div class="form-row">
+        <label>Stil</label>
+        <div class="style-btns">
+          <button class="style-btn bold-btn active" id="watermarkBold" onclick="toggleStyle('watermarkBold')">K</button>
+          <button class="style-btn italic-btn" id="watermarkItalic" onclick="toggleStyle('watermarkItalic')">İ</button>
+        </div>
+      </div>
+
+      <!-- Yön -->
+      <div class="form-row">
+        <label>Açı (derece)</label>
+        <input type="range" id="watermarkAngle" min="-90" max="90" value="-45" oninput="document.getElementById('watermarkAngleVal').textContent=this.value+'°'">
+        <div class="range-display" id="watermarkAngleVal">-45°</div>
+      </div>
+
+      <!-- Konum -->
+      <div class="form-row">
+        <label>Konum</label>
+        <div class="style-btns">
+          <button class="style-btn" id="wmPosCenter" onclick="selectWatermarkPos('center')">Merkez</button>
+          <button class="style-btn active" id="wmPosTile" onclick="selectWatermarkPos('tile')">Döşeme</button>
+        </div>
+      </div>
+
+      <!-- Döşeme aralığı (sadece tile modda) -->
+      <div id="watermarkTileOptions" style="margin-top:10px;">
+        <div class="inline-row">
+          <div class="form-row">
+            <label>Yatay aralık (mm)</label>
+            <input type="range" id="watermarkTileX" min="20" max="150" value="70" oninput="document.getElementById('watermarkTileXVal').textContent=this.value+' mm'">
+            <div class="range-display" id="watermarkTileXVal">70 mm</div>
+          </div>
+          <div class="form-row">
+            <label>Dikey aralık (mm)</label>
+            <input type="range" id="watermarkTileY" min="20" max="150" value="50" oninput="document.getElementById('watermarkTileYVal').textContent=this.value+' mm'">
+            <div class="range-display" id="watermarkTileYVal">50 mm</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hangi sayfalar -->
+      <div class="form-row">
+        <label>Hangi sayfalara</label>
+        <div class="style-btns">
+          <button class="style-btn active" id="wmPageAll" onclick="selectWatermarkPages('all')">Tümü</button>
+          <button class="style-btn" id="wmPageFirst" onclick="selectWatermarkPages('first')">Sadece 1. Sayfa</button>
+          <button class="style-btn" id="wmPageLast" onclick="selectWatermarkPages('last')">Sadece Son Sayfa</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Sabit Alt Bar -->
+<div class="bottom-bar">
+  <div class="bottom-bar-info" id="bottomBarInfo">© sebasmobil</div>
+  <div class="bottom-bar-progress" id="bottomBarProgress">
+    <div class="bottom-bar-progress-label" id="progressLabel">Hazırlanıyor...</div>
+    <div class="bottom-bar-progress-bar"><div class="bottom-bar-progress-fill" id="progressFill"></div></div>
+  </div>
+  <button class="btn-generate" id="generateBtn" disabled onclick="generatePDF()">⬇ PDF Oluştur</button>
+</div>
+
+<!-- Progress wrap (JS uyumu için gizli) -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+
+<script>var _0xSA9f93a9=["dGhlbWUtZGFyay1ibHVl","ZGF5TmlnaHRCdG4=","ZGF5TmlnaHQ=","ZGFyaw==","bGlnaHQ=","cG9ydHJhaXQ=","cmVzaXpl","bGFuZHNjYXBl","b3JpZW50UG9ydHJhaXQ=","YWN0aXZl","b3JpZW50TGFuZHNjYXBl","YXV0b1NvcnRFbmFibGVk","c29saWQ=","IzAwMDAwMA==","ZGl2aWRlckxpc3Q=","PGRpdiBzdHlsZT0iZm9udC1fMHgxMWE6MC43OHJlbTtfMHgxMTk6dmFyKC0tbXV0ZWQpO18weDEyNS1hbGlnbjpjZW50ZXI7cGFkZGluZzo2cHggMDsiPkhlbsO8eiDDp2l6Z2kgZWtsZW5tZWRpPC9kaXY+","ZGl2aWRlci1ydWxl","ZGl2aWRlci1ydWxlLWxhYmVs","bnVtYmVy","JHtyLnBhZ2V9","d2lkdGg6NDZweA==","XzB4MTBkWyR7aWR4fV0ucGFnZT1wYXJzZUludCh0aGlzLnZhbHVlKXx8MQ==","XzB4MTBkWyR7aWR4fV0uXzB4MWI1PXBhcnNlSW50KHRoaXMudmFsdWUp","JHtjfQ==","c2VsZWN0ZWQ=","XzB4MTBkWyR7aWR4fV0uc3R5bGU9dGhpcy52YWx1ZQ==","c29saWQ=","ZGFzaGVk","ZGFzaGVk","ZG90dGVk","ZG90dGVk","JHtyLndpZHRofQ==","d2lkdGg6NTJweA==","XzB4MTBkWyR7aWR4fV0ud2lkdGg9cGFyc2VGbG9hdCh0aGlzLnZhbHVlKXx8MC41","XzB4MTE5","JHtyLl8weDExOX0=","XzB4MTBkWyR7aWR4fV0uXzB4MTE5PXRoaXMudmFsdWU=","ZGl2aWRlci1ydWxlLWRlbA==","cmVtb3ZlRGl2aWRlclJ1bGUoJHtpZHh9KQ==","Z2FwU2xpZGVy","aW5wdXQ=","Z2FwVmFs","bWFyZ2luU2xpZGVy","bWFyZ2luVmFs","Zml0UGFnZXNFbmFibGVk","Zml0UGFnZXNPcHRpb25z","bm9uZQ==","Zml0UGFnZQ==","bGVmdA==","Y2VudGVy","cmlnaHQ=","YWxpZ24=","XzB4MTU3","Ym9yZGVyT3B0aW9ucw==","dGlsZQ==","XzB4MTZk","d2F0ZXJtYXJrT3B0aW9ucw==","Q2VudGVy","VGlsZQ==","d21Qb3M=","d2F0ZXJtYXJrVGlsZU9wdGlvbnM=","YmxvY2s=","Rmlyc3Q=","TGFzdA==","d21QYWdl","XzB4MTE1","ZG9jRGVzYw==","YXJjaGl2ZS1fMHgxMTY=","YXJjaGl2ZS1fMHgxMTYtXzB4MTI1","YXJjaGl2ZVVzZURlc2MoJHtpZHh9KQ==","JHt0fQ==","YXJjaGl2ZS11c2UtYnRu","YXJjaGl2ZS1kZWwtYnRu","YXJjaGl2ZURlbGV0ZURlc2MoJHtpZHh9KQ==","XzB4MTE3","ZG9jVGl0bGU=","YXJjaGl2ZVVzZVRpdGxlKCR7aWR4fSk=","YXJjaGl2ZURlbGV0ZVRpdGxlKCR7aWR4fSk=","TGVmdA==","UmlnaHQ=","XzB4MTEy","XzB4MTQ5","bGFiZWxPcHRpb25z","XzB4MTRh","XzB4MWQy","bGFiZWxTaXpl","XzB4MTRk","XzB4MTRl","bGFiZWxQcmV2aWV3","bGFiZWxTaG93TnVtYmVy","XzB4MTFj","bm9ybWFs","XzB4MTFm","XzB4MTIw","XzB4MTIx","Zm9vdGVyQXJjaGl2ZQ==","XzB4MWQ5","YXJjaGl2ZVVzZUZvb3Rlcigke2lkeH0p","YXJjaGl2ZURlbGV0ZUZvb3Rlcigke2lkeH0p","bGFzdFRleHRf","XzB4MTI0","Zm9vdGVyUHJldmlldw==","U29uIHNheWZhIGHDp8Sxa2xhbWEgbWV0bmk=","Zm9vdGVyQ29sb3I=","Zm9vdGVyU2l6ZQ==","Zm9vdGVyQm9sZA==","Zm9vdGVySXRhbGlj","ZmlsZUlucHV0","Y2hhbmdl","XzB4MTI2","ZHJhZ292ZXI=","ZHJhZy1vdmVy","ZHJhZ2xlYXZl","ZHJvcA==","dXBsb2FkUXVhbGl0eQ==","bWVkaXVt","b3JpZ2luYWw=","XzB4MTJh","aW1hZ2UvanBlZw==","aW1hZ2Uv","cGhvdG9MaXN0","XzB4MWJkLV8weDExNg==","XzB4MWJkLV8weDExNi10b3A=","bW92ZS1idG5z","bW92ZS1idG4=","bW92ZVBob3RvKCR7aWR4fSwgLTEp","ZGlzYWJsZWQ=","WXVrYXJcdTAxMzE=","bW92ZVBob3RvKCR7aWR4fSwgMSk=","QVx1MDE1ZmFcdTAxMWZcdTAxMzE=","dGh1bWI=","JHtwLmRhdGFVcmx9","JHtwLm5hbWV9","XzB4MTE2LW51bQ==","XzB4MTE2LW5hbWU=","cmVtb3ZlLWJ0bg==","cmVtb3ZlUGhvdG8oJHtpZHh9KQ==","XzB4MWJkLV8weDExNi1ib3R0b20=","XzB4MWJkLV8weDExNi1ib3R0b20tZ3JvdXA=","XzB4MWJkLV8weDExNi1ib3R0b20tbGFiZWw=","cG9pbnQtd3JhcA==","cG9pbnQtaW5wdXQ=","XzB4MTI1","bnVtZXJpYw==","JHtwLnBvaW50c30=","JHtpZHh9","dXBkYXRlUG9pbnRzKCR7aWR4fSwgdGhpcy52YWx1ZSk=","dGhpcy5zZWxlY3QoKQ==","c3Bhbi1kaXZpZGVy","c3Bhbi1zZWxlY3Rvcg==","c3Bhbi1jb2wtYnRuICR7KHAuXzB4MWEzfHwxKSA9PT0gcyA/ICdhY3RpdmUnIDogJyd9","c2V0U3BhbkNvbHMoJHtpZHh9LCAke3N9KQ==","JHtzfSBzXHUwMGZjdHVu","ZHJhZ3N0YXJ0","ZHJhZ2dpbmc=","ZHJhZ2VuZA==","Ll8weDFiZC1fMHgxMTY=","ZHJhZy10YXJnZXQ=","XzB4MTMy","XzB4MTMz","ZmxleA==","cGhvdG9Db3VudA==","cGFnZUNvdW50","dG90YWxQb2ludHM=","dG90YWxQb2ludHNTcGFu","dG90YWxQb2ludHNCYW5uZXI=","cmdiYSgzNCwxNjcsODIsMC4xMik=","IzIyYTc1Mg==","4pyFIFRvcGxhbSBwdWFuOiA8c3Ryb25nIGlkPSJ0b3RhbFBvaW50cyI+","PC9zdHJvbmc+IOKAlCBUYW0gMTAwIQ==","cmdiYSgyMjQsODUsODUsMC4xMik=","I2UwNTU1NQ==","4pqg77iPIFRvcGxhbSBwdWFuOiA8c3Ryb25nIGlkPSJ0b3RhbFBvaW50cyI+","PC9zdHJvbmc+IOKAlCAxMDBcJ2RlbiBmYXpsYSE=","dmFyKC0tc3VyZmFjZTIp","dmFyKC0tbXV0ZWQp","8J+OryBUb3BsYW0gcHVhbjogPHN0cm9uZyBpZD0idG90YWxQb2ludHMiPjA8L3N0cm9uZz4=","cmdiYSgyMjQsMTQwLDAsMC4xMCk=","I2UwOGMwMA==","8J+OryBUb3BsYW0gcHVhbjogPHN0cm9uZyBpZD0idG90YWxQb2ludHMiPg==","PC9zdHJvbmc+IOKAlCAxMDBcJ2UgdWxhxZ/EsWxtYWTEsQ==","Ym90dG9tQmFySW5mbw==","wqkgc2ViYXNtb2JpbA==","YmdDb2xvcg==","XzB4MTdm","XzB4MTQy","XzB4MTQz","XzB4MTQ0","XzB4MTgw","XzB4MTQ2","XzB4MTQ3","XzB4MTQ4","XzB4MTUw","XzB4MTUx","XzB4MTUy","XzB4MTUz","XzB4MTU4","Ym9yZGVyQ29sb3I=","XzB4MTVh","XzB4MTVi","XzB4MTVj","XzB4MTFjIA==","XzB4MTFiIA==","aW1hZ2UvcG5n","RkFTVA==","c3R1ZGVudFNpemU=","d2F0ZXJtYXJrVGV4dA==","RsSwTMSwR1JBTg==","d2F0ZXJtYXJrU2l6ZQ==","d2F0ZXJtYXJrT3BhY2l0eQ==","d2F0ZXJtYXJrQ29sb3I=","d2F0ZXJtYXJrQm9sZA==","d2F0ZXJtYXJrSXRhbGlj","d2F0ZXJtYXJrQW5nbGU=","d2F0ZXJtYXJrVGlsZVg=","d2F0ZXJtYXJrVGlsZVk=","Zmlyc3Q=","bGFzdA==","bWlkZGxl","XzB4MTgx","c3R1ZGVudEJvbGQ=","c3R1ZGVudEl0YWxpYw==","QUQgU09ZQUQ6","U0lOSUY6","bmV4dFBhZ2VFbmFibGVk","bmV4dFBhZ2VTaXpl","bmV4dFBhZ2VPZmZzZXRTbGlkZXI=","cmdiKDgwLDgwLDgwKQ==","RGnEn2VyIHNheWZheWEgZ2XDp2luaXrigKY=","SlBFRw==","Zm9vdGVyT2Zmc2V0U2xpZGVy","MTAwJQ==","4pyFIFBERiBoYXrEsXIh","c2ViYXNtb2JpbC1zaW5hdg==","dW5kZWZpbmVk","ZnVuY3Rpb24=","YmxvYg==","cGRmT3ZlcmxheQ==","ZGF0YXVyaXN0cmluZw==","PGlmcmFtZSBzcmM9Ig==","IiBzdHlsZT0iLXdlYmtpdC1mbGV4OjE7ZmxleDoxO2JvcmRlcjpub25lO3dpZHRoOjEwMCU7bWluLWhlaWdodDowOyIgYWxsb3dmdWxsc2NyZWVuPjwvaWZyYW1lPg==","PGRpdiBzdHlsZT0iLXdlYmtpdC1mbGV4OjE7ZmxleDoxO2Rpc3BsYXk6LXdlYmtpdC1mbGV4O2Rpc3BsYXk6ZmxleDstd2Via2l0LWFsaWduLWl0ZW1zOmNlbnRlcjthbGlnbi1pdGVtczpjZW50ZXI7LXdlYmtpdC1qdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO2p1c3RpZnktY29udGVudDpjZW50ZXI7XzB4MTE5OiNhYWE7Zm9udC1fMHgxMWE6MC45cmVtO18weDEyNS1hbGlnbjpjZW50ZXI7cGFkZGluZzoyMHB4OyI+UERGIFx1MDBmNm5pemxlbWUgYnUgdGFyYXlcdTAxMzFjXHUwMTMxZGEgZGVzdGVrbGVubWl5b3IuPGJyPlx1MkIwNyBcdTAxMzBuZGlyIGJ1dG9udW51IGt1bGxhblx1MDEzMW4uPC9kaXY+","Zml4ZWQ=","IzExMQ==","LXdlYmtpdC1mbGV4","Y29sdW1u","c2Fucy1zZXJpZg==","YmFja2dyb3VuZDojMjIyO3BhZGRpbmc6MTRweCAxOHB4O2Rpc3BsYXk6LXdlYmtpdC1mbGV4O2Rpc3BsYXk6ZmxleDstd2Via2l0LWFsaWduLWl0ZW1zOmNlbnRlcjthbGlnbi1pdGVtczpjZW50ZXI7LXdlYmtpdC1qdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjtqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2Vlbjstd2Via2l0LWZsZXgtc2hyaW5rOjA7ZmxleC1zaHJpbms6MDs=","YnV0dG9u","JiN4MjcxNTs=","YmFja2dyb3VuZDpub25lO2JvcmRlcjpub25lO18weDExOTojYWFhO2ZvbnQtXzB4MTFhOjEuNHJlbTtjdXJzb3I6cG9pbnRlcjtwYWRkaW5nOjRweDs=","c3Bhbg==","XzB4MTE5OiNmZmY7Zm9udC1fMHgxMWE6MC45cmVtOy13ZWJraXQtZmxleDoxO2ZsZXg6MTtwYWRkaW5nOjAgMTBweDs=","XHVEODNEXHVEQ0M0IA==","LnBkZg==","YmFja2dyb3VuZDojZjU5ZTBiO18weDExOTojMDAwO3BhZGRpbmc6MTBweCAxOHB4O2JvcmRlci1yYWRpdXM6OHB4O2ZvbnQtd2VpZ2h0OjcwMDtmb250LV8weDExYTowLjlyZW07XzB4MTI1LWRlY29yYXRpb246bm9uZTt3aGl0ZS1zcGFjZTpub3dyYXA7","XHUyQjA3IFx1MDEzMG5kaXI=","YmFja2dyb3VuZDojMzMzO18weDExOTojY2NjO2ZvbnQtXzB4MTFhOjAuNzhyZW07cGFkZGluZzoxMHB4IDE4cHg7XzB4MTI1LWFsaWduOmNlbnRlcjtsaW5lLWhlaWdodDoxLjY7LXdlYmtpdC1mbGV4LXNocmluazowO2ZsZXgtc2hyaW5rOjA7","PGI+aVBob25lOjwvYj4gXHUyQjA3IFx1MDEzMG5kaXIgXHUyMTkyIFBheWxhXHUwMTVmIChcdTI1QTFcdTIxOTEpIFx1MjE5MiA8Yj5Eb3N5YWxhcmEgS2F5ZGV0PC9iPg==","LXdlYmtpdC1mbGV4OjE7ZmxleDoxO2Rpc3BsYXk6LXdlYmtpdC1mbGV4O2Rpc3BsYXk6ZmxleDstd2Via2l0LWZsZXgtZGlyZWN0aW9uOmNvbHVtbjtmbGV4LWRpcmVjdGlvbjpjb2x1bW47bWluLWhlaWdodDowOw==","ZGF0YTppbWFnZS9wbmc=","ZGF0YTppbWFnZS93ZWJw","V0VCUA=="];function _0xGS225328(_i){try{return atob(_0xSA9f93a9[_i]);}catch(_e){return _0xSA9f93a9[_i];}}
+const { jsPDF } = window.jspdf;
+
+let _0x102 = [];
+let _0x103 = null;
+
+let _0x104 = false;
+function toggleDayNight() {
+  _0x104 = !_0x104;
+  document.body.className = _0x104 ? _0xGS225328(0) : '';
+  document.getElementById(_0xGS225328(1)).textContent = _0x104 ? '🌙' : '☀️';
+  localStorage.setItem(_0xGS225328(2), _0x104 ? _0xGS225328(3) : _0xGS225328(4));
+}
+(function() {
+  const _0x105 = localStorage.getItem(_0xGS225328(2));
+  if (_0x105 === _0xGS225328(3)) {
+    _0x104 = true;
+    document.body.className = _0xGS225328(0);
+    const btn = document.getElementById(_0xGS225328(1));
+    if (btn) btn.textContent = '🌙';
+  }
+})();
+
+let _0x106 = _0xGS225328(5);
+let _0x107 = 2;
+
+window.addEventListener(_0xGS225328(6), () => {
+  const _0x108 = window.innerWidth > window.innerHeight;
+  const _0x109 = _0x108 ? _0xGS225328(7) : _0xGS225328(5);
+  if (_0x109 !== _0x106) {
+    _0x106 = _0x109;
+    document.getElementById(_0xGS225328(8)).classList.toggle(_0xGS225328(9), _0x109 === _0xGS225328(5));
+    document.getElementById(_0xGS225328(10)).classList.toggle(_0xGS225328(9), _0x109 === _0xGS225328(7));
+    updateStats();
+  }
+});
+
+function selectOrientation(val) {
+  _0x106 = val;
+  document.getElementById(_0xGS225328(8)).classList.toggle(_0xGS225328(9), val === _0xGS225328(5));
+  document.getElementById(_0xGS225328(10)).classList.toggle(_0xGS225328(9), val === _0xGS225328(7));
+  updateStats();
+}
+
+function selectCols(n) {
+  _0x107 = n;
+  [1,2,3,4].forEach(i => document.getElementById('col'+i).classList.toggle(_0xGS225328(9), i === n));
+  updateStats();
+  if (_0x102.length) renderList();
+  renderDividerList();
+  
+  if (_0x102.length > 1 && document.getElementById(_0xGS225328(11)).checked) {
+    applyAutoSort();
+  }
+}
+
+async function applyAutoSort() {
+  if (_0x102.length < 2) return;
+  const _0x10a = document.getElementById(_0xGS225328(11)).checked;
+
+  if (!_0x10a) {
+    
+    _0x102.sort((a, b) => a.id - b.id);
+    renderList();
+    return;
+  }
+
+  
+  const _0x10b    = _0x102.filter(p => Math.min(p._0x1a3 || 1, _0x107) > 1);
+  const _0x10c = _0x102.filter(p => Math.min(p._0x1a3 || 1, _0x107) === 1);
+
+  
+  _0x10b.sort((a, b) => (b._0x1a3 || 1) - (a._0x1a3 || 1));
+
+  _0x102 = [..._0x10b, ..._0x10c];
+  renderList();
+}
+
+let _0x10d = []; 
+
+function addDividerRule() {
+  _0x10d.push({ page: 1, _0x1b5: 1, style: _0xGS225328(12), width: 2, _0x119: _0xGS225328(13) });
+  renderDividerList();
+}
+
+function removeDividerRule(idx) {
+  _0x10d.splice(idx, 1);
+  renderDividerList();
+}
+
+function renderDividerList() {
+  const _0x10e = document.getElementById(_0xGS225328(14));
+  if (!_0x10e) return;
+  _0x10e.innerHTML = '';
+  if (_0x10d.length === 0) {
+    _0x10e.innerHTML = _0xGS225328(15);
+    return;
+  }
+  const _0x10f = Math.max(1, _0x107 - 1);
+  _0x10d.forEach((r, idx) => {
+    const div = document.createElement('div');
+    div.className = _0xGS225328(16);
+    div.innerHTML = `
+      <span class=_0xGS225328(17)>Sayfa</span>
+      <input type=_0xGS225328(18) min="1" max="20" value=_0xGS225328(19) style=_0xGS225328(20) oninput=_0xGS225328(21)>
+      <span class=_0xGS225328(17)>Sütun</span>
+      <select onchange=_0xGS225328(22)>
+        ${Array.from({length: _0x10f}, (_, i) => i+1).map(c =>
+          `<option value=_0xGS225328(23) ${r._0x1b5===c?_0xGS225328(24):''}>${c}–${c+1} arası</option>`
+        ).join('')}
+      </select>
+      <span class=_0xGS225328(17)>Stil</span>
+      <select onchange=_0xGS225328(25)>
+        <option value=_0xGS225328(26) ${r.style===_0xGS225328(12)?_0xGS225328(24):''}>Düz</option>
+        <option value=_0xGS225328(27) ${r.style===_0xGS225328(28)?_0xGS225328(24):''}>Kesik</option>
+        <option value=_0xGS225328(29) ${r.style===_0xGS225328(30)?_0xGS225328(24):''}>Noktalı</option>
+      </select>
+      <span class=_0xGS225328(17)>Kalınlık</span>
+      <input type=_0xGS225328(18) min="0.1" max="5" step="0.1" value=_0xGS225328(31) style=_0xGS225328(32) oninput=_0xGS225328(33)>
+      <span class=_0xGS225328(17)>pt &nbsp;</span>
+      <input type=_0xGS225328(34) value=_0xGS225328(35) oninput=_0xGS225328(36)>
+      <button class=_0xGS225328(37) onclick=_0xGS225328(38) _0x13e="Sil">✕</button>
+    `;
+    _0x10e.appendChild(div);
+  });
+}
+
+document.getElementById(_0xGS225328(39)).addEventListener(_0xGS225328(40), function() {
+  document.getElementById(_0xGS225328(41)).textContent = this.value + ' mm';
+  updateStats();
+});
+document.getElementById(_0xGS225328(42)).addEventListener(_0xGS225328(40), function() {
+  document.getElementById(_0xGS225328(43)).textContent = this.value + ' mm';
+  updateStats();
+});
+
+let _0x110 = 2;
+
+function toggleFitPages() {
+  const _0x10a = document.getElementById(_0xGS225328(44)).checked;
+  document.getElementById(_0xGS225328(45)).style.opacity = _0x10a ? '1' : '0.4';
+  document.getElementById(_0xGS225328(45)).style.pointerEvents = _0x10a ? '' : _0xGS225328(46);
+}
+
+function selectFitPages(n) {
+  _0x110 = n;
+  [1,2,3,4,5,6,7,8].forEach(i => document.getElementById(_0xGS225328(47)+i).classList.toggle(_0xGS225328(9), i === n));
+}
+
+let _0x111 = _0xGS225328(48);
+let _0x112 = _0xGS225328(48);
+
+function selectAlign(val) {
+  _0x111 = val;
+  [_0xGS225328(48),_0xGS225328(49),_0xGS225328(50)].forEach(a => document.getElementById(_0xGS225328(51)+a.charAt(0).toUpperCase()+a.slice(1)).classList.toggle(_0xGS225328(9), a === val));
+}
+
+function toggleBorderOptions() {
+  const _0x10a = document.getElementById(_0xGS225328(52)).checked;
+  document.getElementById(_0xGS225328(53)).style.opacity = _0x10a ? '1' : '0.4';
+  document.getElementById(_0xGS225328(53)).style.pointerEvents = _0x10a ? '' : _0xGS225328(46);
+}
+
+let _0x113 = _0xGS225328(54);
+let _0x114 = 'all';
+
+function toggleWatermarkOptions() {
+  const _0x10a = document.getElementById(_0xGS225328(55)).checked;
+  document.getElementById(_0xGS225328(56)).style.opacity = _0x10a ? '1' : '0.4';
+  document.getElementById(_0xGS225328(56)).style.pointerEvents = _0x10a ? '' : _0xGS225328(46);
+}
+
+function selectWatermarkPos(val) {
+  _0x113 = val;
+  [_0xGS225328(57),_0xGS225328(58)].forEach(p => document.getElementById(_0xGS225328(59)+p).classList.toggle(_0xGS225328(9), p.toLowerCase() === val));
+  document.getElementById(_0xGS225328(60)).style.display = val === _0xGS225328(54) ? _0xGS225328(61) : _0xGS225328(46);
+}
+
+function selectWatermarkPages(val) {
+  _0x114 = val;
+  ['All',_0xGS225328(62),_0xGS225328(63)].forEach(p => document.getElementById(_0xGS225328(64)+p).classList.toggle(_0xGS225328(9), p.toLowerCase() === val));
+}
+
+let _0x115 = JSON.parse(localStorage.getItem(_0xGS225328(65)) || '[]');
+
+function archiveSaveDesc() {
+  const val = document.getElementById(_0xGS225328(66)).value.trim();
+  if (!val) return;
+  if (_0x115.includes(val)) return;
+  _0x115.unshift(val);
+  if (_0x115.length > 10) _0x115 = _0x115.slice(0, 10);
+  localStorage.setItem(_0xGS225328(65), JSON.stringify(_0x115));
+  renderDescArchive();
+}
+
+function archiveUseDesc(idx) {
+  document.getElementById(_0xGS225328(66)).value = _0x115[idx];
+}
+
+function archiveDeleteDesc(idx) {
+  _0x115.splice(idx, 1);
+  localStorage.setItem(_0xGS225328(65), JSON.stringify(_0x115));
+  renderDescArchive();
+}
+
+function renderDescArchive() {
+  const _0x10e = document.getElementById(_0xGS225328(65));
+  _0x10e.innerHTML = '';
+  if (_0x115.length === 0) return;
+  _0x115.forEach((t, idx) => {
+    const _0x116 = document.createElement('div');
+    _0x116.className = _0xGS225328(67);
+    _0x116.innerHTML = `
+      <span class=_0xGS225328(68) onclick=_0xGS225328(69) _0x13e=_0xGS225328(70)>${t}</span>
+      <button class=_0xGS225328(71) onclick=_0xGS225328(69)>Kullan</button>
+      <button class=_0xGS225328(72) onclick=_0xGS225328(73) _0x13e="Sil">✕</button>
+    `;
+    _0x10e.appendChild(_0x116);
+  });
+}
+renderDescArchive();
+
+let _0x117 = JSON.parse(localStorage.getItem(_0xGS225328(74)) || '[]');
+
+function archiveSaveTitle() {
+  const val = document.getElementById(_0xGS225328(75)).value.trim();
+  if (!val) return;
+  if (_0x117.includes(val)) return;
+  _0x117.unshift(val);
+  if (_0x117.length > 10) _0x117 = _0x117.slice(0, 10);
+  localStorage.setItem(_0xGS225328(74), JSON.stringify(_0x117));
+  renderTitleArchive();
+}
+
+function archiveUseTitle(idx) {
+  document.getElementById(_0xGS225328(75)).value = _0x117[idx];
+}
+
+function archiveDeleteTitle(idx) {
+  _0x117.splice(idx, 1);
+  localStorage.setItem(_0xGS225328(74), JSON.stringify(_0x117));
+  renderTitleArchive();
+}
+
+function renderTitleArchive() {
+  const _0x10e = document.getElementById(_0xGS225328(74));
+  _0x10e.innerHTML = '';
+  if (_0x117.length === 0) return;
+  _0x117.forEach((t, idx) => {
+    const _0x116 = document.createElement('div');
+    _0x116.className = _0xGS225328(67);
+    _0x116.innerHTML = `
+      <span class=_0xGS225328(68) onclick=_0xGS225328(76) _0x13e=_0xGS225328(70)>${t}</span>
+      <button class=_0xGS225328(71) onclick=_0xGS225328(76)>Kullan</button>
+      <button class=_0xGS225328(72) onclick=_0xGS225328(77) _0x13e="Sil">✕</button>
+    `;
+    _0x10e.appendChild(_0x116);
+  });
+}
+renderTitleArchive();
+
+function toggleStyle(id) {
+  const btn = document.getElementById(id);
+  btn.classList.toggle(_0xGS225328(9));
+}
+
+function isActive(id) {
+  return document.getElementById(id).classList.contains(_0xGS225328(9));
+}
+
+function setLabelAlign(align) {
+  _0x112 = align;
+  [_0xGS225328(78),_0xGS225328(57),_0xGS225328(79)].forEach(a => {
+    const btn = document.getElementById(_0xGS225328(80) + a);
+    if (btn) btn.classList.toggle(_0xGS225328(9), a.toLowerCase() === align);
+  });
+}
+
+function updatePreview() {
+  const _0x10a = document.getElementById(_0xGS225328(81)).checked;
+  document.getElementById(_0xGS225328(82)).style.opacity = _0x10a ? '1' : '0.4';
+  document.getElementById(_0xGS225328(82)).style.pointerEvents = _0x10a ? '' : _0xGS225328(46);
+  const _0x118 = parseInt(document.getElementById(_0xGS225328(83)).value) || 1;
+  const _0x119 = document.getElementById(_0xGS225328(84)).value;
+  const _0x11a = parseInt(document.getElementById(_0xGS225328(85)).value) || 9;
+  const _0x11b = isActive(_0xGS225328(86));
+  const _0x11c = isActive(_0xGS225328(87));
+  const _0x11d = document.getElementById(_0xGS225328(88));
+  const _0x11e = document.getElementById(_0xGS225328(89)) ? document.getElementById(_0xGS225328(89)).checked : true;
+  _0x11d.textContent = _0x11e ? `SORU ${_0x118}   (10 Puan)` : `SORU ……   (10 Puan)`;
+  _0x11d.style._0x119 = _0x119;
+  _0x11d.style.fontSize = Math.min(_0x11a * 1.2, 18) + 'px';
+  _0x11d.style.fontWeight = _0x11b ? '700' : '400';
+  _0x11d.style.fontStyle = _0x11c ? _0xGS225328(90) : _0xGS225328(91);
+}
+updatePreview();
+
+let _0x11f = _0xGS225328(50);
+
+function selectNextPageAlign(val) {
+  _0x11f = val;
+  [_0xGS225328(78),_0xGS225328(57),_0xGS225328(79)].forEach(a => {
+    const btn = document.getElementById(_0xGS225328(92) + a);
+    if (btn) btn.classList.toggle(_0xGS225328(9), a.toLowerCase() === val);
+  });
+}
+
+let _0x120 = _0xGS225328(49);
+
+function setTitleAlign(align) {
+  _0x120 = align;
+  [_0xGS225328(78),_0xGS225328(57),_0xGS225328(79)].forEach(a => {
+    const btn = document.getElementById(_0xGS225328(93) + a);
+    if (btn) btn.classList.toggle(_0xGS225328(9), a.toLowerCase() === align);
+  });
+}
+
+let _0x121 = _0xGS225328(48);
+
+function setDescAlign(align) {
+  _0x121 = align;
+  [_0xGS225328(78),_0xGS225328(57),_0xGS225328(79)].forEach(a => {
+    const btn = document.getElementById(_0xGS225328(94) + a);
+    if (btn) btn.classList.toggle(_0xGS225328(9), a.toLowerCase() === align);
+  });
+}
+
+let _0x122 = JSON.parse(localStorage.getItem(_0xGS225328(95)) || '[]');
+
+function archiveSaveFooter() {
+  const val = document.getElementById(_0xGS225328(96)).value.trim();
+  if (!val) return;
+  if (_0x122.includes(val)) return;
+  _0x122.unshift(val);
+  if (_0x122.length > 10) _0x122 = _0x122.slice(0, 10);
+  localStorage.setItem(_0xGS225328(95), JSON.stringify(_0x122));
+  renderFooterArchive();
+}
+
+function archiveUseFooter(idx) {
+  document.getElementById(_0xGS225328(96)).value = _0x122[idx];
+  updateFooterPreview();
+}
+
+function archiveDeleteFooter(idx) {
+  _0x122.splice(idx, 1);
+  localStorage.setItem(_0xGS225328(95), JSON.stringify(_0x122));
+  renderFooterArchive();
+}
+
+function renderFooterArchive() {
+  const _0x10e = document.getElementById(_0xGS225328(95));
+  _0x10e.innerHTML = '';
+  if (_0x122.length === 0) return;
+  _0x122.forEach((t, idx) => {
+    const _0x116 = document.createElement('div');
+    _0x116.className = _0xGS225328(67);
+    _0x116.innerHTML = `
+      <span class=_0xGS225328(68) onclick=_0xGS225328(97) _0x13e=_0xGS225328(70)>${t}</span>
+      <button class=_0xGS225328(71) onclick=_0xGS225328(97)>Kullan</button>
+      <button class=_0xGS225328(72) onclick=_0xGS225328(98) _0x13e="Sil">✕</button>
+    `;
+    _0x10e.appendChild(_0x116);
+  });
+}
+renderFooterArchive();
+renderDividerList();
+
+(function() {
+  const _0x123 = [_0xGS225328(75), _0xGS225328(66), _0xGS225328(96)];
+  
+  _0x123.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const _0x105 = localStorage.getItem(_0xGS225328(99) + id);
+    if (_0x105) el.value = _0x105;
+  });
+  
+  _0x123.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener(_0xGS225328(40), () => {
+      localStorage.setItem(_0xGS225328(99) + id, el.value);
+    });
+  });
+  
+  updateFooterPreview();
+})();
+
+let _0x124 = _0xGS225328(50);
+
+function setFooterAlign(align) {
+  _0x124 = align;
+  [_0xGS225328(78),_0xGS225328(57),_0xGS225328(79)].forEach(a => {
+    const btn = document.getElementById(_0xGS225328(100) + a);
+    if (btn) btn.classList.toggle(_0xGS225328(9), a.toLowerCase() === align);
+  });
+  updateFooterPreview();
+}
+
+function updateFooterPreview() {
+  const _0x11d = document.getElementById(_0xGS225328(101));
+  if (!_0x11d) return;
+  const _0x125 = document.getElementById(_0xGS225328(96)).value || _0xGS225328(102);
+  const _0x119 = document.getElementById(_0xGS225328(103)).value;
+  const _0x11a = parseInt(document.getElementById(_0xGS225328(104)).value) || 12;
+  const _0x11b = isActive(_0xGS225328(105));
+  const _0x11c = isActive(_0xGS225328(106));
+  _0x11d.textContent = _0x125;
+  _0x11d.style._0x119 = _0x119;
+  _0x11d.style.fontSize = Math.min(_0x11a * 1.2, 18) + 'px';
+  _0x11d.style.fontWeight = _0x11b ? '700' : '400';
+  _0x11d.style.fontStyle = _0x11c ? _0xGS225328(90) : _0xGS225328(91);
+  _0x11d.style.textAlign = _0x124;
+}
+
+document.getElementById(_0xGS225328(96)).addEventListener(_0xGS225328(40), updateFooterPreview);
+document.getElementById(_0xGS225328(104)).addEventListener(_0xGS225328(40), updateFooterPreview);
+document.getElementById(_0xGS225328(103)).addEventListener(_0xGS225328(40), updateFooterPreview);
+
+document.getElementById(_0xGS225328(107)).addEventListener(_0xGS225328(108), e => handleFiles(e.target._0x12b));
+
+const _0x126 = document.getElementById(_0xGS225328(109));
+_0x126.addEventListener(_0xGS225328(110), e => { e.preventDefault(); _0x126.classList.add(_0xGS225328(111)); });
+_0x126.addEventListener(_0xGS225328(112), () => _0x126.classList.remove(_0xGS225328(111)));
+_0x126.addEventListener(_0xGS225328(113), e => {
+  e.preventDefault();
+  _0x126.classList.remove(_0xGS225328(111));
+  handleFiles(e.dataTransfer._0x12b);
+});
+
+function compressImage(dataUrl) {
+  return new Promise(resolve => {
+    const _0x127 = document.getElementById(_0xGS225328(114));
+    const _0x128 = (_0x127 && _0x127.value) ? _0x127.value : _0xGS225328(115);
+    if (_0x128 === _0xGS225328(116)) { resolve(dataUrl); return; }
+
+    const _0x129 = {
+      low:    { max: 900,  q: 0.65 },
+      medium: { max: 1200, q: 0.82 },
+      high:   { max: 1800, q: 0.93 },
+    };
+    const { max: MAX, q } = _0x129[_0x128];
+
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      const _0x12a = document.createElement(_0xGS225328(117));
+      _0x12a.width = w; _0x12a.height = h;
+      _0x12a.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(_0x12a.toDataURL(_0xGS225328(118), q));
+    };
+    img.src = dataUrl;
+  });
+}
+
+function handleFiles(fileList) {
+  const _0x12b = Array.from(fileList).filter(f => f.type.startsWith(_0xGS225328(119)));
+  if (_0x12b.length === 0) return;
+
+  async function _0x100() {
+    for (const file of _0x12b) {
+      await new Promise(resolve => {
+        const _0x12c = new FileReader();
+        _0x12c.onload = async e => {
+          const _0x12d = await compressImage(e.target.result);
+          _0x102.push({ id: Date.now() + Math.random(), file, dataUrl: _0x12d, name: file.name, points: 10 });
+          renderList();
+          resolve();
+        };
+        _0x12c.readAsDataURL(file);
+      });
+      await new Promise(r => setTimeout(r, 10));
+    }
+    
+    if (document.getElementById(_0xGS225328(11)) && document.getElementById(_0xGS225328(11)).checked) {
+      applyAutoSort();
+    }
+  }
+
+  _0x100();
+}
+
+function clearAllPhotos() {
+  if (_0x102.length === 0) return;
+  _0x102 = [];
+  savePhotos();
+  renderList();
+}
+
+function savePhotos() {
+  
+}
+
+function loadPhotos() {
+  
+}
+
+loadPhotos();
+
+function shufflePhotos() {
+  for (let i = _0x102.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [_0x102[i], _0x102[j]] = [_0x102[j], _0x102[i]];
+  }
+  renderList();
+}
+
+function movePhoto(idx, dir) {
+  const _0x12e = idx + dir;
+  if (_0x12e < 0 || _0x12e >= _0x102.length) return;
+  const _0x12f = _0x102.splice(idx, 1)[0];
+  _0x102.splice(_0x12e, 0, _0x12f);
+  renderList();
+}
+
+function renderList() {
+  const _0x130 = document.getElementById(_0xGS225328(120));
+  _0x130.innerHTML = '';
+  const _0x131 = parseInt(document.getElementById(_0xGS225328(83)).value) || 1;
+
+  _0x102.forEach((p, idx) => {
+    const _0x116 = document.createElement('div');
+    _0x116.className = _0xGS225328(121);
+    _0x116.draggable = true;
+    _0x116.dataset.idx = idx;
+    const _0x118 = _0x131 + idx;
+    _0x116.innerHTML = `
+      <div class=_0xGS225328(122)>
+        <div class=_0xGS225328(123)>
+          <button class=_0xGS225328(124) onclick=_0xGS225328(125) ${idx === 0 ? _0xGS225328(126) : ''} _0x13e=_0xGS225328(127)>▲</button>
+          <button class=_0xGS225328(124) onclick=_0xGS225328(128) ${idx === _0x102.length-1 ? _0xGS225328(126) : ''} _0x13e=_0xGS225328(129)>▼</button>
+        </div>
+        <div class=_0xGS225328(130)><img src=_0xGS225328(131) alt=_0xGS225328(132)></div>
+        <span class=_0xGS225328(133)>${_0x118}</span>
+        <span class=_0xGS225328(134) _0x13e=_0xGS225328(132)>${p.name}</span>
+        <button class=_0xGS225328(135) onclick=_0xGS225328(136) _0x13e="Sil">✕</button>
+      </div>
+      <div class=_0xGS225328(137)>
+        <div class=_0xGS225328(138)>
+          <span class=_0xGS225328(139)>Puan</span>
+          <div class=_0xGS225328(140)>
+            <input class=_0xGS225328(141) type=_0xGS225328(142) inputmode=_0xGS225328(143) value=_0xGS225328(144) data-idx=_0xGS225328(145) oninput=_0xGS225328(146) onfocus=_0xGS225328(147)>
+          </div>
+        </div>
+        ${_0x107 > 1 ? `
+          <div class=_0xGS225328(148)></div>
+          <div class=_0xGS225328(138)>
+            <span class=_0xGS225328(139)>Sütun genişliği</span>
+            <div class=_0xGS225328(149)>
+              ${Array.from({length: _0x107}, (_, s) => s+1).map(s => `<button class=_0xGS225328(150) onclick=_0xGS225328(151) _0x13e=_0xGS225328(152)>${s}</button>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+    _0x116.addEventListener(_0xGS225328(153), e => { _0x103 = idx; _0x116.classList.add(_0xGS225328(154)); });
+    _0x116.addEventListener(_0xGS225328(155), () => { _0x116.classList.remove(_0xGS225328(154)); document.querySelectorAll(_0xGS225328(156)).forEach(t => t.classList.remove(_0xGS225328(157))); });
+    _0x116.addEventListener(_0xGS225328(110), e => { e.preventDefault(); _0x116.classList.add(_0xGS225328(157)); });
+    _0x116.addEventListener(_0xGS225328(112), () => _0x116.classList.remove(_0xGS225328(157)));
+    _0x116.addEventListener(_0xGS225328(113), e => {
+      e.preventDefault();
+      if (_0x103 !== null && _0x103 !== idx) {
+        const _0x12f = _0x102.splice(_0x103, 1)[0];
+        _0x102.splice(idx, 0, _0x12f);
+        renderList();
+      }
+    });
+    _0x130.appendChild(_0x116);
+  });
+
+  const _0x132 = document.getElementById(_0xGS225328(158));
+  const _0x133 = document.getElementById(_0xGS225328(159));
+  if (_0x102.length > 0) {
+    _0x132.style.display = _0xGS225328(160);
+    _0x133.disabled = false;
+    updateStats();
+    savePhotos();
+  } else {
+    _0x132.style.display = _0xGS225328(46);
+    _0x133.disabled = true;
+    savePhotos();
+  }
+}
+
+function updatePoints(idx, val) {
+  _0x102[idx].points = parseInt(val) || 0;
+  savePhotos();
+  updateStats();
+}
+
+function setSpanCols(idx, cols) {
+  _0x102[idx]._0x1a3 = cols;
+  savePhotos();
+  renderList();
+}
+
+function removePhoto(idx) {
+  _0x102.splice(idx, 1);
+  renderList();
+}
+
+document.getElementById(_0xGS225328(83)).addEventListener(_0xGS225328(40), () => { if(_0x102.length) renderList(); });
+
+function updateStats() {
+  document.getElementById(_0xGS225328(161)).textContent = _0x102.length;
+  const gap = parseFloat(document.getElementById(_0xGS225328(39)).value);
+  const _0x134 = parseFloat(document.getElementById(_0xGS225328(42)).value);
+  const _0x108 = _0x106 === _0xGS225328(7);
+  const pgW = _0x108 ? 297 : 210;
+  const pgH = _0x108 ? 210 : 297;
+  const _0x135 = (pgW - _0x134 * 2 - gap * (_0x107 - 1)) / _0x107;
+  const _0x136 = _0x135 / 1.33;
+  const _0x137 = pgH - _0x134 * 2 - 30;
+  const _0x138 = Math.floor(_0x137 / (_0x136 + gap)) * _0x107;
+  const _0x139 = Math.max(1, Math.ceil(_0x102.length / Math.max(1, _0x138)));
+  document.getElementById(_0xGS225328(162)).textContent = '~' + _0x139;
+
+  const _0x13a = _0x102.reduce((sum, p) => sum + (parseFloat(p.points) || 0), 0);
+  const _0x13b = document.getElementById(_0xGS225328(163));
+  const _0x13c = document.getElementById(_0xGS225328(164));
+  const _0x13d = document.getElementById(_0xGS225328(165));
+  _0x13b.textContent = _0x13a;
+
+  if (_0x102.length === 0) {
+    _0x13d.style.display = _0xGS225328(46);
+  } else {
+    _0x13d.style.display = _0xGS225328(61);
+    if (_0x13a === 100) {
+      _0x13d.style.background = _0xGS225328(166);
+      _0x13d.style._0x119 = _0xGS225328(167);
+      _0x13c.innerHTML = _0xGS225328(168) + _0x13a + _0xGS225328(169);
+    } else if (_0x13a > 100) {
+      _0x13d.style.background = _0xGS225328(170);
+      _0x13d.style._0x119 = _0xGS225328(171);
+      _0x13c.innerHTML = _0xGS225328(172) + _0x13a + _0xGS225328(173);
+    } else if (_0x13a === 0) {
+      _0x13d.style.background = _0xGS225328(174);
+      _0x13d.style._0x119 = _0xGS225328(175);
+      _0x13c.innerHTML = _0xGS225328(176);
+    } else {
+      _0x13d.style.background = _0xGS225328(177);
+      _0x13d.style._0x119 = _0xGS225328(178);
+      _0x13c.innerHTML = _0xGS225328(179) + _0x13a + _0xGS225328(180);
+    }
+  }
+  
+  const bbi = document.getElementById(_0xGS225328(181));
+  if (bbi) {
+    if (_0x102.length === 0) {
+      bbi.innerHTML = _0xGS225328(182);
+    } else {
+      bbi.innerHTML = `© sebasmobil &nbsp;·&nbsp; <strong>${_0x102.length}</strong> soru &nbsp;·&nbsp; ~<strong>${_0x139}</strong> sayfa &nbsp;·&nbsp; <strong>${_0x13a}</strong> puan`;
+    }
+  }
+}
+
+async function generatePDF() {
+  
+  if (document.getElementById(_0xGS225328(11)).checked && _0x102.length > 1) {
+    await applyAutoSort();
+  }
+
+  const _0x13e = document.getElementById(_0xGS225328(75)).value.trim();
+  const _0x13f = document.getElementById(_0xGS225328(66)).value.trim();
+  const gap = parseFloat(document.getElementById(_0xGS225328(39)).value);
+  const _0x134 = parseFloat(document.getElementById(_0xGS225328(42)).value);
+  const _0x140 = document.getElementById(_0xGS225328(183)).value;
+
+  const _0x141 = document.getElementById(_0xGS225328(184)).value;
+  const _0x142 = parseInt(document.getElementById(_0xGS225328(185)).value) || 22;
+  const _0x143 = isActive(_0xGS225328(186));
+  const _0x144 = isActive(_0xGS225328(187));
+
+  const _0x145 = document.getElementById(_0xGS225328(188)).value;
+  const _0x146 = parseInt(document.getElementById(_0xGS225328(189)).value) || 10;
+  const _0x147 = isActive(_0xGS225328(190));
+  const _0x148 = isActive(_0xGS225328(191));
+
+  const _0x149 = document.getElementById(_0xGS225328(81)).checked;
+  const _0x14a = parseInt(document.getElementById(_0xGS225328(83)).value) || 1;
+  const _0x14b = document.getElementById(_0xGS225328(84)).value;
+  const _0x14c = parseInt(document.getElementById(_0xGS225328(85)).value) || 9;
+  const _0x14d = isActive(_0xGS225328(86));
+  const _0x14e = isActive(_0xGS225328(87));
+
+  const _0x14f = _0x14c * 0.352778 + 2;
+
+  const btn = document.getElementById(_0xGS225328(159));
+  const _0x150 = document.getElementById(_0xGS225328(192));
+  const _0x151 = document.getElementById(_0xGS225328(193));
+  const _0x152 = document.getElementById(_0xGS225328(194));
+
+  btn.disabled = true;
+  _0x150.style.display = _0xGS225328(46);
+  const _0x153 = document.getElementById(_0xGS225328(195));
+  if (_0x153) _0x153.style.display = _0xGS225328(61);
+  document.getElementById(_0xGS225328(181)).style.display = _0xGS225328(46);
+
+  const _0x108 = _0x106 === _0xGS225328(7);
+  const _0x154 = _0x108 ? 297 : 210;
+  const _0x155 = _0x108 ? 210 : 297;
+  const _0x156 = _0x107;
+  const _0x135 = (_0x154 - _0x134 * 2 - gap * (_0x156 - 1)) / _0x156;
+
+  const bgR = parseInt(_0x140.slice(1,3),16);
+  const bgG = parseInt(_0x140.slice(3,5),16);
+  const bgB = parseInt(_0x140.slice(5,7),16);
+
+  const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: _0x106 });
+
+  const _0x157 = document.getElementById(_0xGS225328(52)).checked;
+  const _0x158 = parseFloat(document.getElementById(_0xGS225328(196)).value) || 1;
+  const _0x159 = document.getElementById(_0xGS225328(197)).value;
+  const _0x15a = parseFloat(document.getElementById(_0xGS225328(198)).value) || 3;
+  const _0x15b = parseFloat(document.getElementById(_0xGS225328(199)).value) || 2;
+  const _0x15c = parseFloat(document.getElementById(_0xGS225328(200)).value) || 2;
+  const bR = parseInt(_0x159.slice(1,3),16);
+  const bG = parseInt(_0x159.slice(3,5),16);
+  const bB = parseInt(_0x159.slice(5,7),16);
+
+  function drawRoundedRect(x, y, w, h, r) {
+    r = Math.min(r, w/2, h/2);
+    pdf.setDrawColor(bR, bG, bB);
+    pdf.setLineWidth(_0x158 * 0.352778);
+    pdf.roundedRect(x, y, w, h, r, r, 'S');
+  }
+
+  const DPI = 300;
+  const _0x15d = DPI / 25.4;
+
+  function _0x101(mm) { return Math.round(mm * _0x15d); }
+
+  function drawTextBlock(_0x125, xMm, yMm, fontSizePt, _0x119, _0x11b, _0x11c, maxWidthMm, align) {
+    if (!_0x125 || !_0x125.trim()) return 0;
+    const _0x12a = document.createElement(_0xGS225328(117));
+    const ctx = _0x12a.getContext('2d');
+    const _0x15e = Math.round(fontSizePt * DPI / 72);
+    const _0x15f = _0x101(maxWidthMm);
+    const _0x160 = `${_0x11c?_0xGS225328(201):''} ${_0x11b?_0xGS225328(202):''} ${_0x15e}px Arial, sans-serif`;
+    ctx.font = _0x160;
+
+    const _0x161 = _0x125.split('\n');
+    const _0x162 = [];
+    for (const para of _0x161) {
+      if (para.trim() === '') { _0x162.push(''); continue; }
+      const _0x163 = para.split(' ');
+      let _0x164 = '';
+      for (const w of _0x163) {
+        const _0x165 = _0x164 ? _0x164 + ' ' + w : w;
+        if (ctx.measureText(_0x165).width > _0x15f && _0x164) {
+          _0x162.push(_0x164);
+          _0x164 = w;
+        } else {
+          _0x164 = _0x165;
+        }
+      }
+      if (_0x164) _0x162.push(_0x164);
+    }
+
+    const _0x166 = Math.round(_0x15e * 1.3);
+    const _0x167 = _0x162.length * _0x166;
+    _0x12a.width = _0x15f;
+    _0x12a.height = _0x167 + 4;
+    ctx.font = _0x160;
+    ctx.fillStyle = _0x119;
+    ctx.textBaseline = 'top';
+    if (align === _0xGS225328(49)) {
+      ctx.textAlign = _0xGS225328(49);
+    } else if (align === _0xGS225328(50)) {
+      ctx.textAlign = _0xGS225328(50);
+    } else {
+      ctx.textAlign = _0xGS225328(48);
+    }
+    const _0x168 = align === _0xGS225328(49) ? _0x15f / 2 : align === _0xGS225328(50) ? _0x15f : 0;
+    _0x162.forEach((line, i) => {
+      ctx.fillText(line, _0x168, i * _0x166 + 2);
+    });
+
+    const _0x169 = _0x12a.toDataURL(_0xGS225328(203));
+    const hMm = (_0x167 + 4) / _0x15d;
+    pdf.addImage(_0x169, 'PNG', xMm, yMm, maxWidthMm, hMm, '', _0xGS225328(204));
+    return hMm;
+  }
+
+  function drawTextLine(_0x125, xMm, yMm, fontSizePt, _0x119, _0x11b, _0x11c) {
+    if (!_0x125 || !_0x125.trim()) return 0;
+    const _0x12a = document.createElement(_0xGS225328(117));
+    const ctx = _0x12a.getContext('2d');
+    const _0x15e = Math.round(fontSizePt * DPI / 72);
+    const _0x160 = `${_0x11c?_0xGS225328(201):''} ${_0x11b?_0xGS225328(202):''} ${_0x15e}px Arial, sans-serif`;
+    ctx.font = _0x160;
+    const _0x16a = ctx.measureText(_0x125).width;
+    const hPx = Math.round(_0x15e * 1.4);
+    _0x12a.width = Math.ceil(_0x16a) + 4;
+    _0x12a.height = hPx;
+    ctx.font = _0x160;
+    ctx.fillStyle = _0x119;
+    ctx.textBaseline = 'top';
+    ctx.fillText(_0x125, 2, 2);
+    const _0x169 = _0x12a.toDataURL(_0xGS225328(203));
+    const wMm = _0x12a.width / _0x15d;
+    const hMm = hPx / _0x15d;
+    pdf.addImage(_0x169, 'PNG', xMm, yMm, wMm, hMm, '', _0xGS225328(204));
+    return wMm;
+  }
+
+  function hexToRgbStr(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  let _0x16b = true;
+  const _0x16c = 4;
+
+  function getStudentLineH() {
+    const fs = parseInt(document.getElementById(_0xGS225328(205)).value) || 10;
+    return fs * 0.352778 * 1.2;
+  }
+
+  function drawBackground() {
+    pdf.setFillColor(bgR, bgG, bgB);
+    pdf.rect(0, 0, _0x154, _0x155, 'F');
+  }
+
+  
+  const _0x16d = document.getElementById(_0xGS225328(55)).checked;
+  const _0x16e = document.getElementById(_0xGS225328(206)).value.trim() || _0xGS225328(207);
+  const _0x16f = parseInt(document.getElementById(_0xGS225328(208)).value) || 60;
+  const _0x170 = (parseInt(document.getElementById(_0xGS225328(209)).value) || 10) / 100;
+  const _0x171 = document.getElementById(_0xGS225328(210)).value;
+  const _0x172 = isActive(_0xGS225328(211));
+  const _0x173 = isActive(_0xGS225328(212));
+  const _0x174 = parseInt(document.getElementById(_0xGS225328(213)).value) || -45;
+  const _0x175 = parseFloat(document.getElementById(_0xGS225328(214)).value) || 70;
+  const _0x176 = parseFloat(document.getElementById(_0xGS225328(215)).value) || 50;
+
+  function drawWatermark(pageNum, _0x1e2) {
+    if (!_0x16d) return;
+    if (_0x114 === _0xGS225328(216) && pageNum !== 1) return;
+    if (_0x114 === _0xGS225328(217) && pageNum !== _0x1e2) return;
+
+    const _0x177 = 300;
+    const _0x178 = _0x177 / 25.4;
+    const _0x15e = Math.round(_0x16f * _0x177 / 72);
+    const _0x160 = `${_0x173 ? _0xGS225328(201) : ''}${_0x172 ? _0xGS225328(202) : ''}${_0x15e}px Arial, sans-serif`;
+
+    
+    const _0x179 = document.createElement(_0xGS225328(117));
+    const _0x17a = _0x179.getContext('2d');
+    _0x17a.font = _0x160;
+    const _0x16a = _0x17a.measureText(_0x16e).width;
+    const _0x17b = Math.round(_0x15e * 1.2);
+    const _0x17c = Math.ceil(Math.sqrt(_0x16a * _0x16a + _0x17b * _0x17b)) + 20;
+
+    const _0x12a = document.createElement(_0xGS225328(117));
+    _0x12a.width = _0x17c;
+    _0x12a.height = _0x17c;
+    const ctx = _0x12a.getContext('2d');
+    ctx.clearRect(0, 0, _0x17c, _0x17c);
+    ctx.globalAlpha = _0x170;
+    ctx.font = _0x160;
+    ctx.fillStyle = _0x171;
+    ctx.textBaseline = _0xGS225328(218);
+    ctx.textAlign = _0xGS225328(49);
+    const cx = _0x17c / 2, cy = _0x17c / 2;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(_0x174 * Math.PI / 180);
+    ctx.fillText(_0x16e, 0, 0);
+    ctx.restore();
+
+    const _0x169 = _0x12a.toDataURL(_0xGS225328(203));
+    const _0x17d = _0x17c / _0x178;
+
+    if (_0x113 === _0xGS225328(49)) {
+      const x = (_0x154 - _0x17d) / 2;
+      const y = (_0x155 - _0x17d) / 2;
+      pdf.addImage(_0x169, 'PNG', x, y, _0x17d, _0x17d, '', _0xGS225328(204));
+    } else {
+      
+      for (let ty = -_0x17d; ty < _0x155 + _0x17d; ty += _0x176) {
+        for (let tx = -_0x17d; tx < _0x154 + _0x17d; tx += _0x175) {
+          pdf.addImage(_0x169, 'PNG', tx, ty, _0x17d, _0x17d, '', _0xGS225328(204));
+        }
+      }
+    }
+  }
+
+  function drawHeader() {
+    let y = _0x134;
+    const _0x17e = _0x154 - _0x134 * 2;
+    const _0x17f = hexToRgbStr(_0x141);
+    const _0x180 = hexToRgbStr(_0x145);
+
+    if (_0x13e) {
+      const h = drawTextBlock(_0x13e, _0x134, y, _0x142, _0x17f, _0x143, _0x144, _0x17e, _0x120);
+      y += h + _0x16c;
+    }
+
+    {
+      const fs = parseInt(document.getElementById(_0xGS225328(205)).value) || 10;
+      const _0x181 = hexToRgbStr(document.getElementById(_0xGS225328(219)).value);
+      const _0x182 = isActive(_0xGS225328(220));
+      const _0x183 = isActive(_0xGS225328(221));
+      const adW = _0x17e * 0.52;
+      const _0x184 = _0x17e * 0.26;
+      const pad = 0;
+      const _0x185 = getStudentLineH();
+
+      pdf.setDrawColor(160,160,160);
+      pdf.setLineWidth(0.25);
+      pdf.line(_0x134, y, _0x134 + _0x17e, y);
+
+      y += pad;
+
+      drawTextLine(_0xGS225328(222), _0x134, y, fs, _0x181, _0x182, _0x183);
+      drawTextLine(_0xGS225328(223), _0x134 + adW, y, fs, _0x181, _0x182, _0x183);
+      drawTextLine('NO:', _0x134 + adW + _0x184, y, fs, _0x181, _0x182, _0x183);
+
+      y += _0x185;
+
+      pdf.setDrawColor(160,160,160);
+      pdf.setLineWidth(0.25);
+      pdf.line(_0x134, y, _0x134 + _0x17e, y);
+
+      y += pad + 0.5;
+    }
+
+    if (_0x13f) {
+      const _0x186 = hexToRgbStr(_0x145);
+      const h = drawTextBlock(_0x13f, _0x134, y, _0x146, _0x186, _0x147, _0x148, _0x17e, _0x121);
+      y += h + 1;
+    }
+
+    return y + 1;
+  }
+
+  drawBackground();
+  
+  let _0x187 = _0x134;
+  if (_0x16b) {
+    _0x187 = drawHeader();
+    _0x16b = false;
+  }
+
+  let _0x188 = Array(_0x156).fill(_0x187);
+  let col = 0;
+
+  const _0x189 = document.getElementById(_0xGS225328(44)).checked;
+  let _0x18a = 1.0;
+
+  
+  let _0x18b = [];
+
+  
+  
+  async function buildPhotoInfo(scl) {
+    const _0x18c = _0x149 ? _0x14f : 0;
+    const _0x18d = _0x157 ? _0x15c : 0;
+    const _0x18e = _0x157 ? _0x15b : 0;
+    const _0x18f = _0x135 - _0x18e * 2;
+    const _0x137 = _0x155 - _0x134;
+    let _0x190 = Array(_0x156).fill(_0x187);
+    let _0x191 = 0;
+    const _0x192 = [];
+
+    for (let i = 0; i < _0x102.length; i++) {
+      const sc = Math.min(_0x102[i]._0x1a3 || 1, _0x156);
+      const _0x193 = sc > 1;
+      const _0x194 = _0x193 ? _0x135 * sc + gap * (sc - 1) - _0x18e * 2 : _0x18f;
+      const _0x195 = _0x1a0[i];
+      const _0x196 = _0x194 * scl;
+      const _0x197 = _0x196 * _0x195;
+      const _0x198 = _0x197 + _0x18c + _0x18d * 2;
+      const _0x199 = Math.min(_0x198, _0x137 - _0x134);
+
+      if (_0x193) {
+        
+        let _0x19a = 0;
+        while (_0x19a + sc > _0x156) _0x19a = 0;
+        const _0x19b = Math.max(..._0x190.slice(_0x19a, _0x19a + sc));
+        for (let c = _0x19a; c < _0x19a + sc; c++) _0x190[c] = _0x19b;
+        if (_0x190[_0x19a] + _0x199 > _0x137) {
+          _0x191++; _0x190 = Array(_0x156).fill(_0x134); _0x19a = 0;
+          const _0x19c = Math.max(..._0x190.slice(0, sc));
+          for (let c = 0; c < sc; c++) _0x190[c] = _0x19c;
+        }
+        const yB = _0x190[_0x19a];
+        const _0x19d = yB + _0x199 + gap;
+        for (let c = _0x19a; c < _0x19a + sc; c++) _0x190[c] = _0x19d;
+        _0x192.push({ page: _0x191, col: _0x19a, yBefore: yB, _0x1a4: true, _0x1a3: sc });
+      } else {
+        
+        
+        let _0x19e = -1;
+        
+        const _0x19f = Array.from({length: _0x156}, (_, c) => c)
+          .sort((a, b) => _0x190[a] - _0x190[b]);
+
+        for (const c of _0x19f) {
+          if (_0x190[c] + _0x199 <= _0x137) {
+            _0x19e = c;
+            break;
+          }
+        }
+
+        if (_0x19e === -1) {
+          
+          _0x191++; _0x190 = Array(_0x156).fill(_0x134);
+          _0x19e = 0;
+        }
+
+        const yB = _0x190[_0x19e];
+        _0x190[_0x19e] += _0x199 + gap;
+        _0x192.push({ page: _0x191, col: _0x19e, yBefore: yB, _0x1a4: false, _0x1a3: 1 });
+      }
+    }
+    return _0x192;
+  }
+
+  
+  const _0x1a0 = [];
+  for (let i = 0; i < _0x102.length; i++) {
+    const _0x192 = await getImageDimensions(_0x102[i].dataUrl);
+    _0x1a0.push(_0x192.height / _0x192.width);
+  }
+
+  if (_0x189 && _0x102.length > 0) {
+    
+    
+    function simulateLayout(scale) {
+      const _0x18c = _0x149 ? _0x14f : 0;
+      const _0x18d = _0x157 ? _0x15c : 0;
+      const _0x18e = _0x157 ? _0x15b : 0;
+      const _0x18f = _0x135 - _0x18e * 2;
+      const _0x137 = _0x155 - _0x134;
+      let _0x1a1 = Array(_0x156).fill(_0x187);
+      let _0x1a2 = 1;
+
+      for (let i = 0; i < _0x102.length; i++) {
+        const _0x1a3 = Math.min(_0x102[i]._0x1a3 || 1, _0x156);
+        const _0x1a4 = _0x1a3 > 1;
+        const _0x1a5 = _0x1a4 ? _0x135 * _0x1a3 + gap * (_0x1a3 - 1) - _0x18e * 2 : _0x18f;
+        const _0x196 = _0x1a5 * scale;
+        const _0x197 = _0x196 * _0x1a0[i];
+        const _0x1a6 = _0x197 + _0x18c + _0x18d * 2;
+        const _0x1a7 = Math.min(_0x1a6, _0x137 - _0x134);
+
+        if (_0x1a4) {
+          let _0x19a = 0;
+          while (_0x19a + _0x1a3 > _0x156) _0x19a = 0;
+          const _0x19b = Math.max(..._0x1a1.slice(_0x19a, _0x19a + _0x1a3));
+          for (let c = _0x19a; c < _0x19a + _0x1a3; c++) _0x1a1[c] = _0x19b;
+          if (_0x1a1[_0x19a] + _0x1a7 > _0x137) {
+            _0x1a2++;
+            _0x1a1 = Array(_0x156).fill(_0x134);
+            _0x19a = 0;
+          }
+          const _0x19d = _0x1a1[_0x19a] + _0x1a7 + gap;
+          for (let c = _0x19a; c < _0x19a + _0x1a3; c++) _0x1a1[c] = _0x19d;
+        } else {
+          
+          const _0x19f = Array.from({length: _0x156}, (_, c) => c)
+            .sort((a, b) => _0x1a1[a] - _0x1a1[b]);
+          let _0x19e = -1;
+          for (const c of _0x19f) {
+            if (_0x1a1[c] + _0x1a7 <= _0x137) { _0x19e = c; break; }
+          }
+          if (_0x19e === -1) {
+            _0x1a2++;
+            _0x1a1 = Array(_0x156).fill(_0x134);
+            _0x19e = 0;
+          }
+          _0x1a1[_0x19e] += _0x1a7 + gap;
+        }
+      }
+      return _0x1a2;
+    }
+
+    
+    if (simulateLayout(1.0) <= _0x110) {
+      _0x18a = 1.0;
+    } else {
+      let lo = 0.05, hi = 1.0;
+      for (let _0x1a8 = 0; _0x1a8 < 18; _0x1a8++) {
+        const mid = (lo + hi) / 2;
+        if (simulateLayout(mid) <= _0x110) lo = mid;
+        else hi = mid;
+      }
+      _0x18a = lo;
+    }
+  }
+
+  
+  
+  let _0x1a9 = [];
+  let _0x1aa = [];
+  if (_0x102.length > 0) {
+    const _0x18e = _0x157 ? _0x15b : 0;
+    const _0x18d = _0x157 ? _0x15c : 0;
+    const _0x18c = _0x149 ? _0x14f : 0;
+    const _0x18f = _0x135 - _0x18e * 2;
+    const _0x137 = _0x155 - _0x134;
+
+    _0x18b = new Array(_0x102.length).fill(_0x18a);
+    _0x1aa = await buildPhotoInfo(_0x18a);
+    const _0x1ab = _0x1aa;
+
+    
+    _0x1a9 = new Array(_0x102.length);
+    const _0x1ac = Array.from({length: _0x102.length}, (_, i) => i)
+      .sort((a, b) => {
+        const pa = _0x1ab[a], pb = _0x1ab[b];
+        if (pa.page !== pb.page) return pa.page - pb.page;
+        if (pa.col !== pb.col) return pa.col - pb.col;
+        return pa.yBefore - pb.yBefore;
+      });
+    _0x1ac.forEach((photoIdx, rank) => { _0x1a9[photoIdx] = rank; });
+
+    
+    
+    
+    
+    
+    for (let i = 0; i < _0x102.length; i++) {
+      const _0x192 = _0x1ab[i];
+      if (_0x192._0x1a4) continue;
+
+      
+      let _0x1ad = _0x137; 
+      for (let j = 0; j < _0x102.length; j++) {
+        if (j === i) continue;
+        const _0x1ae = _0x1ab[j];
+        if (!_0x1ae._0x1a4 && _0x1ae.page === _0x192.page && _0x1ae.col === _0x192.col && _0x1ae.yBefore > _0x192.yBefore) {
+          if (_0x1ae.yBefore < _0x1ad) _0x1ad = _0x1ae.yBefore;
+        }
+      }
+
+      
+      const _0x1af = _0x1ad - _0x192.yBefore - _0x18c - _0x18d * 2 - gap;
+      if (_0x1af > 4) {
+        const _0x1b0 = _0x1af / _0x1a0[i];
+        const _0x1b1 = _0x1b0 / _0x18f;
+        _0x18b[i] = Math.min(1.0, Math.max(_0x18a, _0x1b1));
+      }
+    }
+  }
+
+  let _0x1b2 = 1;
+
+  function drawDividerLines(pageNum, bottomY) {
+    if (!_0x10d || _0x10d.length === 0) return;
+    const _0x1b3 = _0x10d.filter(r => r.page === pageNum);
+    if (_0x1b3.length === 0) return;
+
+    const _0x18d = _0x157 ? _0x15c : 0;
+    const _0x18c = _0x149 ? _0x14f : 0;
+    const _0x1b4 = (bottomY !== undefined) ? bottomY : _0x155 - _0x134;
+
+    _0x1b3.forEach(r => {
+      const _0x1b5 = Math.min(r._0x1b5, _0x156 - 1);
+      if (_0x1b5 < 1) return;
+
+      const x = _0x134 + _0x1b5 * (_0x135 + gap) - gap / 2;
+      const lw = (r.width || 0.5) * 0.352778;
+      const cr = parseInt(r._0x119.slice(1,3),16);
+      const cg = parseInt(r._0x119.slice(3,5),16);
+      const cb = parseInt(r._0x119.slice(5,7),16);
+      pdf.setDrawColor(cr, cg, cb);
+      pdf.setLineWidth(lw);
+      if (r.style === _0xGS225328(28)) pdf.setLineDashPattern([2, 2], 0);
+      else if (r.style === _0xGS225328(30)) pdf.setLineDashPattern([0.5, 1.5], 0);
+      else pdf.setLineDashPattern([], 0);
+
+      const _0x1b6 = (pageNum === 1) ? _0x187 : _0x134;
+
+      
+      const _0x1b7 = [];
+      _0x1aa.forEach((_0x192, idx) => {
+        if (!_0x192._0x1a4) return;
+        if (_0x192.page !== pageNum - 1) return;
+        const sc = _0x192._0x1a3;
+        const _0x1b8 = _0x192.col;
+        const _0x1b9 = _0x192.col + sc - 1;
+        if (_0x1b8 <= _0x1b5 - 1 && _0x1b9 >= _0x1b5) {
+          const _0x1ba = _0x157 ? _0x15b : 0;
+          const _0x194 = _0x135 * sc + gap * (sc - 1) - _0x1ba * 2;
+          const _0x196 = _0x194 * (_0x18b[idx] || _0x18a);
+          const _0x197 = _0x196 * _0x1a0[idx];
+          const _0x198 = _0x197 + _0x18c + _0x18d * 2;
+          _0x1b7.push({ y1: _0x192.yBefore, y2: _0x192.yBefore + _0x198 });
+        }
+      });
+
+      _0x1b7.sort((a, b) => a.y1 - b.y1);
+
+      let _0x1bb = _0x1b6;
+      for (const b of _0x1b7) {
+        const _0x1bc = Math.min(b.y1, _0x1b4);
+        if (_0x1bb < _0x1bc) pdf.line(x, _0x1bb, x, _0x1bc);
+        _0x1bb = Math.max(_0x1bb, b.y2);
+        if (_0x1bb >= _0x1b4) break;
+      }
+      if (_0x1bb < _0x1b4) pdf.line(x, _0x1bb, x, _0x1b4);
+
+      pdf.setLineDashPattern([], 0);
+    });
+  }
+
+  for (let i = 0; i < _0x102.length; i++) {
+    _0x152.textContent = `Soru ${i+1} / ${_0x102.length} işleniyor...`;
+    _0x151.style.width = ((i / _0x102.length) * 90) + '%';
+
+    const _0x1bd = _0x102[i];
+    const _0x1a3 = Math.min(_0x1bd._0x1a3 || 1, _0x156);
+    const _0x1a4 = _0x1a3 > 1;
+
+    const _0x1be = await getImageDimensions(_0x1bd.dataUrl);
+    const _0x1bf = _0x1a0[i] || (_0x1be.height / _0x1be.width);
+    const _0x18e = _0x157 ? _0x15b : 0;
+    const _0x18d = _0x157 ? _0x15c : 0;
+    const _0x18f = _0x135 - _0x18e * 2;
+    const _0x1c0 = _0x135 * _0x1a3 + gap * (_0x1a3 - 1) - _0x18e * 2;
+    const _0x1c1 = _0x1a4 ? _0x1c0 : _0x18f;
+    const _0x1c2 = _0x1a4 ? _0x135 * _0x1a3 + gap * (_0x1a3 - 1) : _0x135;
+    const _0x18c = _0x149 ? _0x14f : 0;
+    const _0x137 = _0x155 - _0x134;
+
+    
+    const _0x1c3 = (_0x18b.length > i) ? _0x18b[i] : _0x18a;
+    const _0x1c4 = _0x1a4 ? _0x18a : _0x1c3;
+    const _0x1c5 = _0x1c1 * _0x1c4;
+    const _0x1c6 = _0x1c5 * _0x1bf;
+    const _0x1c7 = Math.min(_0x1c6 + _0x18c + _0x18d * 2, _0x137 - _0x134);
+
+    function addNewPage() {
+      drawDividerLines(_0x1b2);
+      if (document.getElementById(_0xGS225328(224)).checked) {
+        const _0x1c8 = parseInt(document.getElementById(_0xGS225328(225)).value) || 9;
+        const _0x1c9 = parseFloat(document.getElementById(_0xGS225328(226)).value) || 8;
+        const _0x1ca = _0xGS225328(227);
+        const _0x1cb = _0x1c8 * 0.352778 * 1.4;
+        const npY = _0x155 - _0x134 - _0x1c9 - _0x1cb;
+        drawTextBlock(_0xGS225328(228), _0x134, npY, _0x1c8, _0x1ca, false, true, _0x154 - _0x134 * 2, _0x11f);
+      }
+      pdf.addPage();
+      drawBackground();
+      _0x1b2++;
+      _0x188 = Array(_0x156).fill(_0x134);
+      col = 0;
+    }
+
+    
+    if (_0x1a4) {
+      
+      while (col + _0x1a3 > _0x156) col = 0;
+      const _0x19b = Math.max(..._0x188.slice(col, col + _0x1a3));
+      for (let c = col; c < col + _0x1a3; c++) _0x188[c] = _0x19b;
+      if (_0x188[col] + _0x1c7 > _0x137) {
+        addNewPage();
+        col = 0;
+      }
+    } else {
+      
+      const _0x19f = Array.from({length: _0x156}, (_, c) => c)
+        .sort((a, b) => _0x188[a] - _0x188[b]);
+      let _0x19e = -1;
+      for (const c of _0x19f) {
+        if (_0x188[c] + _0x1c7 <= _0x137) { _0x19e = c; break; }
+      }
+      if (_0x19e === -1) {
+        addNewPage();
+        col = 0;
+      } else {
+        col = _0x19e;
+      }
+    }
+
+    
+    
+    let _0x196, _0x197;
+    {
+      const _0x1c3 = (_0x18b.length > i) ? _0x18b[i] : _0x18a;
+      _0x196 = _0x1c1 * _0x1c3;
+      _0x197 = _0x196 * _0x1bf;
+      
+      const _0x1cc = _0x137 - _0x188[col] - _0x18c - _0x18d * 2;
+      if (_0x197 > _0x1cc && _0x1cc > 5) {
+        _0x197 = _0x1cc;
+        _0x196 = _0x197 / _0x1bf;
+      }
+    }
+    const _0x1a6 = _0x197 + _0x18c + _0x18d * 2;
+
+    const _0x1cd = _0x134 + col * (_0x135 + gap);
+    let _0x1ce = _0x188[col];
+
+    let _0x1cf = 0;
+    if (!_0x1a4) {
+      if (_0x111 === _0xGS225328(49)) _0x1cf = (_0x18f - _0x196) / 2;
+      else if (_0x111 === _0xGS225328(50)) _0x1cf = _0x18f - _0x196;
+    }
+
+    if (_0x157) {
+      drawRoundedRect(_0x1cd, _0x1ce, _0x1c2, _0x1a6, _0x15a);
+    }
+
+    _0x1ce += _0x18d;
+    const _0x1d0 = _0x1cd + _0x18e + _0x1cf;
+
+    if (_0x149) {
+      const _0x11e = document.getElementById(_0xGS225328(89)) ? document.getElementById(_0xGS225328(89)).checked : true;
+      const _0x118 = _0x14a + (_0x1a9.length > i ? _0x1a9[i] : i);
+      const pts = _0x1bd.points ?? 0;
+      const _0x1d1 = _0x11e ? `SORU ${_0x118}   (${pts} Puan)` : `SORU ……   (${pts} Puan)`;
+      const _0x1d2 = hexToRgbStr(_0x14b);
+      const _0x1d3 = _0x112 === _0xGS225328(49) ? _0xGS225328(49) : _0x112 === _0xGS225328(50) ? _0xGS225328(50) : _0xGS225328(48);
+      drawTextBlock(_0x1d1, _0x1cd + _0x18e, _0x1ce, _0x14c, _0x1d2, _0x14d, _0x14e, _0x1c2 - _0x18e * 2, _0x1d3);
+      _0x1ce += _0x14f;
+    }
+
+    try {
+      const fmt = getImageFormat(_0x1bd.dataUrl);
+      pdf.addImage(_0x1bd.dataUrl, fmt, _0x1d0, _0x1ce, _0x196, _0x197, '', _0xGS225328(204));
+    } catch(e) {
+      pdf.addImage(_0x1bd.dataUrl, _0xGS225328(229), _0x1d0, _0x1ce, _0x196, _0x197, '', _0xGS225328(204));
+    }
+
+    if (_0x1a4) {
+      const _0x19d = _0x188[col] + _0x1a6 + gap;
+      for (let c = col; c < col + _0x1a3; c++) _0x188[c] = _0x19d;
+      
+    } else {
+      _0x188[col] += _0x1a6 + gap;
+    }
+  } 
+
+  
+  const _0x1d4 = document.getElementById(_0xGS225328(96)).value.trim();
+  let _0x1d5 = _0x155 - _0x134;
+  if (_0x1d4) {
+    const _0x1d6 = parseInt(document.getElementById(_0xGS225328(104)).value) || 10;
+    const _0x1d7 = _0x1d6 * 0.352778 * 1.4;
+    const _0x1d8 = parseFloat(document.getElementById(_0xGS225328(230)).value) || 8;
+    _0x1d5 = _0x155 - _0x134 - _0x1d8 - _0x1d7 - 1;
+  }
+  drawDividerLines(_0x1b2, _0x1d5);
+
+  
+  const _0x1d9 = document.getElementById(_0xGS225328(96)).value.trim();
+  if (_0x1d9) {
+    const _0x1da = parseInt(document.getElementById(_0xGS225328(104)).value) || 10;
+    const _0x1db = document.getElementById(_0xGS225328(103)).value;
+    const _0x1dc = isActive(_0xGS225328(105));
+    const _0x1dd = isActive(_0xGS225328(106));
+    const _0x1de = hexToRgbStr(_0x1db);
+    const _0x17e = _0x154 - _0x134 * 2;
+    const _0x1df = _0x1da * 0.352778 * 1.4;
+    const _0x1e0 = parseFloat(document.getElementById(_0xGS225328(230)).value) || 8;
+    const _0x1e1 = _0x155 - _0x134 - _0x1e0 - _0x1df;
+    drawTextBlock(_0x1d9, _0x134, _0x1e1, _0x1da, _0x1de, _0x1dc, _0x1dd, _0x17e, _0x124);
+  }
+
+  
+  if (_0x16d) {
+    const _0x1e2 = _0x1b2;
+    for (let p = 1; p <= _0x1e2; p++) {
+      pdf.setPage(p);
+      drawWatermark(p, _0x1e2);
+    }
+  }
+
+  _0x151.style.width = _0xGS225328(231);
+  _0x152.textContent = _0xGS225328(232);
+
+  var _0x1e3 = _0xGS225328(233);
+
+  
+  var _0x1e4 = null;
+  try {
+    if (typeof URL !== _0xGS225328(234) && typeof URL.createObjectURL === _0xGS225328(235)) {
+      var _0x1e5 = pdf.output(_0xGS225328(236));
+      _0x1e4 = URL.createObjectURL(_0x1e5);
+    }
+  } catch(e) { _0x1e4 = null; }
+
+  window.__pdfBlobUrl = _0x1e4;
+
+  
+  window.__closePdfOverlay = function() {
+    var el = document.getElementById(_0xGS225328(237));
+    if (el) el.remove();
+    try {
+      if (window.__pdfBlobUrl) {
+        URL.revokeObjectURL(window.__pdfBlobUrl);
+        window.__pdfBlobUrl = null;
+      }
+    } catch(e) {}
+  };
+
+  
+  var _0x1e6 = _0x1e4;
+  if (!_0x1e6) {
+    try { _0x1e6 = pdf.output(_0xGS225328(238)); } catch(e) { _0x1e6 = '#'; }
+  }
+
+  
+  var _0x1e7;
+  if (_0x1e4) {
+    _0x1e7 = _0xGS225328(239) + _0x1e4 + _0xGS225328(240);
+  } else {
+    _0x1e7 = _0xGS225328(241);
+  }
+
+  var _0x1e8 = document.createElement('div');
+  _0x1e8.id = _0xGS225328(237);
+  _0x1e8.style.position = _0xGS225328(242);
+  _0x1e8.style.top = '0';
+  _0x1e8.style.right = '0';
+  _0x1e8.style.bottom = '0';
+  _0x1e8.style.left = '0';
+  _0x1e8.style.background = _0xGS225328(243);
+  _0x1e8.style.zIndex = '9999';
+  _0x1e8.style.display = _0xGS225328(244);
+  _0x1e8.style.display = _0xGS225328(160);
+  _0x1e8.style.webkitFlexDirection = _0xGS225328(245);
+  _0x1e8.style.flexDirection = _0xGS225328(245);
+  _0x1e8.style.fontFamily = _0xGS225328(246);
+
+  var _0x1e9 = document.createElement('div');
+  _0x1e9.style.cssText = _0xGS225328(247);
+
+  var _0x1ea = document.createElement(_0xGS225328(248));
+  _0x1ea.innerHTML = _0xGS225328(249);
+  _0x1ea.style.cssText = _0xGS225328(250);
+  _0x1ea.onclick = function() { window.__closePdfOverlay(); };
+
+  var _0x1eb = document.createElement(_0xGS225328(251));
+  _0x1eb.style.cssText = _0xGS225328(252);
+  _0x1eb.textContent = _0xGS225328(253) + _0x1e3 + _0xGS225328(254);
+
+  var _0x1ec = document.createElement('a');
+  _0x1ec.href = _0x1e6;
+  _0x1ec.download = _0x1e3 + _0xGS225328(254);
+  _0x1ec.style.cssText = _0xGS225328(255);
+  _0x1ec.textContent = _0xGS225328(256);
+
+  _0x1e9.appendChild(_0x1ea);
+  _0x1e9.appendChild(_0x1eb);
+  _0x1e9.appendChild(_0x1ec);
+
+  var _0x1ed = document.createElement('div');
+  _0x1ed.style.cssText = _0xGS225328(257);
+  _0x1ed.innerHTML = _0xGS225328(258);
+
+  _0x1e8.appendChild(_0x1e9);
+  _0x1e8.appendChild(_0x1ed);
+
+  var _0x1ee = document.createElement('div');
+  _0x1ee.style.cssText = _0xGS225328(259);
+  _0x1ee.innerHTML = _0x1e7;
+  _0x1e8.appendChild(_0x1ee);
+
+  document.body.appendChild(_0x1e8);
+
+  setTimeout(function() {
+    _0x150.style.display = _0xGS225328(46);
+    _0x151.style.width = '0%';
+    btn.disabled = false;
+    const bbp = document.getElementById(_0xGS225328(195));
+    if (bbp) bbp.style.display = _0xGS225328(46);
+    const bbi = document.getElementById(_0xGS225328(181));
+    if (bbi) bbi.style.display = '';
+    updateStats();
+  }, 1500);
+}
+
+function getImageDimensions(dataUrl) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.src = dataUrl;
+  });
+}
+
+function getImageFormat(dataUrl) {
+  if (dataUrl.includes(_0xGS225328(260))) return 'PNG';
+  if (dataUrl.includes(_0xGS225328(261))) return _0xGS225328(262);
+  return _0xGS225328(229);
+}</script>
+<!-- ===== AKILLI HATA AYIKLAYICI ===== -->
+<style>
+  #debugOverlay {
+    display: none;
+    position: fixed; top:0; right:0; bottom:0; left:0; z-index: 99999;
+    background: rgba(0,0,0,0.75);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    -webkit-align-items: center; align-items: center;
+    -webkit-justify-content: center; justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    animation: debugFadeIn 0.2s ease;
+  }
+  #debugOverlay.visible { display: -webkit-flex; display: flex; }
+  @keyframes debugFadeIn { from { opacity:0; transform:scale(0.97); } to { opacity:1; transform:scale(1); } }
+  #debugPanel {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    width: min(680px, 96vw);
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  }
+  #debugHeader {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 20px;
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+    flex-shrink: 0;
+  }
+  #debugHeader .debug-icon { font-size: 1.3rem; }
+  #debugHeader .debug-title {
+    font-size: 0.95rem; font-weight: 700; color: #f87171;
+    flex: 1;
+  }
+  #debugHeader .debug-close {
+    background: none; border: none; color: #64748b;
+    cursor: pointer; font-size: 1.3rem; padding: 2px 6px;
+    border-radius: 6px; line-height: 1;
+    transition: color 0.15s, background 0.15s;
+  }
+  #debugHeader .debug-close:hover { color: #fff; background: #334155; }
+  #debugBody { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+
+  .debug-section { display: flex; flex-direction: column; gap: 6px; }
+  .debug-label {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #64748b;
+  }
+
+  .debug-error-box {
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.35);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .debug-error-message {
+    font-size: 0.92rem; font-weight: 600; color: #fca5a5;
+    line-height: 1.5; word-break: break-word;
+  }
+
+  .debug-meta-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+  .debug-meta-item {
+    background: #1e293b; border: 1px solid #334155;
+    border-radius: 8px; padding: 10px 14px;
+  }
+  .debug-meta-key { font-size: 0.72rem; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .debug-meta-val { font-size: 0.88rem; color: #e2e8f0; font-weight: 600; word-break: break-all; }
+
+  .debug-source-box {
+    background: #020617;
+    border: 1px solid #334155;
+    border-radius: 10px; overflow: hidden;
+  }
+  .debug-source-header {
+    padding: 8px 14px; font-size: 0.72rem; color: #64748b;
+    border-bottom: 1px solid #1e293b; background: #0f172a;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .debug-source-lines { padding: 8px 0; }
+  .debug-source-line {
+    display: flex; gap: 0; align-items: stretch;
+    font-size: 0.8rem; line-height: 1.7;
+  }
+  .debug-source-line.error-line { background: rgba(248,113,113,0.12); }
+  .debug-line-num {
+    min-width: 48px; text-align: right; padding: 0 12px 0 8px;
+    color: #475569; user-select: none; flex-shrink: 0;
+    font-family: monospace;
+  }
+  .debug-source-line.error-line .debug-line-num { color: #f87171; font-weight: 700; }
+  .debug-line-code { color: #94a3b8; font-family: monospace; padding-right: 12px; white-space: pre-wrap; word-break: break-all; }
+  .debug-source-line.error-line .debug-line-code { color: #fca5a5; }
+
+  .debug-explain-box {
+    background: rgba(56,189,248,0.08);
+    border: 1px solid rgba(56,189,248,0.25);
+    border-radius: 10px; padding: 14px 16px;
+    font-size: 0.88rem; color: #bae6fd;
+    line-height: 1.6;
+  }
+  .debug-explain-box strong { color: #38bdf8; }
+
+  .debug-stack-box {
+    background: #020617; border: 1px solid #1e293b;
+    border-radius: 10px; padding: 12px 16px;
+    font-size: 0.75rem; color: #475569; font-family: monospace;
+    white-space: pre-wrap; word-break: break-all; max-height: 120px; overflow-y: auto;
+  }
+  .debug-footer {
+    padding: 12px 20px; border-top: 1px solid #1e293b;
+    display: flex; gap: 8px; flex-shrink: 0;
+    background: #0f172a;
+  }
+  .debug-btn {
+    padding: 8px 16px; border-radius: 8px; border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+  }
+  .debug-btn:hover { opacity: 0.85; }
+  .debug-btn-copy { background: #334155; color: #e2e8f0; }
+  .debug-btn-close { background: #38bdf8; color: #0f172a; }
+  .debug-copy-ok { font-size: 0.78rem; color: #4ade80; align-self: center; opacity: 0; transition: opacity 0.3s; }
+  .debug-copy-ok.show { opacity: 1; }
+</style>
+
+<div id="debugOverlay" role="dialog" aria-modal="true" aria-label="Hata Ayıklayıcı">
+  <div id="debugPanel">
+    <div id="debugHeader">
+      <span class="debug-icon">🐛</span>
+      <span class="debug-title">Akıllı Hata Ayıklayıcı</span>
+      <button class="debug-close" onclick="closeDebugger()" title="Kapat">✕</button>
+    </div>
+    <div id="debugBody">
+      <!-- dinamik içerik -->
+    </div>
+    <div class="debug-footer">
+      <button class="debug-btn debug-btn-copy" onclick="copyDebugInfo()">📋 Kopyala</button>
+      <span class="debug-copy-ok" id="debugCopyOk">✓ Kopyalandı</span>
+      <button class="debug-btn debug-btn-close" style="margin-left:auto;" onclick="closeDebugger()">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<script>var _0xSA158d3c=["Y2Fubm90IHJlYWQgcHJvcA==","Y2Fubm90IHJlYWQgcHJvcGVydGllcw==","bnVsbA==","dW5kZWZpbmVk","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gS29kLCBoZW7DvHogecO8a2xlbm1lbWnFnyB2ZXlhIHZhciBvbG1heWFuIGJpciBlbGVtYW5hL2RlxJ9pxZ9rZW5lIGVyacWfbWV5ZSDDp2FsxLHFn8SxeW9yLiBTYXlmYW7EsW4gdGFtIHnDvGtsZW5tZWRlbiDDtm5jZSBiaXIgc2NyaXB0IMOnYWzEscWfxLF5b3Igb2xhYmlsaXIgeWEgZGEgYmVrbGVuZW4gYmlyIEhUTUwgZWxlbWVudGkgYnVsdW5hbcSxeW9yLg==","aXMgbm90IGEgZnVuY3Rpb24=","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gQmlyIGZvbmtzaXlvbiBvbG1hc8SxIGJla2xlbmVuIGRlxJ9lciwgYXNsxLFuZGEgZm9ua3NpeW9uIGRlxJ9pbC4gWWFubMSxxZ8gaXNpbSwgeWFubMSxxZ8ga2Fwc2FtIHZleWEgaGVuw7x6IHRhbsSxbWxhbm1hbcSxxZ8gYmlyIGZvbmtzaXlvbiDDp2HEn3LEsWxtxLHFnyBvbGFiaWxpci4=","aXMgbm90IGRlZmluZWQ=","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gS3VsbGFuxLFsbWF5YSDDp2FsxLHFn8SxbGFuIGRlxJ9pxZ9rZW4gdmV5YSBmb25rc2l5b24gaGnDpyB0YW7EsW1sYW5tYW3EscWfLiBZYXrEsW0gaGF0YXPEsSB5YSBkYSBmYXJrbMSxIGJpciBkb3N5YWRhL2thcHNhbWRhIHRhbsSxbWzEsSBvbGFiaWxpci4=","c3ludGF4ZXJyb3I=","U3ludGF4RXJyb3I=","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gS29kZGEgeWF6xLFtL3PDtnpkaXppbWkgaGF0YXPEsSB2YXIuIEVrc2lrIHBhcmFudGV6LCB2aXJnw7xsIHZleWEgdMSxcm5hayBpxZ9hcmV0aSBvbGFiaWxpci4=","dHlwZWVycm9y","VHlwZUVycm9y","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gWWFubMSxxZ8gdMO8cmRlIGJpciBkZcSfZXIga3VsbGFuxLFsbcSxxZ8uIMOWcm5lxJ9pbiBzYXnEsSBiZWtsZW5pcmtlbiBtZXRpbiBnZWxtacWfIHlhIGRhIG5lc25lIHllcmluZSBudWxsL3VuZGVmaW5lZCBnZWxtacWfIG9sYWJpbGlyLg==","cmFuZ2VlcnJvcg==","UmFuZ2VFcnJvcg==","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gQmlyIGRlxJ9lciBnZcOnZXJsaSBhcmFsxLHEn8SxbiBkxLHFn8SxbmEgw6fEsWt0xLEuIFNvbnN1eiBkw7ZuZ8O8LCDDp29rIGRlcmluIMO2enlpbmVsZW1lIHZleWEgZ2XDp2Vyc2l6IHNhecSxc2FsIGnFn2xlbSBvbGFiaWxpci4=","cmVmZXJlbmNlZXJyb3I=","UmVmZXJlbmNlRXJyb3I=","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gVmFyIG9sbWF5YW4gYmlyIGRlxJ9pxZ9rZW5lIHJlZmVyYW5zIHZlcmlsbWnFny4gS2Fwc2FtIChzY29wZSkgc29ydW5sYXLEsSB2ZXlhIHlhesSxbSBoYXRhc8SxIG9sYWJpbGlyLg==","bmV0d29yaw==","ZmV0Y2g=","bG9hZA==","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gQcSfIHZleWEga2F5bmFrIHnDvGtsZW1lIGhhdGFzxLEuIMSwbnRlcm5ldCBiYcSfbGFudMSxc8SxLCBDT1JTIHBvbGl0aWthc8SxIHZleWEgeWFubMSxxZ8gVVJMIG9sYWJpbGlyLg==","PHN0cm9uZz5OZSBhbmxhbWEgZ2VsaXlvcj88L3N0cm9uZz4gQmVrbGVubWVkaWsgYmlyIEphdmFTY3JpcHQgaGF0YXPEsSBvbHXFn3R1LiBEZXRheWxhciBpw6dpbiBoYXRhIG1lc2FqxLEgdmUgecSxxJ/EsW4gaXppbmkgaW5jZWxleWluaXou","JmFtcDs=","Jmx0Ow==","Jmd0Ow==","ZGVidWctc291cmNlLWxpbmUke18weDEwMz8nIGVycm9yLWxpbmUnOicnfQ==","ZGVidWctbGluZS1udW0=","ZGVidWctbGluZS1fMHgxMDQ=","QmlsaW5tZXllbiBoYXRh","RXJyb3I=","aW5saW5l","dHItVFI=","dW5oYW5kbGVkcmVqZWN0aW9u","UHJvbWlzZSByZWRkZWRpbGRp","VW5oYW5kbGVkUHJvbWlzZVJlamVjdGlvbg==","UHJvbWlzZQ==","ZGVidWdPdmVybGF5","ZGVidWdCb2R5","QnUgZG9zeWEgKGlubGluZSBzY3JpcHQp","YmxvYjo=","ZGVidWctc2VjdGlvbg==","ZGVidWctbGFiZWw=","ZGVidWctZXJyb3ItYm94","ZGVidWctZXJyb3ItbWVzc2FnZQ==","PHNwYW4gc3R5bGU9ImNvbG9yOiNmYjkyM2M7Ij5b","XTwvc3Bhbj4g","ZGVidWctbWV0YS1ncmlk","ZGVidWctbWV0YS1pdGVt","ZGVidWctbWV0YS1rZXk=","ZGVidWctbWV0YS12YWw=","Z3JpZC1jb2x1bW46c3BhbiAyOw==","Zm9udC1zaXplOjAuNzhyZW07","ZGVidWctc291cmNlLWJveA==","ZGVidWctc291cmNlLWhlYWRlcg==","ZGVidWctc291cmNlLV8weDEwMQ==","ZGVidWctXzB4MTA5LWJveA==","ZGVidWctc3RhY2stYm94","dmlzaWJsZQ==","ZGVidWdDb3B5T2s=","c2hvdw==","dGV4dGFyZWE=","cG9zaXRpb246Zml4ZWQ7dG9wOi05OTk5cHg7bGVmdDotOTk5OXB4O29wYWNpdHk6MDs=","Y29weQ==","Y2xpY2s=","a2V5ZG93bg==","RXNjYXBl","Q2Fubm90IHJlYWQgcHJvcGVydGllcyBvZiBudWxsIChyZWFkaW5nICd2YWx1ZScp","VHlwZUVycm9yOiBDYW5ub3QgcmVhZCBwcm9wZXJ0aWVzIG9mIG51bGxcbiAgICBhdCBnZW5lcmF0ZVBERiAocy1zaW5hdi5fMHgxMDA6NDI6MTgpXG4gICAgYXQgSFRNTEJ1dHRvbkVsZW1lbnQub25jbGljayAocy1zaW5hdi5fMHgxMDA6ODkzOjEp"];function _0xGSc85057(_i){try{return atob(_0xSA158d3c[_i]);}catch(_e){return _0xSA158d3c[_i];}}
+(function() {
+  
+  function explainError(msg, type) {
+    const m = (msg || '').toLowerCase();
+    if (m.includes(_0xGSc85057(0)) || m.includes(_0xGSc85057(1)) || m.includes(_0xGSc85057(2)) || m.includes(_0xGSc85057(3))) {
+      return _0xGSc85057(4);
+    }
+    if (m.includes(_0xGSc85057(5))) {
+      return _0xGSc85057(6);
+    }
+    if (m.includes(_0xGSc85057(7))) {
+      return _0xGSc85057(8);
+    }
+    if (m.includes(_0xGSc85057(9)) || type === _0xGSc85057(10)) {
+      return _0xGSc85057(11);
+    }
+    if (m.includes(_0xGSc85057(12)) || type === _0xGSc85057(13)) {
+      return _0xGSc85057(14);
+    }
+    if (m.includes(_0xGSc85057(15)) || type === _0xGSc85057(16)) {
+      return _0xGSc85057(17);
+    }
+    if (m.includes(_0xGSc85057(18)) || type === _0xGSc85057(19)) {
+      return _0xGSc85057(20);
+    }
+    if (m.includes(_0xGSc85057(21)) || m.includes(_0xGSc85057(22)) || m.includes(_0xGSc85057(23))) {
+      return _0xGSc85057(24);
+    }
+    return _0xGSc85057(25);
+  }
+
+  
+  function buildSourceView(url, lineNo, colNo) {
+    
+    const _0x100 = document.documentElement.outerHTML;
+    const _0x101 = _0x100.split('\n');
+    if (!lineNo || lineNo < 1) return null;
+
+    const ctx = 4; 
+    const _0x102 = Math.max(0, lineNo - ctx - 1);
+    const end = Math.min(_0x101.length - 1, lineNo + ctx - 1);
+
+    let out = '';
+    for (let i = _0x102; i <= end; i++) {
+      const _0x103 = (i === lineNo - 1);
+      const _0x104 = _0x101[i]
+        .replace(/&/g,_0xGSc85057(26)).replace(/</g,_0xGSc85057(27)).replace(/>/g,_0xGSc85057(28));
+      out += `<div class=_0xGSc85057(29)>
+        <span class=_0xGSc85057(30)>${i+1}${_0x103?' ◀':''}</span>
+        <span class=_0xGSc85057(31)>${_0x104 || ' '}</span>
+      </div>`;
+    }
+    return out;
+  }
+
+  
+  window.__debugErrors = [];
+
+  window.onerror = function(message, source, lineno, colno, error) {
+    const _0x105 = {
+      message: message || _0xGSc85057(32),
+      type: error ? error.name : _0xGSc85057(33),
+      source: source || _0xGSc85057(34),
+      lineno: lineno || 0,
+      colno: colno || 0,
+      stack: error ? (error.stack || '') : '',
+      time: new Date().toLocaleTimeString(_0xGSc85057(35))
+    };
+    window.__debugErrors.push(_0x105);
+    showDebugger(_0x105);
+    return false; 
+  };
+
+  window.addEventListener(_0xGSc85057(36), function(e) {
+    const err = e.reason;
+    const _0x105 = {
+      message: err ? (err.message || String(err)) : _0xGSc85057(37),
+      type: err ? (err.name || _0xGSc85057(38)) : _0xGSc85057(38),
+      source: _0xGSc85057(39),
+      lineno: 0, colno: 0,
+      stack: err ? (err.stack || '') : '',
+      time: new Date().toLocaleTimeString(_0xGSc85057(35))
+    };
+    window.__debugErrors.push(_0x105);
+    showDebugger(_0x105);
+  });
+
+  window.showDebugger = function(_0x105) {
+    const _0x106 = document.getElementById(_0xGSc85057(40));
+    const _0x107 = document.getElementById(_0xGSc85057(41));
+    if (!_0x106 || !_0x107) return;
+
+    const _0x108 = buildSourceView(_0x105.source, _0x105.lineno, _0x105.colno);
+    const _0x109 = explainError(_0x105.message, _0x105.type);
+    const _0x10a = _0x105.source === _0xGSc85057(34) ? _0xGSc85057(42) : _0x105.source;
+    const _0x10b = !_0x105.source || _0x105.source === _0xGSc85057(34) || _0x105.source.includes(location.hostname) || _0x105.source.startsWith(_0xGSc85057(43));
+
+    _0x107.innerHTML = `
+      <div class=_0xGSc85057(44)>
+        <div class=_0xGSc85057(45)>Hata Mesajı</div>
+        <div class=_0xGSc85057(46)>
+          <div class=_0xGSc85057(47)>${_0x105.type ? _0xGSc85057(48)+_0x105.type+_0xGSc85057(49) : ''}${(_0x105.message||'').replace(/</g,_0xGSc85057(27))}</div>
+        </div>
+      </div>
+
+      <div class=_0xGSc85057(44)>
+        <div class=_0xGSc85057(45)>Konum Bilgisi</div>
+        <div class=_0xGSc85057(50)>
+          <div class=_0xGSc85057(51)>
+            <div class=_0xGSc85057(52)>Satır</div>
+            <div class=_0xGSc85057(53)>${_0x105.lineno || '—'}</div>
+          </div>
+          <div class=_0xGSc85057(51)>
+            <div class=_0xGSc85057(52)>Sütun</div>
+            <div class=_0xGSc85057(53)>${_0x105.colno || '—'}</div>
+          </div>
+          <div class=_0xGSc85057(51) style=_0xGSc85057(54)>
+            <div class=_0xGSc85057(52)>Kaynak</div>
+            <div class=_0xGSc85057(53) style=_0xGSc85057(55)>${_0x10a}</div>
+          </div>
+        </div>
+      </div>
+
+      ${_0x108 && _0x10b ? `
+      <div class=_0xGSc85057(44)>
+        <div class=_0xGSc85057(45)>Kaynak Kod (Satır ${_0x105.lineno})</div>
+        <div class=_0xGSc85057(56)>
+          <div class=_0xGSc85057(57)>
+            <span>◀ hata satırı işaretli</span>
+            <span>Satır ${_0x105.lineno}, Sütun ${_0x105.colno}</span>
+          </div>
+          <div class=_0xGSc85057(58)>${_0x108}</div>
+        </div>
+      </div>` : ''}
+
+      <div class=_0xGSc85057(44)>
+        <div class=_0xGSc85057(45)>Açıklama</div>
+        <div class=_0xGSc85057(59)>${_0x109}</div>
+      </div>
+
+      ${_0x105.stack ? `
+      <div class=_0xGSc85057(44)>
+        <div class=_0xGSc85057(45)>Yığın İzi (Stack Trace)</div>
+        <div class=_0xGSc85057(60)>${_0x105.stack.replace(/</g,_0xGSc85057(27))}</div>
+      </div>` : ''}
+    `;
+
+    _0x106.classList.add(_0xGSc85057(61));
+  };
+
+  window.closeDebugger = function() {
+    document.getElementById(_0xGSc85057(40)).classList.remove(_0xGSc85057(61));
+  };
+
+  window.copyDebugInfo = function() {
+    const _0x107 = document.getElementById(_0xGSc85057(41));
+    const _0x10c = _0x107 ? _0x107.innerText : '';
+    const _0x10d = function() {
+      const el = document.getElementById(_0xGSc85057(62));
+      if (el) { el.classList.add(_0xGSc85057(63)); setTimeout(function() { el.classList.remove(_0xGSc85057(63)); }, 2000); }
+    };
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(_0x10c).then(_0x10d).catch(function() { fallbackCopy(_0x10c, _0x10d); });
+    } else {
+      fallbackCopy(_0x10c, _0x10d);
+    }
+  };
+
+  function fallbackCopy(_0x10c, cb) {
+    try {
+      const ta = document.createElement(_0xGSc85057(64));
+      ta.value = _0x10c;
+      ta.style.cssText = _0xGSc85057(65);
+      document._0x107.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand(_0xGSc85057(66));
+      document._0x107.removeChild(ta);
+      if (cb) cb();
+    } catch(e) {}
+  }
+
+  
+  document.getElementById(_0xGSc85057(40)).addEventListener(_0xGSc85057(67), function(e) {
+    if (e.target === this) closeDebugger();
+  });
+
+  
+  document.addEventListener(_0xGSc85057(68), function(e) {
+    if (e.key === _0xGSc85057(69)) closeDebugger();
+  });
+
+  
+  window.debugTest = function() {
+    window.showDebugger({
+      message: _0xGSc85057(70),
+      type: _0xGSc85057(13), source: _0xGSc85057(34),
+      lineno: 42, colno: 18,
+      stack: _0xGSc85057(71),
+      time: new Date().toLocaleTimeString(_0xGSc85057(35))
+    });
+  };
+})();</script>
+
+</body>
+</html>
