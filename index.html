@@ -42,7 +42,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="license" content="GNU Affero General Public License v3.0 - https://www.gnu.org/licenses/agpl-3.0.html"/>
 <meta name="copyright" content="Copyright (C) 2026 sebasmobil"/>
-<title>S-Sınav Pro 8.7</title>
+<title>S-Sınav Pro 8.6</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');
@@ -846,7 +846,7 @@
     <div class="cl-handle"></div>
     <div class="cl-header">
       <div class="cl-header-top">
-        <div class="cl-title">✨ Sürüm 8.7 Yenilikleri</div>
+        <div class="cl-title">✨ Sürüm 8.6 Yenilikleri</div>
       </div>
       <div class="cl-subtitle">S-Sınav Pro — Sürüm Notları</div>
     </div>
@@ -898,7 +898,7 @@
   <div class="fixed-top-bar-row1">
     <div class="top-brand">
       <span>S-Sınav</span>
-      <span class="top-brand-badge">Pro 8.7</span>
+      <span class="top-brand-badge">Pro 8.6</span>
       <span style="font-size:0.68rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:400; margin-left:4px;">© sebasmobil &nbsp;<a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style="color:inherit;opacity:0.75;text-decoration:none;">AGPL v3.0</a></span>
     </div>
     <div class="top-right-actions">
@@ -989,71 +989,6 @@
         <button class="style-btn" id="titleAlignLeft" onclick="setTitleAlign('left')">← Sol</button>
         <button class="style-btn active" id="titleAlignCenter" onclick="setTitleAlign('center')">←→ Orta</button>
         <button class="style-btn" id="titleAlignRight" onclick="setTitleAlign('right')">→ Sağ</button>
-      </div>
-    </div>
-  </div>
-
-  </div>
-
-  <!-- Kart: Puan Kutusu -->
-  <div class="card">
-    <div class="card-title">Puan Kutusu</div>
-    <div class="form-row">
-      <div class="toggle-row">
-        <span>Sağ üst köşeye puan kutusu ekle</span>
-        <label class="toggle">
-          <input type="checkbox" id="scoreBoxEnabled" onchange="toggleScoreBoxOptions()">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-    <div id="scoreBoxOptions" style="opacity:0.4; pointer-events:none; margin-top:14px;">
-      <div class="form-row">
-        <label>Kutu içi metin</label>
-        <input type="text" id="scoreBoxText" value="Puan" placeholder="örn: Puan, Not...">
-      </div>
-      <div class="three-col">
-        <div class="form-row">
-          <label>Yazı boyutu (pt)</label>
-          <input type="number" id="scoreBoxFontSize" value="11" min="6" max="24">
-        </div>
-        <div class="form-row">
-          <label>Metin rengi</label>
-          <div class="color-row"><input type="color" id="scoreBoxTextColor" value="#000000"></div>
-        </div>
-        <div class="form-row">
-          <label>Kutu boyutu (mm)</label>
-          <input type="number" id="scoreBoxSize" value="16" min="8" max="40">
-        </div>
-      </div>
-      <div class="three-col">
-        <div class="form-row">
-          <label>Çerçeve kalınlığı (pt)</label>
-          <input type="number" id="scoreBoxBorderWidth" value="1" min="0.5" max="5" step="0.5">
-        </div>
-        <div class="form-row">
-          <label>Çerçeve rengi</label>
-          <div class="color-row"><input type="color" id="scoreBoxBorderColor" value="#cc0000"></div>
-        </div>
-        <div class="form-row">
-          <label>Köşe yuvarlaklığı (mm)</label>
-          <input type="number" id="scoreBoxRadius" value="2" min="0" max="10">
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Çerçeve stili</label>
-        <div class="style-btns">
-          <button class="style-btn active" id="scoreBoxStyleSolid" onclick="setScoreBoxStyle('solid')">Düz</button>
-          <button class="style-btn" id="scoreBoxStyleDashed" onclick="setScoreBoxStyle('dashed')">Kesik</button>
-          <button class="style-btn" id="scoreBoxStyleDotted" onclick="setScoreBoxStyle('dotted')">Noktalı</button>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Dolgu rengi</label>
-        <div class="color-row">
-          <input type="color" id="scoreBoxFillColor" value="#ffffff">
-          <span>Arka plan</span>
-        </div>
       </div>
     </div>
   </div>
@@ -1196,11 +1131,19 @@
     </div>
   </div>
 
-
+  <!-- Kart: Arka Plan -->
+  <div class="card">
+    <div class="card-title">Arka Plan</div>
+    <div class="form-row">
+      <label>Sayfa arka plan rengi</label>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#ffffff">
+        <span>Arka plan rengi</span>
+      </div>
+    </div>
+  </div>
 
 </div>
-
-
 
 
 <div class="tab-section" id="tab-duzen">
@@ -1278,18 +1221,6 @@
     <div class="card-title">Sütun Arası Çizgiler</div>
     <div id="dividerList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
     <button onclick="addDividerRule()" style="width:100%; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:8px; padding:8px; font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">＋ Çizgi Ekle</button>
-  </div>
-
-  <!-- Kart: Arka Plan -->
-  <div class="card">
-    <div class="card-title">Arka Plan</div>
-    <div class="form-row">
-      <label>Sayfa arka plan rengi</label>
-      <div class="color-row">
-        <input type="color" id="bgColor" value="#ffffff">
-        <span>Arka plan rengi</span>
-      </div>
-    </div>
   </div>
 
 </div>
@@ -1451,7 +1382,7 @@
     <div class="card-title">Metin ve Görünüm</div>
     <div class="form-row">
       <label>Filigran metni</label>
-      <input type="text" id="watermarkText" value="sebasmobil" placeholder="örn: TASLAK, GİZLİ, KOPYA...">
+      <input type="text" id="watermarkText" value="GİZLİ" placeholder="örn: TASLAK, GİZLİ, KOPYA...">
     </div>
     <div class="three-col" style="margin-top:4px;">
       <div class="form-row">
@@ -1487,11 +1418,11 @@
     <div class="form-row">
       <label>Konum</label>
       <div class="style-btns">
-        <button class="style-btn active" id="wmPosCenter" onclick="selectWatermarkPos('center')">Merkez</button>
-        <button class="style-btn" id="wmPosTile" onclick="selectWatermarkPos('tile')">Döşeme</button>
+        <button class="style-btn" id="wmPosCenter" onclick="selectWatermarkPos('center')">Merkez</button>
+        <button class="style-btn active" id="wmPosTile" onclick="selectWatermarkPos('tile')">Döşeme</button>
       </div>
     </div>
-    <div id="watermarkTileOptions" style="margin-top:10px; display:none;">
+    <div id="watermarkTileOptions" style="margin-top:10px;">
       <div class="inline-row">
         <div class="form-row">
           <label>Yatay aralık (mm)</label>
@@ -1586,7 +1517,7 @@
 const { jsPDF } = window.jspdf;
 
 // ── Yenilikler Modalı ──
-const CL_VERSION = 'sinav-pro-8.7';
+const CL_VERSION = 'sinav-pro-8.6';
 (function initChangelog() {
   const noShowKey = 'cl_noshow_' + CL_VERSION;
   if (localStorage.getItem(noShowKey) !== '1') {
@@ -1776,20 +1707,6 @@ function selectAlign(val) {
   ['left','center','right'].forEach(a => document.getElementById('align'+a.charAt(0).toUpperCase()+a.slice(1)).classList.toggle('active', a === val));
 }
 
-let scoreBoxStyle = 'solid';
-function toggleScoreBoxOptions() {
-  const enabled = document.getElementById('scoreBoxEnabled').checked;
-  const opts = document.getElementById('scoreBoxOptions');
-  opts.style.opacity = enabled ? '1' : '0.4';
-  opts.style.pointerEvents = enabled ? '' : 'none';
-}
-function setScoreBoxStyle(val) {
-  scoreBoxStyle = val;
-  ['Solid','Dashed','Dotted'].forEach(s => {
-    document.getElementById('scoreBoxStyle'+s).classList.toggle('active', s.toLowerCase() === val);
-  });
-}
-
 function toggleBorderOptions() {
   const enabled = document.getElementById('borderEnabled').checked;
   document.getElementById('borderOptions').style.opacity = enabled ? '1' : '0.4';
@@ -1797,7 +1714,7 @@ function toggleBorderOptions() {
 }
 
 // --- Filigran ---
-let watermarkPos = 'center';
+let watermarkPos = 'tile';
 let watermarkPages = 'all';
 
 function toggleWatermarkOptions() {
@@ -2550,76 +2467,8 @@ async function generatePDF() {
     const titleColor = hexToRgbStr(titleColorHex);
     const descColor = hexToRgbStr(descColorHex);
 
-    // Puan kutusu ayarları
-    const scoreBoxEnabled = document.getElementById('scoreBoxEnabled').checked;
-    const scoreBoxSizeMm = scoreBoxEnabled ? (parseFloat(document.getElementById('scoreBoxSize').value) || 16) : 0;
-    const scoreBoxGap = scoreBoxEnabled ? 3 : 0;
-    const titleW = usableW - (scoreBoxEnabled ? scoreBoxSizeMm + scoreBoxGap : 0);
-
     if (title) {
-      const h = drawTextBlock(title, margin, y, titleSize, titleColor, titleBold, titleItalic, titleW, titleAlign);
-
-      // Puan kutusunu başlığın sağına, başlıkla aynı hizada çiz
-      if (scoreBoxEnabled) {
-        const sbText = document.getElementById('scoreBoxText').value.trim() || 'Puan';
-        const sbFontSize = parseInt(document.getElementById('scoreBoxFontSize').value) || 11;
-        const sbBorderW = parseFloat(document.getElementById('scoreBoxBorderWidth').value) || 1;
-        const sbBorderColor = hexToRgbStr(document.getElementById('scoreBoxBorderColor').value);
-        const sbFillColor = hexToRgbStr(document.getElementById('scoreBoxFillColor').value);
-        const sbRadius = parseFloat(document.getElementById('scoreBoxRadius').value) || 2;
-        const sbTextColor = hexToRgbStr(document.getElementById('scoreBoxTextColor').value);
-
-        const sbX = margin + titleW + scoreBoxGap;
-        const sbY = y;
-        const sbW = scoreBoxSizeMm;
-        const sbH = scoreBoxSizeMm;
-
-        // Dolu
-        const fillRgb = document.getElementById('scoreBoxFillColor').value;
-        const fr = parseInt(fillRgb.slice(1,3),16);
-        const fg = parseInt(fillRgb.slice(3,5),16);
-        const fb = parseInt(fillRgb.slice(5,7),16);
-        pdf.setFillColor(fr, fg, fb);
-
-        const brRgb = document.getElementById('scoreBoxBorderColor').value;
-        const brr = parseInt(brRgb.slice(1,3),16);
-        const brg = parseInt(brRgb.slice(3,5),16);
-        const brb = parseInt(brRgb.slice(5,7),16);
-        pdf.setDrawColor(brr, brg, brb);
-        pdf.setLineWidth(sbBorderW * 0.352778);
-
-        // Çerçeve stili (jsPDF sadece solid destekler; dashed/dotted için setLineDash)
-        if (scoreBoxStyle === 'dashed') {
-          pdf.setLineDashPattern([2, 1.5], 0);
-        } else if (scoreBoxStyle === 'dotted') {
-          pdf.setLineDashPattern([0.5, 1.5], 0);
-        } else {
-          pdf.setLineDashPattern([], 0);
-        }
-
-        if (sbRadius > 0) {
-          pdf.roundedRect(sbX, sbY, sbW, sbH, sbRadius, sbRadius, 'FD');
-        } else {
-          pdf.rect(sbX, sbY, sbW, sbH, 'FD');
-        }
-        pdf.setLineDashPattern([], 0); // reset
-
-        // Metin ortala
-        const sbFontSizePt = sbFontSize;
-        pdf.setFontSize(sbFontSizePt);
-        pdf.setFont('helvetica', 'bold');
-        const sbTextRgb = document.getElementById('scoreBoxTextColor').value;
-        const str = parseInt(sbTextRgb.slice(1,3),16);
-        const stg = parseInt(sbTextRgb.slice(3,5),16);
-        const stb = parseInt(sbTextRgb.slice(5,7),16);
-        pdf.setTextColor(str, stg, stb);
-        const sbTextW = pdf.getStringUnitWidth(sbText) * sbFontSizePt / pdf.internal.scaleFactor;
-        const sbTextX = sbX + (sbW - sbTextW) / 2;
-        const sbTextY = sbY + sbH / 2 + (sbFontSizePt * 0.352778) / 2 - 0.5;
-        pdf.text(sbText, sbTextX, sbTextY);
-        pdf.setFont('helvetica', 'normal');
-      }
-
+      const h = drawTextBlock(title, margin, y, titleSize, titleColor, titleBold, titleItalic, usableW, titleAlign);
       y += h + headerPadding;
     }
 
