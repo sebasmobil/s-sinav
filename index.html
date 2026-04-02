@@ -42,7 +42,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="license" content="GNU Affero General Public License v3.0 - https://www.gnu.org/licenses/agpl-3.0.html"/>
 <meta name="copyright" content="Copyright (C) 2026 sebasmobil"/>
-<title>S-Sınav Pro 8.6</title>
+<title>S-Sınav Pro 8.7</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');
@@ -846,11 +846,19 @@
     <div class="cl-handle"></div>
     <div class="cl-header">
       <div class="cl-header-top">
-        <div class="cl-title">✨ Sürüm 8.6 Yenilikleri</div>
+        <div class="cl-title">✨ Sürüm 8.7 Yenilikleri</div>
       </div>
       <div class="cl-subtitle">S-Sınav Pro — Sürüm Notları</div>
     </div>
     <div class="cl-body">
+      <div class="cl-item">
+        <span class="cl-item-icon">🎨</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Arka Plan kartı Belge sekmesinden Düzen sekmesine taşındı</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">🔢</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-fix">İYİLEŞTİRME</span>Düzen sekmesindeki sütun sayısı butonlarında gereksiz yazı kaldırıldı — sadece rakam gösteriliyor</div>
+      </div>
       <div class="cl-item">
         <span class="cl-item-icon">🗂️</span>
         <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Sekmeli navigasyon — Sorular, Belge, Düzen, Soru Düzeni ve Filigran ayrı bölümlere taşındı</div>
@@ -898,7 +906,7 @@
   <div class="fixed-top-bar-row1">
     <div class="top-brand">
       <span>S-Sınav</span>
-      <span class="top-brand-badge">Pro 8.6</span>
+      <span class="top-brand-badge">Pro 8.7</span>
       <span style="font-size:0.68rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:400; margin-left:4px;">© sebasmobil &nbsp;<a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style="color:inherit;opacity:0.75;text-decoration:none;">AGPL v3.0</a></span>
     </div>
     <div class="top-right-actions">
@@ -1131,18 +1139,6 @@
     </div>
   </div>
 
-  <!-- Kart: Arka Plan -->
-  <div class="card">
-    <div class="card-title">Arka Plan</div>
-    <div class="form-row">
-      <label>Sayfa arka plan rengi</label>
-      <div class="color-row">
-        <input type="color" id="bgColor" value="#ffffff">
-        <span>Arka plan rengi</span>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 
@@ -1221,6 +1217,18 @@
     <div class="card-title">Sütun Arası Çizgiler</div>
     <div id="dividerList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
     <button onclick="addDividerRule()" style="width:100%; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:8px; padding:8px; font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">＋ Çizgi Ekle</button>
+  </div>
+
+  <!-- Kart: Arka Plan -->
+  <div class="card">
+    <div class="card-title">Arka Plan</div>
+    <div class="form-row">
+      <label>Sayfa arka plan rengi</label>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#ffffff">
+        <span>Arka plan rengi</span>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -1517,7 +1525,7 @@
 const { jsPDF } = window.jspdf;
 
 // ── Yenilikler Modalı ──
-const CL_VERSION = 'sinav-pro-8.6';
+const CL_VERSION = 'sinav-pro-8.7';
 (function initChangelog() {
   const noShowKey = 'cl_noshow_' + CL_VERSION;
   if (localStorage.getItem(noShowKey) !== '1') {
