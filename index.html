@@ -39,10 +39,10 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="license" content="GNU Affero General Public License v3.0 - https://www.gnu.org/licenses/agpl-3.0.html"/>
 <meta name="copyright" content="Copyright (C) 2026 sebasmobil"/>
-<title>S-Sınav Pro 8.4</title>
+<title>S-Sınav Pro 8.5</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');
@@ -110,8 +110,149 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    padding: 40px 20px 80px 20px;
+    padding: 0;
+    padding-top: 44px;
+    padding-bottom: 120px;
   }
+
+  /* ── Sabit Üst Bar ── */
+  .fixed-top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 8px rgba(0,0,0,0.08);
+  }
+  .fixed-top-bar-row1 {
+    height: 44px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 12px;
+    gap: 8px;
+  }
+  .fixed-top-bar-row2 {
+    display: none;
+    align-items: center; justify-content: space-between;
+    padding: 0 12px 8px 12px;
+    gap: 10px;
+  }
+  .fixed-top-bar-row2.has-photos { display: flex; }
+  .top-stats {
+    font-size: 0.73rem; color: var(--muted);
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  }
+  .top-stats strong { color: var(--accent2); }
+  .top-brand {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem; font-weight: 800;
+    color: var(--accent);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .top-brand-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.58rem; font-weight: 700;
+    background: var(--accent); color: #fff;
+    border-radius: 3px; padding: 1px 4px;
+    line-height: 1.4;
+  }
+  .top-right-actions { display: flex; align-items: center; gap: 6px; }
+  .top-night-btn {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 50%; width: 32px; height: 32px;
+    font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .top-night-btn:hover { border-color: var(--accent); }
+  .btn-generate-top {
+    padding: 6px 14px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 700;
+    cursor: pointer; white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .btn-generate-top:hover { opacity: 0.85; }
+  .btn-generate-top:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; opacity: 1; }
+
+  /* ── Sekmeli İçerik ── */
+  .tab-section {
+    display: none;
+    padding: 16px 16px 0 16px;
+    max-width: 780px; margin: 0 auto;
+  }
+  .tab-section.active { display: block; }
+
+  /* ── PDF Bar (Ana Sayfa üstü) ── */
+  .pdf-action-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 14px;
+  }
+  .pdf-action-info { font-size: 0.82rem; color: var(--muted); flex: 1; min-width: 0; }
+  .pdf-action-info strong { color: var(--accent2); }
+
+  /* ── Alt Navigasyon ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+  }
+  .bottom-nav-top {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px 6px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .bottom-nav-progress {
+    flex: 1; min-width: 80px; max-width: 200px; display: none;
+  }
+  .bottom-nav-progress-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bottom-nav-progress-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .bottom-nav-progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+  .bottom-nav-copyright { font-size: 0.72rem; color: var(--muted); flex: 1; }
+  .bottom-nav-copyright a { color: inherit; text-decoration: none; opacity: 0.75; font-size: 0.65em; }
+
+  .bottom-nav-tabs {
+    display: flex; align-items: stretch;
+  }
+  .nav-tab {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 3px; padding: 7px 4px 9px 4px;
+    background: none; border: none; cursor: pointer;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.2px;
+    transition: color 0.15s;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-tab .nav-icon { font-size: 1.25rem; line-height: 1; }
+  .nav-tab.active { color: var(--accent); }
+  .nav-tab.active::before {
+    content: '';
+    position: absolute; top: 0; left: 15%; right: 15%; height: 2px;
+    background: var(--accent); border-radius: 0 0 3px 3px;
+  }
+  /* İletişim sekmesi özel */
+  .nav-tab-contact { border-left: 1px solid var(--border); }
+
+  /* Contact mini butonlar */
+  .contact-mini-btns { display: flex; gap: 6px; }
+  .contact-mini-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px;
+    border-radius: 7px; border: 1px solid var(--border);
+    background: var(--surface2); color: var(--text);
+    text-decoration: none; font-size: 0.95rem;
+    transition: all 0.15s; cursor: pointer; flex-shrink: 0;
+  }
+  .contact-mini-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   .container { max-width: 780px; margin: 0 auto; }
 
@@ -602,20 +743,174 @@
     width: 12px; height: 12px; border-radius: 50%;
     border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;
   }
+  /* ── Yenilikler Modalı ── */
+  .cl-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .cl-overlay.visible { opacity: 1; pointer-events: all; }
+  .cl-modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px 18px 0 0;
+    width: 100%; max-width: 600px;
+    margin: 0 auto;
+    max-height: 88vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+    transform: translateY(40px);
+    transition: transform 0.3s;
+  }
+  .cl-overlay.visible .cl-modal { transform: translateY(0); }
+  .cl-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 10px auto 0 auto; flex-shrink: 0;
+  }
+  .cl-header {
+    padding: 14px 20px 10px 20px; flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cl-header-top {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cl-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem; font-weight: 800;
+    color: var(--accent);
+  }
+  .cl-subtitle {
+    font-size: 0.75rem; color: var(--muted); margin-top: 2px;
+  }
+  .cl-body {
+    flex: 1; overflow-y: auto;
+    padding: 4px 20px 12px 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cl-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem; line-height: 1.55; color: var(--text);
+  }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-item-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .cl-item-text { flex: 1; }
+  .cl-badge {
+    display: inline-flex; align-items: center;
+    font-size: 0.58rem; font-weight: 700;
+    padding: 2px 5px; border-radius: 4px;
+    letter-spacing: 0.3px; margin-right: 5px;
+    vertical-align: middle;
+  }
+  .cl-badge-new { background: #dcfce7; color: #16a34a; }
+  .cl-badge-beta { background: #fef3c7; color: #d97706; }
+  .cl-badge-fix { background: #dbeafe; color: #2563eb; }
+  .cl-badge-license { background: #ede9fe; color: #7c3aed; }
+  body.theme-dark .cl-badge-new, body.theme-dark-blue .cl-badge-new { background: rgba(22,163,74,0.2); color: #4ade80; }
+  body.theme-dark .cl-badge-beta, body.theme-dark-blue .cl-badge-beta { background: rgba(217,119,6,0.2); color: #fbbf24; }
+  body.theme-dark .cl-badge-fix, body.theme-dark-blue .cl-badge-fix { background: rgba(37,99,235,0.2); color: #60a5fa; }
+  body.theme-dark .cl-badge-license, body.theme-dark-blue .cl-badge-license { background: rgba(124,58,237,0.2); color: #a78bfa; }
+  .cl-footer {
+    padding: 12px 20px 20px 20px; flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .cl-noshow-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; color: var(--muted);
+    cursor: pointer; user-select: none;
+  }
+  .cl-noshow-row input[type="checkbox"] {
+    accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer;
+  }
+  .cl-ok-btn {
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; transition: opacity 0.15s;
+    letter-spacing: 0.2px;
+  }
+  .cl-ok-btn:active { opacity: 0.85; }
 </style>
 </head>
 <body class="">
 
-
-<div style="position:fixed; top:12px; right:12px; z-index:1000;">
-  <button id="dayNightBtn" onclick="toggleDayNight()" title="Gece/Gündüz" style="background:var(--surface); border:1px solid var(--border); border-radius:50%; width:38px; height:38px; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; box-shadow:0 2px 8px rgba(0,0,0,0.2);">☀️</button>
+<!-- ── Yenilikler Modalı ── -->
+<div class="cl-overlay" id="clOverlay">
+  <div class="cl-modal">
+    <div class="cl-handle"></div>
+    <div class="cl-header">
+      <div class="cl-header-top">
+        <div class="cl-title">✨ Sürüm 8.5 Yenilikleri</div>
+      </div>
+      <div class="cl-subtitle">S-Sınav Pro — Sürüm Notları</div>
+    </div>
+    <div class="cl-body">
+      <div class="cl-item">
+        <span class="cl-item-icon">🗂️</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Sekmeli navigasyon — Sorular, Belge, Düzen, Soru Düzeni ve Filigran ayrı bölümlere taşındı</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📊</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Alt barda anlık soru sayısı, sayfa tahmini ve puan bilgisi göstergesi eklendi</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">⬆️</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>PDF Oluştur butonu sabit alt bara taşındı — her sekmeden erişilebilir</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📱</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-fix">DÜZELTİLDİ</span>Safari'de input odaklandığında sayfa zoom yapma sorunu giderildi</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">🔗</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-fix">DÜZELTİLDİ</span>Safari Paylaş butonunun tetiklediği hatalı hata penceresi düzeltildi</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📬</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>İletişim ikonları (Instagram + e-posta) alt navigasyon barına taşındı</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📄</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Belge Bilgileri ayrı bir sekme olarak bağımsız bölüme alındı</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">⚖️</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-license">LİSANS</span>GNU AGPL v3.0 — özgür ve açık kaynak</div>
+      </div>
+    </div>
+    <div class="cl-footer">
+      <label class="cl-noshow-row">
+        <input type="checkbox" id="clNoShow"> Bir daha gösterme
+      </label>
+      <button class="cl-ok-btn" onclick="closeChangelog()">Anlaşıldı →</button>
+    </div>
+  </div>
 </div>
 
-<div class="container">
-    <header>
-      <h1 style="position:relative; display:inline-block;">S-Sınav<span style="display:inline-block; vertical-align:top; margin-left:0.1em; margin-top:1.55em; font-family:'DM Sans',sans-serif; font-size:0.22em; font-weight:700; letter-spacing:0.02em; background:var(--accent); color:#fff; border-radius:4px; padding:2px 5px; line-height:1.4; white-space:nowrap;">Pro 8.4</span></h1>
-      <p>Fotoğrafları seç ve sınavını hazırla</p>
-    </header>
+<!-- ── Sabit Üst Bar ── -->
+<div class="fixed-top-bar">
+  <div class="fixed-top-bar-row1">
+    <div class="top-brand">
+      <span>S-Sınav</span>
+      <span class="top-brand-badge">Pro 8.5</span>
+      <span style="font-size:0.68rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:400; margin-left:4px;">© sebasmobil &nbsp;<a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style="color:inherit;opacity:0.75;text-decoration:none;">AGPL v3.0</a></span>
+    </div>
+    <div class="top-right-actions">
+      <button class="top-night-btn" id="dayNightBtn" onclick="toggleDayNight()" title="Gece/Gündüz">☀️</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SEKME 1 — ANA SAYFA (Fotoğraflar)
+     ══════════════════════════════════════ -->
+<div class="tab-section active" id="tab-anasayfa">
 
   <!-- Sorular -->
   <div class="card">
@@ -643,8 +938,8 @@
 
     <div id="statsBar" class="stats-bar" style="display:none; flex-direction:column; gap:10px;">
       <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
-        <span>📋 <strong id="photoCount">0</strong> soru</span>
-        <span>📄 Tahminen <strong id="pageCount">~</strong> sayfa</span>
+        <span>📋 <strong id="photoCountCard">0</strong> soru</span>
+        <span>📄 Tahminen <strong id="pageCountCard">~</strong> sayfa</span>
       </div>
       <div style="display:flex; gap:8px; align-items:center;">
         <button onclick="shufflePhotos()" style="flex:1; background:none; border:1px solid var(--border); color:var(--text); border-radius:6px; padding:5px 10px; font-size:0.75rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">🔀 Karıştır</button>
@@ -652,12 +947,15 @@
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Belge Bilgileri -->
+<!-- ══════════════════════════════════════
+     SEKME 2 — BELGE BİLGİLERİ
+     ══════════════════════════════════════ -->
+<div class="tab-section" id="tab-belge">
   <div class="card">
     <div class="card-title">Belge Bilgileri</div>
 
-    <!-- 1. Başlık -->
     <div class="form-row">
       <label>Başlık metni</label>
       <textarea id="docTitle" rows="2" placeholder="Belgenin başlığını girin..."></textarea>
@@ -695,7 +993,6 @@
 
     <hr class="section-divider">
 
-    <!-- 2. AD SOYAD / SINIF / NO -->
     <div class="three-col">
       <div class="form-row">
         <label>AD SOYAD / NO yazı boyutu (pt)</label>
@@ -716,7 +1013,6 @@
 
     <hr class="section-divider">
 
-    <!-- 3. İlk Sayfa Açıklama Metni -->
     <div class="form-row">
       <label>İlk Sayfa Açıklama Metni</label>
       <textarea id="docDesc" rows="3" placeholder="Kısa bir açıklama yazın..."></textarea>
@@ -754,7 +1050,6 @@
 
     <hr class="section-divider">
 
-    <!-- 4. Son Sayfa Açıklama Metni -->
     <div class="form-row">
       <label>Son Sayfa Açıklama Metni</label>
       <textarea id="footerText" rows="2" placeholder="Örn: Başarılar dileriz. — Fen Bilimleri Zümresi"></textarea>
@@ -796,7 +1091,6 @@
     </div>
     <hr class="section-divider">
 
-    <!-- 5.5 Diğer sayfaya geçiniz -->
     <div class="form-row">
       <div class="toggle-row">
         <span>"Diğer sayfaya geçiniz…" ekle</span>
@@ -830,7 +1124,6 @@
 
     <hr class="section-divider">
 
-    <!-- 6. Arka plan -->
     <div class="form-row">
       <label>Arka plan rengi</label>
       <div class="color-row">
@@ -839,8 +1132,10 @@
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Düzen Ayarları -->
+
+<div class="tab-section" id="tab-duzen">
   <div class="card">
     <div class="card-title">Düzen Ayarları</div>
     <div class="inline-row">
@@ -876,17 +1171,19 @@
 
     <hr class="section-divider">
 
-    <!-- Sütun Arası Çizgiler -->
     <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:12px;">Sütun Arası Çizgiler</div>
     <div id="dividerList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
     <button onclick="addDividerRule()" style="width:100%; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:8px; padding:8px; font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">＋ Çizgi Ekle</button>
   </div>
+</div>
 
-  <!-- Soru Düzeni -->
+<!-- ══════════════════════════════════════
+     SEKME 3 — SORU DÜZENİ
+     ══════════════════════════════════════ -->
+<div class="tab-section" id="tab-soruduzen">
   <div class="card">
     <div class="card-title">Soru Düzeni</div>
 
-    <!-- Soru Etiketi alt bölümü -->
     <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:10px;">Soru Etiketi</div>
     <div class="form-row">
       <div class="toggle-row">
@@ -942,7 +1239,6 @@
 
     <hr class="section-divider">
 
-    <!-- Soru hizalama -->
     <div class="form-row">
       <label>Soru hizalama (sütun içinde)</label>
       <div class="style-btns">
@@ -954,7 +1250,6 @@
 
     <hr class="section-divider">
 
-    <!-- Sayfaya sığdır -->
     <div class="form-row">
       <div class="toggle-row">
         <span>Soruları belirli sayıda sayfaya sığdır</span>
@@ -982,7 +1277,6 @@
 
     <hr class="section-divider">
 
-    <!-- Otomatik sıralama -->
     <div class="form-row">
       <div class="toggle-row">
         <span>Soruları otomatik sırala (en verimli yerleşim)</span>
@@ -1033,8 +1327,12 @@
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Filigran -->
+<!-- ══════════════════════════════════════
+     SEKME 4 — FİLİGRAN
+     ══════════════════════════════════════ -->
+<div class="tab-section" id="tab-filigran">
   <div class="card">
     <div class="card-title">Filigran</div>
     <div class="form-row">
@@ -1048,13 +1346,10 @@
     </div>
 
     <div id="watermarkOptions" style="opacity:0.4; pointer-events:none; margin-top:16px;">
-
-      <!-- Metin -->
       <div class="form-row">
         <label>Filigran metni</label>
         <input type="text" id="watermarkText" value="GİZLİ" placeholder="örn: TASLAK, GİZLİ, KOPYA...">
       </div>
-
       <div class="three-col" style="margin-top:4px;">
         <div class="form-row">
           <label>Yazı boyutu (pt)</label>
@@ -1069,8 +1364,6 @@
           <input type="number" id="watermarkOpacity" value="10" min="1" max="100">
         </div>
       </div>
-
-      <!-- Stil -->
       <div class="form-row">
         <label>Stil</label>
         <div class="style-btns">
@@ -1078,15 +1371,11 @@
           <button class="style-btn italic-btn" id="watermarkItalic" onclick="toggleStyle('watermarkItalic')">İ</button>
         </div>
       </div>
-
-      <!-- Yön -->
       <div class="form-row">
         <label>Açı (derece)</label>
         <input type="range" id="watermarkAngle" min="-90" max="90" value="-45" oninput="document.getElementById('watermarkAngleVal').textContent=this.value+'°'">
         <div class="range-display" id="watermarkAngleVal">-45°</div>
       </div>
-
-      <!-- Konum -->
       <div class="form-row">
         <label>Konum</label>
         <div class="style-btns">
@@ -1094,8 +1383,6 @@
           <button class="style-btn active" id="wmPosTile" onclick="selectWatermarkPos('tile')">Döşeme</button>
         </div>
       </div>
-
-      <!-- Döşeme aralığı (sadece tile modda) -->
       <div id="watermarkTileOptions" style="margin-top:10px;">
         <div class="inline-row">
           <div class="form-row">
@@ -1110,8 +1397,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Hangi sayfalar -->
       <div class="form-row">
         <label>Hangi sayfalara</label>
         <div class="style-btns">
@@ -1120,19 +1405,64 @@
           <button class="style-btn" id="wmPageLast" onclick="selectWatermarkPages('last')">Sadece Son Sayfa</button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- Sabit Alt Bar -->
-<div class="bottom-bar">
-  <div class="bottom-bar-info" id="bottomBarInfo">© sebasmobil &nbsp;<a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style="color:inherit;font-size:0.75em;opacity:0.8;text-decoration:none;">AGPL v3.0</a></div>
-  <div class="bottom-bar-progress" id="bottomBarProgress">
-    <div class="bottom-bar-progress-label" id="progressLabel">Hazırlanıyor...</div>
-    <div class="bottom-bar-progress-bar"><div class="bottom-bar-progress-fill" id="progressFill"></div></div>
+<!-- ══════════════════════════════════════
+     ALT NAVİGASYON
+     ══════════════════════════════════════ -->
+<div class="bottom-nav">
+  <!-- Stats + PDF şeridi -->
+  <div class="bottom-nav-top">
+    <div class="top-stats" id="topStatsText" style="flex:1; font-size:0.72rem; color:var(--muted); display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <span>📋 <strong id="photoCount">0</strong> soru</span>
+      <span>·</span>
+      <span>📄 <strong id="pageCount">~</strong> sayfa</span>
+      <span>·</span>
+      <span>🎯 <strong id="totalPointsTop">0</strong> puan</span>
+    </div>
+    <div class="bottom-nav-progress" id="bottomBarProgress">
+      <div class="bottom-nav-progress-label" id="progressLabel">Hazırlanıyor...</div>
+      <div class="bottom-nav-progress-bar"><div class="bottom-nav-progress-fill" id="progressFill"></div></div>
+    </div>
+    <button class="btn-generate-top" id="generateBtn" disabled onclick="generatePDF()">⬇ PDF Oluştur</button>
   </div>
-  <button class="btn-generate" id="generateBtn" disabled onclick="generatePDF()">⬇ PDF Oluştur</button>
+  <!-- Sekme butonları -->
+  <div class="bottom-nav-tabs">
+    <button class="nav-tab active" id="navtab-anasayfa" onclick="switchTab('anasayfa')">
+      <span class="nav-icon">📷</span>
+      <span>Sorular</span>
+    </button>
+    <button class="nav-tab" id="navtab-belge" onclick="switchTab('belge')">
+      <span class="nav-icon">📄</span>
+      <span>Belge</span>
+    </button>
+    <button class="nav-tab" id="navtab-duzen" onclick="switchTab('duzen')">
+      <span class="nav-icon">📐</span>
+      <span>Düzen</span>
+    </button>
+    <button class="nav-tab" id="navtab-soruduzen" onclick="switchTab('soruduzen')">
+      <span class="nav-icon">📝</span>
+      <span>Soru</span>
+    </button>
+    <button class="nav-tab" id="navtab-filigran" onclick="switchTab('filigran')">
+      <span class="nav-icon">💧</span>
+      <span>Filigran</span>
+    </button>
+    <div style="width:1px; background:var(--border); align-self:stretch; margin: 6px 0;"></div>
+    <div class="nav-tab" style="cursor:default; gap:4px;">
+      <div style="display:flex; gap:6px; margin-bottom:2px;">
+        <a href="https://instagram.com/sebasmobil" target="_blank" rel="noopener noreferrer" title="@sebasmobil" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.15s;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="mailto:?subject=sebasmobil%20-%20ileti%C5%9Fim" title="E-posta" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.15s;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        </a>
+      </div>
+      <span style="font-size:0.55rem; color:var(--muted); letter-spacing:0.3px;">İLETİŞİM</span>
+    </div>
+  </div>
 </div>
 
 <!-- Progress wrap (JS uyumu için gizli) -->
@@ -1142,6 +1472,38 @@
 
 <script>
 const { jsPDF } = window.jspdf;
+
+// ── Yenilikler Modalı ──
+const CL_VERSION = 'sinav-pro-8.5';
+(function initChangelog() {
+  const noShowKey = 'cl_noshow_' + CL_VERSION;
+  if (localStorage.getItem(noShowKey) !== '1') {
+    document.getElementById('clOverlay').classList.add('visible');
+  }
+})();
+
+function closeChangelog() {
+  if (document.getElementById('clNoShow').checked) {
+    localStorage.setItem('cl_noshow_' + CL_VERSION, '1');
+  }
+  document.getElementById('clOverlay').classList.remove('visible');
+}
+
+// Overlay dışına tıklayınca kapat
+document.getElementById('clOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeChangelog();
+});
+
+// ── Sekme Geçişi ──
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const section = document.getElementById('tab-' + tabId);
+  const btn = document.getElementById('navtab-' + tabId);
+  if (section) section.classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
 
 let photos = [];
 let dragSrcIdx = null;
@@ -1758,7 +2120,8 @@ function removePhoto(idx) {
 document.getElementById('startQuestion').addEventListener('input', () => { if(photos.length) renderList(); });
 
 function updateStats() {
-  document.getElementById('photoCount').textContent = photos.length;
+  const cardPhotoCount = document.getElementById('photoCountCard');
+  if (cardPhotoCount) cardPhotoCount.textContent = photos.length;
   const gap = parseFloat(document.getElementById('gapSlider').value);
   const margin = parseFloat(document.getElementById('marginSlider').value);
   const isLandscape = currentOrientation === 'landscape';
@@ -1769,7 +2132,8 @@ function updateStats() {
   const usableH = pgH - margin * 2 - 30;
   const perPage = Math.floor(usableH / (avgH + gap)) * currentCols;
   const pages = Math.max(1, Math.ceil(photos.length / Math.max(1, perPage)));
-  document.getElementById('pageCount').textContent = '~' + pages;
+  const cardPageCount = document.getElementById('pageCountCard');
+  if (cardPageCount) cardPageCount.textContent = '~' + pages;
 
   const total = photos.reduce((sum, p) => sum + (parseFloat(p.points) || 0), 0);
   const totalEl = document.getElementById('totalPoints');
@@ -1808,6 +2172,13 @@ function updateStats() {
       bbi.innerHTML = `© sebasmobil &nbsp;·&nbsp; <strong>${photos.length}</strong> soru &nbsp;·&nbsp; ~<strong>${pages}</strong> sayfa &nbsp;·&nbsp; <strong>${total}</strong> puan`;
     }
   }
+  // Alt bar stats güncelle
+  const topPhotoCount = document.getElementById('photoCount');
+  const topPageCount = document.getElementById('pageCount');
+  const topPointsEl = document.getElementById('totalPointsTop');
+  if (topPhotoCount) topPhotoCount.textContent = photos.length;
+  if (topPageCount) topPageCount.textContent = '~' + pages;
+  if (topPointsEl) topPointsEl.textContent = total;
 }
 
 async function generatePDF() {
@@ -1850,7 +2221,8 @@ async function generatePDF() {
   progressWrap.style.display = 'none';
   const bottomBarProgress = document.getElementById('bottomBarProgress');
   if (bottomBarProgress) bottomBarProgress.style.display = 'block';
-  document.getElementById('bottomBarInfo').style.display = 'none';
+  const bbi0 = document.getElementById('bottomBarInfo');
+  if (bbi0) bbi0.style.display = 'none';
 
   const isLandscape = currentOrientation === 'landscape';
   const pageW = isLandscape ? 297 : 210;
@@ -2855,6 +3227,9 @@ function getImageFormat(dataUrl) {
   window.__debugErrors = [];
 
   window.onerror = function(message, source, lineno, colno, error) {
+    // Safari'nin paylaşım / cross-origin hatalarını yoksay
+    if (!message || message === 'Script error.' || message === 'Script error') return false;
+    if (!lineno && !colno && !error) return false;
     const info = {
       message: message || 'Bilinmeyen hata',
       type: error ? error.name : 'Error',
@@ -2866,7 +3241,7 @@ function getImageFormat(dataUrl) {
     };
     window.__debugErrors.push(info);
     showDebugger(info);
-    return false; // browser da konsola yazsın
+    return false;
   };
 
   window.addEventListener('unhandledrejection', function(e) {
