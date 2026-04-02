@@ -39,10 +39,10 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="license" content="GNU Affero General Public License v3.0 - https://www.gnu.org/licenses/agpl-3.0.html"/>
 <meta name="copyright" content="Copyright (C) 2026 sebasmobil"/>
-<title>S-Sınav Pro 8.4</title>
+<title>S-Sınav Pro 8.7</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap');
@@ -50,14 +50,14 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #f5f5f5;
-    --surface: #ffffff;
-    --surface2: #f0f0f0;
-    --border: #e0e0e0;
-    --accent: #2563eb;
+    --bg: #e8eef7;
+    --surface: #f4f7fc;
+    --surface2: #dde5f0;
+    --border: #c8d5e8;
+    --accent: #1a56db;
     --accent2: #3b82f6;
-    --text: #1a1a1a;
-    --muted: #888;
+    --text: #0f1f3d;
+    --muted: #5e7399;
     --radius: 12px;
   }
 
@@ -95,14 +95,14 @@
   }
 
   body.theme-dark-blue {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --surface2: #334155;
-    --border: #475569;
-    --accent: #38bdf8;
-    --accent2: #7dd3fc;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
+    --bg: #080d14;
+    --surface: #0e1520;
+    --surface2: #16202e;
+    --border: #1e2d42;
+    --accent: #3b9eff;
+    --accent2: #60b4ff;
+    --text: #dce8f5;
+    --muted: #6b85a3;
   }
 
   body {
@@ -743,26 +743,165 @@
     width: 12px; height: 12px; border-radius: 50%;
     border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0;
   }
+  /* ── Yenilikler Modalı ── */
+  .cl-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .cl-overlay.visible { opacity: 1; pointer-events: all; }
+  .cl-modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px 18px 0 0;
+    width: 100%; max-width: 600px;
+    margin: 0 auto;
+    max-height: 88vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.3);
+    transform: translateY(40px);
+    transition: transform 0.3s;
+  }
+  .cl-overlay.visible .cl-modal { transform: translateY(0); }
+  .cl-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 10px auto 0 auto; flex-shrink: 0;
+  }
+  .cl-header {
+    padding: 14px 20px 10px 20px; flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .cl-header-top {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cl-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem; font-weight: 800;
+    color: var(--accent);
+  }
+  .cl-subtitle {
+    font-size: 0.75rem; color: var(--muted); margin-top: 2px;
+  }
+  .cl-body {
+    flex: 1; overflow-y: auto;
+    padding: 4px 20px 12px 20px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cl-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.88rem; line-height: 1.55; color: var(--text);
+  }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-item-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .cl-item-text { flex: 1; }
+  .cl-badge {
+    display: inline-flex; align-items: center;
+    font-size: 0.58rem; font-weight: 700;
+    padding: 2px 5px; border-radius: 4px;
+    letter-spacing: 0.3px; margin-right: 5px;
+    vertical-align: middle;
+  }
+  .cl-badge-new { background: #dcfce7; color: #16a34a; }
+  .cl-badge-beta { background: #fef3c7; color: #d97706; }
+  .cl-badge-fix { background: #dbeafe; color: #2563eb; }
+  .cl-badge-license { background: #ede9fe; color: #7c3aed; }
+  body.theme-dark .cl-badge-new, body.theme-dark-blue .cl-badge-new { background: rgba(22,163,74,0.2); color: #4ade80; }
+  body.theme-dark .cl-badge-beta, body.theme-dark-blue .cl-badge-beta { background: rgba(217,119,6,0.2); color: #fbbf24; }
+  body.theme-dark .cl-badge-fix, body.theme-dark-blue .cl-badge-fix { background: rgba(37,99,235,0.2); color: #60a5fa; }
+  body.theme-dark .cl-badge-license, body.theme-dark-blue .cl-badge-license { background: rgba(124,58,237,0.2); color: #a78bfa; }
+  .cl-footer {
+    padding: 12px 20px 20px 20px; flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .cl-noshow-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.82rem; color: var(--muted);
+    cursor: pointer; user-select: none;
+  }
+  .cl-noshow-row input[type="checkbox"] {
+    accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer;
+  }
+  .cl-ok-btn {
+    width: 100%; padding: 12px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; transition: opacity 0.15s;
+    letter-spacing: 0.2px;
+  }
+  .cl-ok-btn:active { opacity: 0.85; }
 </style>
 </head>
 <body class="">
+
+<!-- ── Yenilikler Modalı ── -->
+<div class="cl-overlay" id="clOverlay">
+  <div class="cl-modal">
+    <div class="cl-handle"></div>
+    <div class="cl-header">
+      <div class="cl-header-top">
+        <div class="cl-title">✨ Sürüm 8.7 Yenilikleri</div>
+      </div>
+      <div class="cl-subtitle">S-Sınav Pro — Sürüm Notları</div>
+    </div>
+    <div class="cl-body">
+      <div class="cl-item">
+        <span class="cl-item-icon">🗂️</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Sekmeli navigasyon — Sorular, Belge, Düzen, Soru Düzeni ve Filigran ayrı bölümlere taşındı</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📊</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Alt barda anlık soru sayısı, sayfa tahmini ve puan bilgisi göstergesi eklendi</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">⬆️</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>PDF Oluştur butonu sabit alt bara taşındı — her sekmeden erişilebilir</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📱</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-fix">DÜZELTİLDİ</span>Safari'de input odaklandığında sayfa zoom yapma sorunu giderildi</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">🔗</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-fix">DÜZELTİLDİ</span>Safari Paylaş butonunun tetiklediği hatalı hata penceresi düzeltildi</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📬</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>İletişim ikonları (Instagram + e-posta) alt navigasyon barına taşındı</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">📄</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-new">YENİ</span>Belge Bilgileri ayrı bir sekme olarak bağımsız bölüme alındı</div>
+      </div>
+      <div class="cl-item">
+        <span class="cl-item-icon">⚖️</span>
+        <div class="cl-item-text"><span class="cl-badge cl-badge-license">LİSANS</span>GNU AGPL v3.0 — özgür ve açık kaynak</div>
+      </div>
+    </div>
+    <div class="cl-footer">
+      <label class="cl-noshow-row">
+        <input type="checkbox" id="clNoShow"> Bir daha gösterme
+      </label>
+      <button class="cl-ok-btn" onclick="closeChangelog()">Anlaşıldı →</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── Sabit Üst Bar ── -->
 <div class="fixed-top-bar">
   <div class="fixed-top-bar-row1">
     <div class="top-brand">
       <span>S-Sınav</span>
-      <span class="top-brand-badge">Pro 8.4</span>
+      <span class="top-brand-badge">Pro 8.7</span>
       <span style="font-size:0.68rem; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:400; margin-left:4px;">© sebasmobil &nbsp;<a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noopener noreferrer" style="color:inherit;opacity:0.75;text-decoration:none;">AGPL v3.0</a></span>
     </div>
     <div class="top-right-actions">
-      <a class="contact-mini-btn" href="https://instagram.com/sebasmobil" target="_blank" rel="noopener noreferrer" title="@sebasmobil" style="width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.15s;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-      </a>
-      <a class="contact-mini-btn" href="mailto:?subject=sebasmobil%20-%20ileti%C5%9Fim" title="E-posta" style="width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.15s;">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
-      </a>
-      <div style="width:1px; height:20px; background:var(--border);"></div>
       <button class="top-night-btn" id="dayNightBtn" onclick="toggleDayNight()" title="Gece/Gündüz">☀️</button>
     </div>
   </div>
@@ -814,9 +953,10 @@
      SEKME 2 — BELGE BİLGİLERİ
      ══════════════════════════════════════ -->
 <div class="tab-section" id="tab-belge">
-  <div class="card">
-    <div class="card-title">Belge Bilgileri</div>
 
+  <!-- Kart: Başlık -->
+  <div class="card">
+    <div class="card-title">Başlık</div>
     <div class="form-row">
       <label>Başlık metni</label>
       <textarea id="docTitle" rows="2" placeholder="Belgenin başlığını girin..."></textarea>
@@ -851,12 +991,79 @@
         <button class="style-btn" id="titleAlignRight" onclick="setTitleAlign('right')">→ Sağ</button>
       </div>
     </div>
+  </div>
 
-    <hr class="section-divider">
+  </div>
 
+  <!-- Kart: Puan Kutusu -->
+  <div class="card">
+    <div class="card-title">Puan Kutusu</div>
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Sağ üst köşeye puan kutusu ekle</span>
+        <label class="toggle">
+          <input type="checkbox" id="scoreBoxEnabled" onchange="toggleScoreBoxOptions()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="scoreBoxOptions" style="opacity:0.4; pointer-events:none; margin-top:14px;">
+      <div class="form-row">
+        <label>Kutu içi metin</label>
+        <input type="text" id="scoreBoxText" value="Puan" placeholder="örn: Puan, Not...">
+      </div>
+      <div class="three-col">
+        <div class="form-row">
+          <label>Yazı boyutu (pt)</label>
+          <input type="number" id="scoreBoxFontSize" value="11" min="6" max="24">
+        </div>
+        <div class="form-row">
+          <label>Metin rengi</label>
+          <div class="color-row"><input type="color" id="scoreBoxTextColor" value="#000000"></div>
+        </div>
+        <div class="form-row">
+          <label>Kutu boyutu (mm)</label>
+          <input type="number" id="scoreBoxSize" value="16" min="8" max="40">
+        </div>
+      </div>
+      <div class="three-col">
+        <div class="form-row">
+          <label>Çerçeve kalınlığı (pt)</label>
+          <input type="number" id="scoreBoxBorderWidth" value="1" min="0.5" max="5" step="0.5">
+        </div>
+        <div class="form-row">
+          <label>Çerçeve rengi</label>
+          <div class="color-row"><input type="color" id="scoreBoxBorderColor" value="#cc0000"></div>
+        </div>
+        <div class="form-row">
+          <label>Köşe yuvarlaklığı (mm)</label>
+          <input type="number" id="scoreBoxRadius" value="2" min="0" max="10">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Çerçeve stili</label>
+        <div class="style-btns">
+          <button class="style-btn active" id="scoreBoxStyleSolid" onclick="setScoreBoxStyle('solid')">Düz</button>
+          <button class="style-btn" id="scoreBoxStyleDashed" onclick="setScoreBoxStyle('dashed')">Kesik</button>
+          <button class="style-btn" id="scoreBoxStyleDotted" onclick="setScoreBoxStyle('dotted')">Noktalı</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Dolgu rengi</label>
+        <div class="color-row">
+          <input type="color" id="scoreBoxFillColor" value="#ffffff">
+          <span>Arka plan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kart: Ad Soyad / No -->
+  <div class="card">
+    <div class="card-title">Ad Soyad / No</div>
     <div class="three-col">
       <div class="form-row">
-        <label>AD SOYAD / NO yazı boyutu (pt)</label>
+        <label>Yazı boyutu (pt)</label>
         <input type="number" id="studentSize" value="12" min="6" max="20">
       </div>
       <div class="form-row">
@@ -871,11 +1078,12 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <hr class="section-divider">
-
+  <!-- Kart: İlk Sayfa Açıklama -->
+  <div class="card">
+    <div class="card-title">İlk Sayfa Açıklaması</div>
     <div class="form-row">
-      <label>İlk Sayfa Açıklama Metni</label>
       <textarea id="docDesc" rows="3" placeholder="Kısa bir açıklama yazın..."></textarea>
     </div>
     <div class="archive-row">
@@ -908,11 +1116,12 @@
         <button class="style-btn" id="descAlignRight" onclick="setDescAlign('right')">→ Sağ</button>
       </div>
     </div>
+  </div>
 
-    <hr class="section-divider">
-
+  <!-- Kart: Son Sayfa Açıklama -->
+  <div class="card">
+    <div class="card-title">Son Sayfa Açıklaması</div>
     <div class="form-row">
-      <label>Son Sayfa Açıklama Metni</label>
       <textarea id="footerText" rows="2" placeholder="Örn: Başarılar dileriz. — Fen Bilimleri Zümresi"></textarea>
     </div>
     <div class="archive-row">
@@ -950,11 +1159,14 @@
       <input type="range" id="footerOffsetSlider" min="2" max="30" value="8" oninput="document.getElementById('footerOffsetVal').textContent=this.value+' mm'">
       <div class="range-display" id="footerOffsetVal">8 mm</div>
     </div>
-    <hr class="section-divider">
+  </div>
 
+  <!-- Kart: Diğer Sayfaya Geçiniz -->
+  <div class="card">
+    <div class="card-title">"Diğer Sayfaya Geçiniz…"</div>
     <div class="form-row">
       <div class="toggle-row">
-        <span>"Diğer sayfaya geçiniz…" ekle</span>
+        <span>Ekle</span>
         <label class="toggle">
           <input type="checkbox" id="nextPageEnabled" checked>
           <span class="toggle-slider"></span>
@@ -982,70 +1194,114 @@
         </div>
       </div>
     </div>
-
-    <hr class="section-divider">
-
-    <div class="form-row">
-      <label>Arka plan rengi</label>
-      <div class="color-row">
-        <input type="color" id="bgColor" value="#ffffff">
-        <span>Sayfa arka planı</span>
-      </div>
-    </div>
   </div>
+
+
+
 </div>
 
 
+
+
 <div class="tab-section" id="tab-duzen">
+
+  <!-- Kart: Sayfa Yönü -->
   <div class="card">
-    <div class="card-title">Düzen Ayarları</div>
-    <div class="inline-row">
-      <div class="form-row">
-        <label>Sayfa yönü</label>
-        <div class="style-btns">
-          <button class="style-btn active" id="orientPortrait" onclick="selectOrientation('portrait')">↕ Dikey (A4)</button>
-          <button class="style-btn" id="orientLandscape" onclick="selectOrientation('landscape')">↔ Yatay (A4)</button>
-        </div>
+    <div class="card-title">Sayfa Yönü</div>
+    <div class="form-row">
+      <div class="style-btns">
+        <button class="style-btn active" id="orientPortrait" onclick="selectOrientation('portrait')">↕ Dikey (A4)</button>
+        <button class="style-btn" id="orientLandscape" onclick="selectOrientation('landscape')">↔ Yatay (A4)</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Kart: Sütun Sayısı -->
+  <div class="card">
+    <div class="card-title">Sütun Sayısı</div>
+    <div class="form-row">
+      <div class="style-btns">
+        <button class="style-btn" id="col1" onclick="selectCols(1)">1</button>
+        <button class="style-btn active" id="col2" onclick="selectCols(2)">2</button>
+        <button class="style-btn" id="col3" onclick="selectCols(3)">3</button>
+        <button class="style-btn" id="col4" onclick="selectCols(4)">4</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kart: Boşluklar -->
+  <div class="card">
+    <div class="card-title">Boşluklar</div>
+    <div class="form-row">
+      <label>Soru arası boşluk (mm)</label>
+      <input type="range" id="gapSlider" min="1" max="15" value="4">
+      <div class="range-display" id="gapVal">4 mm</div>
+    </div>
+    <div class="form-row">
+      <label>Sayfa kenar boşluğu (mm)</label>
+      <input type="range" id="marginSlider" min="5" max="30" value="8">
+      <div class="range-display" id="marginVal">8 mm</div>
+    </div>
+  </div>
+
+  <!-- Kart: Sayfaya Sığdır -->
+  <div class="card">
+    <div class="card-title">Sayfaya Sığdır</div>
+    <div class="form-row">
+      <div class="toggle-row">
+        <span>Soruları belirli sayıda sayfaya sığdır</span>
+        <label class="toggle">
+          <input type="checkbox" id="fitPagesEnabled" checked onchange="toggleFitPages()">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div id="fitPagesOptions" style="margin-top:12px;">
       <div class="form-row">
-        <label>Sütun sayısı</label>
+        <label>Hedef sayfa sayısı</label>
         <div class="style-btns">
-          <button class="style-btn" id="col1" onclick="selectCols(1)">1 Sütun</button>
-          <button class="style-btn active" id="col2" onclick="selectCols(2)">2 Sütun</button>
-          <button class="style-btn" id="col3" onclick="selectCols(3)">3 Sütun</button>
-          <button class="style-btn" id="col4" onclick="selectCols(4)">4 Sütun</button>
+          <button class="style-btn" id="fitPage1" onclick="selectFitPages(1)">1</button>
+          <button class="style-btn active" id="fitPage2" onclick="selectFitPages(2)">2</button>
+          <button class="style-btn" id="fitPage3" onclick="selectFitPages(3)">3</button>
+          <button class="style-btn" id="fitPage4" onclick="selectFitPages(4)">4</button>
+          <button class="style-btn" id="fitPage5" onclick="selectFitPages(5)">5</button>
+          <button class="style-btn" id="fitPage6" onclick="selectFitPages(6)">6</button>
+          <button class="style-btn" id="fitPage7" onclick="selectFitPages(7)">7</button>
+          <button class="style-btn" id="fitPage8" onclick="selectFitPages(8)">8</button>
         </div>
       </div>
     </div>
-    <div class="inline-row">
-      <div class="form-row">
-        <label>Soru arası boşluk (mm)</label>
-        <input type="range" id="gapSlider" min="1" max="15" value="4">
-        <div class="range-display" id="gapVal">4 mm</div>
-      </div>
-      <div class="form-row">
-        <label>Sayfa kenar boşluğu (mm)</label>
-        <input type="range" id="marginSlider" min="5" max="30" value="8">
-        <div class="range-display" id="marginVal">8 mm</div>
-      </div>
-    </div>
+  </div>
 
-    <hr class="section-divider">
-
-    <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:12px;">Sütun Arası Çizgiler</div>
+  <!-- Kart: Sütun Arası Çizgiler -->
+  <div class="card">
+    <div class="card-title">Sütun Arası Çizgiler</div>
     <div id="dividerList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:10px;"></div>
     <button onclick="addDividerRule()" style="width:100%; background:none; border:1px dashed var(--border); color:var(--muted); border-radius:8px; padding:8px; font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">＋ Çizgi Ekle</button>
   </div>
+
+  <!-- Kart: Arka Plan -->
+  <div class="card">
+    <div class="card-title">Arka Plan</div>
+    <div class="form-row">
+      <label>Sayfa arka plan rengi</label>
+      <div class="color-row">
+        <input type="color" id="bgColor" value="#ffffff">
+        <span>Arka plan rengi</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══════════════════════════════════════
      SEKME 3 — SORU DÜZENİ
      ══════════════════════════════════════ -->
 <div class="tab-section" id="tab-soruduzen">
-  <div class="card">
-    <div class="card-title">Soru Düzeni</div>
 
-    <div style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:10px;">Soru Etiketi</div>
+  <!-- Kart: Soru Etiketi -->
+  <div class="card">
+    <div class="card-title">Soru Etiketi</div>
     <div class="form-row">
       <div class="toggle-row">
         <span>Her soruya "SORU X (Y Puan)" etiketi ekle</span>
@@ -1097,9 +1353,11 @@
       <div class="label-preview" id="labelPreview" style="margin-top:12px;">SORU 1 &nbsp;&nbsp;(10 Puan)</div>
       <div style="font-size:0.82rem; color:var(--muted); margin-top:8px;">Her soru için puan, soru listesinde ayrı ayrı girilecek.</div>
     </div>
+  </div>
 
-    <hr class="section-divider">
-
+  <!-- Kart: Soru Hizalama -->
+  <div class="card">
+    <div class="card-title">Soru Hizalama</div>
     <div class="form-row">
       <label>Soru hizalama (sütun içinde)</label>
       <div class="style-btns">
@@ -1108,36 +1366,11 @@
         <button class="style-btn" id="alignRight" onclick="selectAlign('right')">→ Sağ</button>
       </div>
     </div>
+  </div>
 
-    <hr class="section-divider">
-
-    <div class="form-row">
-      <div class="toggle-row">
-        <span>Soruları belirli sayıda sayfaya sığdır</span>
-        <label class="toggle">
-          <input type="checkbox" id="fitPagesEnabled" checked onchange="toggleFitPages()">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-    <div id="fitPagesOptions" style="margin-top:12px;">
-      <div class="form-row">
-        <label>Hedef sayfa sayısı</label>
-        <div class="style-btns">
-          <button class="style-btn" id="fitPage1" onclick="selectFitPages(1)">1</button>
-          <button class="style-btn active" id="fitPage2" onclick="selectFitPages(2)">2</button>
-          <button class="style-btn" id="fitPage3" onclick="selectFitPages(3)">3</button>
-          <button class="style-btn" id="fitPage4" onclick="selectFitPages(4)">4</button>
-          <button class="style-btn" id="fitPage5" onclick="selectFitPages(5)">5</button>
-          <button class="style-btn" id="fitPage6" onclick="selectFitPages(6)">6</button>
-          <button class="style-btn" id="fitPage7" onclick="selectFitPages(7)">7</button>
-          <button class="style-btn" id="fitPage8" onclick="selectFitPages(8)">8</button>
-        </div>
-      </div>
-    </div>
-
-    <hr class="section-divider">
-
+  <!-- Kart: Otomatik Sıralama -->
+  <div class="card">
+    <div class="card-title">Otomatik Sıralama</div>
     <div class="form-row">
       <div class="toggle-row">
         <span>Soruları otomatik sırala (en verimli yerleşim)</span>
@@ -1148,8 +1381,11 @@
       </div>
     </div>
     <div style="font-size:0.78rem; color:var(--muted); margin-top:6px; line-height:1.5;">Çok sütunlu sorular öne alınır, her soru boşluğa en uygun şekilde yerleştirilir.</div>
+  </div>
 
-    <hr class="section-divider">
+  <!-- Kart: Soru Çerçevesi -->
+  <div class="card">
+    <div class="card-title">Soru Çerçevesi</div>
     <div class="form-row">
       <div class="toggle-row">
         <span>Her soruyu yuvarlatılmış çerçeve içine al</span>
@@ -1188,12 +1424,15 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <!-- ══════════════════════════════════════
      SEKME 4 — FİLİGRAN
      ══════════════════════════════════════ -->
 <div class="tab-section" id="tab-filigran">
+
+  <!-- Kart: Filigran Etkinleştir -->
   <div class="card">
     <div class="card-title">Filigran</div>
     <div class="form-row">
@@ -1205,69 +1444,81 @@
         </label>
       </div>
     </div>
+  </div>
 
-    <div id="watermarkOptions" style="opacity:0.4; pointer-events:none; margin-top:16px;">
+  <!-- Kart: Filigran Metni ve Görünüm -->
+  <div class="card" id="watermarkOptions" style="opacity:0.4; pointer-events:none;">
+    <div class="card-title">Metin ve Görünüm</div>
+    <div class="form-row">
+      <label>Filigran metni</label>
+      <input type="text" id="watermarkText" value="sebasmobil" placeholder="örn: TASLAK, GİZLİ, KOPYA...">
+    </div>
+    <div class="three-col" style="margin-top:4px;">
       <div class="form-row">
-        <label>Filigran metni</label>
-        <input type="text" id="watermarkText" value="GİZLİ" placeholder="örn: TASLAK, GİZLİ, KOPYA...">
+        <label>Yazı boyutu (pt)</label>
+        <input type="number" id="watermarkSize" value="60" min="10" max="200">
       </div>
-      <div class="three-col" style="margin-top:4px;">
+      <div class="form-row">
+        <label>Renk</label>
+        <div class="color-row"><input type="color" id="watermarkColor" value="#000000"></div>
+      </div>
+      <div class="form-row">
+        <label>Saydamlık (%)</label>
+        <input type="number" id="watermarkOpacity" value="10" min="1" max="100">
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Stil</label>
+      <div class="style-btns">
+        <button class="style-btn bold-btn active" id="watermarkBold" onclick="toggleStyle('watermarkBold')">K</button>
+        <button class="style-btn italic-btn" id="watermarkItalic" onclick="toggleStyle('watermarkItalic')">İ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kart: Filigran Konumu -->
+  <div class="card" id="watermarkPosCard" style="opacity:0.4; pointer-events:none;">
+    <div class="card-title">Konum ve Açı</div>
+    <div class="form-row">
+      <label>Açı (derece)</label>
+      <input type="range" id="watermarkAngle" min="-90" max="90" value="-45" oninput="document.getElementById('watermarkAngleVal').textContent=this.value+'°'">
+      <div class="range-display" id="watermarkAngleVal">-45°</div>
+    </div>
+    <div class="form-row">
+      <label>Konum</label>
+      <div class="style-btns">
+        <button class="style-btn active" id="wmPosCenter" onclick="selectWatermarkPos('center')">Merkez</button>
+        <button class="style-btn" id="wmPosTile" onclick="selectWatermarkPos('tile')">Döşeme</button>
+      </div>
+    </div>
+    <div id="watermarkTileOptions" style="margin-top:10px; display:none;">
+      <div class="inline-row">
         <div class="form-row">
-          <label>Yazı boyutu (pt)</label>
-          <input type="number" id="watermarkSize" value="60" min="10" max="200">
+          <label>Yatay aralık (mm)</label>
+          <input type="range" id="watermarkTileX" min="20" max="150" value="70" oninput="document.getElementById('watermarkTileXVal').textContent=this.value+' mm'">
+          <div class="range-display" id="watermarkTileXVal">70 mm</div>
         </div>
         <div class="form-row">
-          <label>Renk</label>
-          <div class="color-row"><input type="color" id="watermarkColor" value="#000000"></div>
-        </div>
-        <div class="form-row">
-          <label>Saydamlık (%)</label>
-          <input type="number" id="watermarkOpacity" value="10" min="1" max="100">
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Stil</label>
-        <div class="style-btns">
-          <button class="style-btn bold-btn active" id="watermarkBold" onclick="toggleStyle('watermarkBold')">K</button>
-          <button class="style-btn italic-btn" id="watermarkItalic" onclick="toggleStyle('watermarkItalic')">İ</button>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Açı (derece)</label>
-        <input type="range" id="watermarkAngle" min="-90" max="90" value="-45" oninput="document.getElementById('watermarkAngleVal').textContent=this.value+'°'">
-        <div class="range-display" id="watermarkAngleVal">-45°</div>
-      </div>
-      <div class="form-row">
-        <label>Konum</label>
-        <div class="style-btns">
-          <button class="style-btn" id="wmPosCenter" onclick="selectWatermarkPos('center')">Merkez</button>
-          <button class="style-btn active" id="wmPosTile" onclick="selectWatermarkPos('tile')">Döşeme</button>
-        </div>
-      </div>
-      <div id="watermarkTileOptions" style="margin-top:10px;">
-        <div class="inline-row">
-          <div class="form-row">
-            <label>Yatay aralık (mm)</label>
-            <input type="range" id="watermarkTileX" min="20" max="150" value="70" oninput="document.getElementById('watermarkTileXVal').textContent=this.value+' mm'">
-            <div class="range-display" id="watermarkTileXVal">70 mm</div>
-          </div>
-          <div class="form-row">
-            <label>Dikey aralık (mm)</label>
-            <input type="range" id="watermarkTileY" min="20" max="150" value="50" oninput="document.getElementById('watermarkTileYVal').textContent=this.value+' mm'">
-            <div class="range-display" id="watermarkTileYVal">50 mm</div>
-          </div>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>Hangi sayfalara</label>
-        <div class="style-btns">
-          <button class="style-btn active" id="wmPageAll" onclick="selectWatermarkPages('all')">Tümü</button>
-          <button class="style-btn" id="wmPageFirst" onclick="selectWatermarkPages('first')">Sadece 1. Sayfa</button>
-          <button class="style-btn" id="wmPageLast" onclick="selectWatermarkPages('last')">Sadece Son Sayfa</button>
+          <label>Dikey aralık (mm)</label>
+          <input type="range" id="watermarkTileY" min="20" max="150" value="50" oninput="document.getElementById('watermarkTileYVal').textContent=this.value+' mm'">
+          <div class="range-display" id="watermarkTileYVal">50 mm</div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Kart: Hangi Sayfalar -->
+  <div class="card" id="watermarkPagesCard" style="opacity:0.4; pointer-events:none;">
+    <div class="card-title">Hangi Sayfalara</div>
+    <div class="form-row">
+      <div class="style-btns">
+        <button class="style-btn active" id="wmPageAll" onclick="selectWatermarkPages('all')">Tümü</button>
+        <button class="style-btn" id="wmPageFirst" onclick="selectWatermarkPages('first')">Sadece 1. Sayfa</button>
+        <button class="style-btn" id="wmPageLast" onclick="selectWatermarkPages('last')">Sadece Son Sayfa</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ══════════════════════════════════════
@@ -1305,12 +1556,24 @@
     </button>
     <button class="nav-tab" id="navtab-soruduzen" onclick="switchTab('soruduzen')">
       <span class="nav-icon">📝</span>
-      <span>Soru</span>
+      <span>Soru Düzeni</span>
     </button>
     <button class="nav-tab" id="navtab-filigran" onclick="switchTab('filigran')">
       <span class="nav-icon">💧</span>
       <span>Filigran</span>
     </button>
+    <div style="width:1px; background:var(--border); align-self:stretch; margin: 6px 0;"></div>
+    <div class="nav-tab" style="cursor:default; gap:4px;">
+      <div style="display:flex; gap:6px; margin-bottom:2px;">
+        <a href="https://instagram.com/sebasmobil" target="_blank" rel="noopener noreferrer" title="@sebasmobil" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.15s;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="mailto:?subject=sebasmobil%20-%20ileti%C5%9Fim" title="E-posta" style="width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.15s;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+        </a>
+      </div>
+      <span style="font-size:0.55rem; color:var(--muted); letter-spacing:0.3px;">İLETİŞİM</span>
+    </div>
   </div>
 </div>
 
@@ -1321,6 +1584,27 @@
 
 <script>
 const { jsPDF } = window.jspdf;
+
+// ── Yenilikler Modalı ──
+const CL_VERSION = 'sinav-pro-8.7';
+(function initChangelog() {
+  const noShowKey = 'cl_noshow_' + CL_VERSION;
+  if (localStorage.getItem(noShowKey) !== '1') {
+    document.getElementById('clOverlay').classList.add('visible');
+  }
+})();
+
+function closeChangelog() {
+  if (document.getElementById('clNoShow').checked) {
+    localStorage.setItem('cl_noshow_' + CL_VERSION, '1');
+  }
+  document.getElementById('clOverlay').classList.remove('visible');
+}
+
+// Overlay dışına tıklayınca kapat
+document.getElementById('clOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeChangelog();
+});
 
 // ── Sekme Geçişi ──
 function switchTab(tabId) {
@@ -1492,6 +1776,20 @@ function selectAlign(val) {
   ['left','center','right'].forEach(a => document.getElementById('align'+a.charAt(0).toUpperCase()+a.slice(1)).classList.toggle('active', a === val));
 }
 
+let scoreBoxStyle = 'solid';
+function toggleScoreBoxOptions() {
+  const enabled = document.getElementById('scoreBoxEnabled').checked;
+  const opts = document.getElementById('scoreBoxOptions');
+  opts.style.opacity = enabled ? '1' : '0.4';
+  opts.style.pointerEvents = enabled ? '' : 'none';
+}
+function setScoreBoxStyle(val) {
+  scoreBoxStyle = val;
+  ['Solid','Dashed','Dotted'].forEach(s => {
+    document.getElementById('scoreBoxStyle'+s).classList.toggle('active', s.toLowerCase() === val);
+  });
+}
+
 function toggleBorderOptions() {
   const enabled = document.getElementById('borderEnabled').checked;
   document.getElementById('borderOptions').style.opacity = enabled ? '1' : '0.4';
@@ -1499,13 +1797,15 @@ function toggleBorderOptions() {
 }
 
 // --- Filigran ---
-let watermarkPos = 'tile';
+let watermarkPos = 'center';
 let watermarkPages = 'all';
 
 function toggleWatermarkOptions() {
   const enabled = document.getElementById('watermarkEnabled').checked;
-  document.getElementById('watermarkOptions').style.opacity = enabled ? '1' : '0.4';
-  document.getElementById('watermarkOptions').style.pointerEvents = enabled ? '' : 'none';
+  ['watermarkOptions', 'watermarkPosCard', 'watermarkPagesCard'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity = enabled ? '1' : '0.4'; el.style.pointerEvents = enabled ? '' : 'none'; }
+  });
 }
 
 function selectWatermarkPos(val) {
@@ -2049,7 +2349,8 @@ async function generatePDF() {
   progressWrap.style.display = 'none';
   const bottomBarProgress = document.getElementById('bottomBarProgress');
   if (bottomBarProgress) bottomBarProgress.style.display = 'block';
-  document.getElementById('bottomBarInfo').style.display = 'none';
+  const bbi0 = document.getElementById('bottomBarInfo');
+  if (bbi0) bbi0.style.display = 'none';
 
   const isLandscape = currentOrientation === 'landscape';
   const pageW = isLandscape ? 297 : 210;
@@ -2249,8 +2550,76 @@ async function generatePDF() {
     const titleColor = hexToRgbStr(titleColorHex);
     const descColor = hexToRgbStr(descColorHex);
 
+    // Puan kutusu ayarları
+    const scoreBoxEnabled = document.getElementById('scoreBoxEnabled').checked;
+    const scoreBoxSizeMm = scoreBoxEnabled ? (parseFloat(document.getElementById('scoreBoxSize').value) || 16) : 0;
+    const scoreBoxGap = scoreBoxEnabled ? 3 : 0;
+    const titleW = usableW - (scoreBoxEnabled ? scoreBoxSizeMm + scoreBoxGap : 0);
+
     if (title) {
-      const h = drawTextBlock(title, margin, y, titleSize, titleColor, titleBold, titleItalic, usableW, titleAlign);
+      const h = drawTextBlock(title, margin, y, titleSize, titleColor, titleBold, titleItalic, titleW, titleAlign);
+
+      // Puan kutusunu başlığın sağına, başlıkla aynı hizada çiz
+      if (scoreBoxEnabled) {
+        const sbText = document.getElementById('scoreBoxText').value.trim() || 'Puan';
+        const sbFontSize = parseInt(document.getElementById('scoreBoxFontSize').value) || 11;
+        const sbBorderW = parseFloat(document.getElementById('scoreBoxBorderWidth').value) || 1;
+        const sbBorderColor = hexToRgbStr(document.getElementById('scoreBoxBorderColor').value);
+        const sbFillColor = hexToRgbStr(document.getElementById('scoreBoxFillColor').value);
+        const sbRadius = parseFloat(document.getElementById('scoreBoxRadius').value) || 2;
+        const sbTextColor = hexToRgbStr(document.getElementById('scoreBoxTextColor').value);
+
+        const sbX = margin + titleW + scoreBoxGap;
+        const sbY = y;
+        const sbW = scoreBoxSizeMm;
+        const sbH = scoreBoxSizeMm;
+
+        // Dolu
+        const fillRgb = document.getElementById('scoreBoxFillColor').value;
+        const fr = parseInt(fillRgb.slice(1,3),16);
+        const fg = parseInt(fillRgb.slice(3,5),16);
+        const fb = parseInt(fillRgb.slice(5,7),16);
+        pdf.setFillColor(fr, fg, fb);
+
+        const brRgb = document.getElementById('scoreBoxBorderColor').value;
+        const brr = parseInt(brRgb.slice(1,3),16);
+        const brg = parseInt(brRgb.slice(3,5),16);
+        const brb = parseInt(brRgb.slice(5,7),16);
+        pdf.setDrawColor(brr, brg, brb);
+        pdf.setLineWidth(sbBorderW * 0.352778);
+
+        // Çerçeve stili (jsPDF sadece solid destekler; dashed/dotted için setLineDash)
+        if (scoreBoxStyle === 'dashed') {
+          pdf.setLineDashPattern([2, 1.5], 0);
+        } else if (scoreBoxStyle === 'dotted') {
+          pdf.setLineDashPattern([0.5, 1.5], 0);
+        } else {
+          pdf.setLineDashPattern([], 0);
+        }
+
+        if (sbRadius > 0) {
+          pdf.roundedRect(sbX, sbY, sbW, sbH, sbRadius, sbRadius, 'FD');
+        } else {
+          pdf.rect(sbX, sbY, sbW, sbH, 'FD');
+        }
+        pdf.setLineDashPattern([], 0); // reset
+
+        // Metin ortala
+        const sbFontSizePt = sbFontSize;
+        pdf.setFontSize(sbFontSizePt);
+        pdf.setFont('helvetica', 'bold');
+        const sbTextRgb = document.getElementById('scoreBoxTextColor').value;
+        const str = parseInt(sbTextRgb.slice(1,3),16);
+        const stg = parseInt(sbTextRgb.slice(3,5),16);
+        const stb = parseInt(sbTextRgb.slice(5,7),16);
+        pdf.setTextColor(str, stg, stb);
+        const sbTextW = pdf.getStringUnitWidth(sbText) * sbFontSizePt / pdf.internal.scaleFactor;
+        const sbTextX = sbX + (sbW - sbTextW) / 2;
+        const sbTextY = sbY + sbH / 2 + (sbFontSizePt * 0.352778) / 2 - 0.5;
+        pdf.text(sbText, sbTextX, sbTextY);
+        pdf.setFont('helvetica', 'normal');
+      }
+
       y += h + headerPadding;
     }
 
@@ -3054,6 +3423,9 @@ function getImageFormat(dataUrl) {
   window.__debugErrors = [];
 
   window.onerror = function(message, source, lineno, colno, error) {
+    // Safari'nin paylaşım / cross-origin hatalarını yoksay
+    if (!message || message === 'Script error.' || message === 'Script error') return false;
+    if (!lineno && !colno && !error) return false;
     const info = {
       message: message || 'Bilinmeyen hata',
       type: error ? error.name : 'Error',
@@ -3065,7 +3437,7 @@ function getImageFormat(dataUrl) {
     };
     window.__debugErrors.push(info);
     showDebugger(info);
-    return false; // browser da konsola yazsın
+    return false;
   };
 
   window.addEventListener('unhandledrejection', function(e) {
