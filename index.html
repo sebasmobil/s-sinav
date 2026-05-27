@@ -1299,6 +1299,11 @@
           <input type="range" min="1" max="20" value="3" id="iedShapeEditLineW" style="flex:1;accent-color:var(--accent)" oninput="document.getElementById('iedShapeEditLineWVal').textContent=this.value;iedApplyShapeEdit()">
           <span id="iedShapeEditLineWVal" style="font-size:0.72rem;font-weight:700;color:var(--text);width:18px">3</span>
         </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px">
+          <label style="font-size:0.72rem;color:var(--muted);white-space:nowrap">Opaklık</label>
+          <input type="range" min="5" max="100" value="100" id="iedShapeEditOpacity" style="flex:1;accent-color:var(--accent)" oninput="document.getElementById('iedShapeEditOpacityVal').textContent=this.value+'%';iedApplyShapeEdit()">
+          <span id="iedShapeEditOpacityVal" style="font-size:0.72rem;font-weight:700;color:var(--text);width:30px">100%</span>
+        </div>
         <!-- Konum X1/Y1 -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
           <div style="display:flex;align-items:center;gap:4px">
@@ -1341,6 +1346,11 @@
           <label style="font-size:0.72rem;color:var(--muted);white-space:nowrap">Kalınlık</label>
           <input type="range" id="iedShapeLineW" min="1" max="20" value="3" oninput="iedUpdateVal(this,'iedShapeLineWVal')" style="flex:1;accent-color:var(--accent)">
           <span class="ied-val" id="iedShapeLineWVal">3</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+          <label style="font-size:0.72rem;color:var(--muted);white-space:nowrap">Opaklık</label>
+          <input type="range" id="iedShapeOpacity" min="5" max="100" value="100" oninput="document.getElementById('iedShapeOpacityVal').textContent=this.value+'%'" style="flex:1;accent-color:var(--accent)">
+          <span class="ied-val" id="iedShapeOpacityVal">100%</span>
         </div>
         <p id="iedShapeHint" style="font-size:0.76rem;color:var(--accent);margin:6px 0 0">👆 Canvas üzerinde sürükle</p>
       </div>
@@ -3904,7 +3914,8 @@ function iedStartShape(type) {
         color:document.getElementById('iedShapeColor').value,
         fillColor:document.getElementById('iedShapeFillColor').value,
         fill:document.getElementById('iedShapeFill').checked,
-        lineW:parseInt(document.getElementById('iedShapeLineW').value)};
+        lineW:parseInt(document.getElementById('iedShapeLineW').value),
+        opacity:parseInt(document.getElementById('iedShapeOpacity').value)};
       iedDrawShape(ctx,ied.shapeDraw,canvas.width,canvas.height);
     };
     img2.src=snap;
@@ -3925,6 +3936,7 @@ function iedStartShape(type) {
 
 function iedDrawShape(ctx,s,cw,ch) {
   ctx.save();
+  ctx.globalAlpha = (s.opacity !== undefined ? s.opacity : 100) / 100;
   ctx.strokeStyle=s.color; ctx.lineWidth=s.lineW; ctx.fillStyle=s.fillColor;
   const x1=s.x1,y1=s.y1,x2=s.x2,y2=s.y2;
   if(s.type==='rect') {
@@ -4017,6 +4029,9 @@ function iedSelectShape(i) {
   document.getElementById('iedShapeEditFilled').checked = !!s.fill;
   document.getElementById('iedShapeEditLineW').value = s.lineW;
   document.getElementById('iedShapeEditLineWVal').textContent = s.lineW;
+  const opVal = s.opacity !== undefined ? s.opacity : 100;
+  document.getElementById('iedShapeEditOpacity').value = opVal;
+  document.getElementById('iedShapeEditOpacityVal').textContent = opVal + '%';
 
   // Koordinatları % değerine çevir
   const canvas = document.getElementById('imgEditorCanvas');
@@ -4043,6 +4058,7 @@ function iedApplyShapeEdit() {
   s.fillColor = document.getElementById('iedShapeEditFill').value;
   s.fill = document.getElementById('iedShapeEditFilled').checked;
   s.lineW = parseInt(document.getElementById('iedShapeEditLineW').value);
+  s.opacity = parseInt(document.getElementById('iedShapeEditOpacity').value);
 
   // % → piksel koordinat
   const canvas = document.getElementById('imgEditorCanvas');
@@ -4070,6 +4086,9 @@ function iedRedrawShape() {
   document.getElementById('iedShapeFill').checked = !!s.fill;
   document.getElementById('iedShapeLineW').value = s.lineW;
   document.getElementById('iedShapeLineWVal').textContent = s.lineW;
+  const opVal = s.opacity !== undefined ? s.opacity : 100;
+  document.getElementById('iedShapeOpacity').value = opVal;
+  document.getElementById('iedShapeOpacityVal').textContent = opVal + '%';
   // Şekil tipini aktif et ve çizim moduna gir
   iedStartShape(origType);
   showSettingsToast('Canvas üzerinde sürükleyerek yeniden çizin', '#3b82f6');
